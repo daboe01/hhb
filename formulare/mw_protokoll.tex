@@ -1,0 +1,59 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[absolute]{<copytex:hhb/textpos.sty>}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+\ThisCenterWallPaper{1}{<file:formulare/MW_EZD.pdf>}
+\setlength{\headheight}{18\baselineskip}
+\setlength{\textheight} {175mm}
+
+\begin{document}
+\textblockorigin{1mm}{1mm}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\begin{textblock}{50}(40 , 61 )
+{
+\noindent <var:KulturEinDatum>
+}
+\end{textblock}
+
+\begin{textblock}{50}(160 , 61 )
+{
+\noindent <var:IDSpender>
+}
+\end{textblock}
+\begin{textblock}{50}(60 , 247 )
+{
+\noindent <var:Name>
+}
+\end{textblock}
+
+~
+\newpage
+~
+\ThisCenterWallPaper{1}{<file:formulare/MW_SL.pdf>}
+\begin{textblock}{50}(40 , 61 )
+{
+\noindent <var:KulturEinDatum>
+}
+\end{textblock}
+
+\begin{textblock}{50}(160 , 61 )
+{
+\noindent <var:IDSpender>
+}
+\end{textblock}
+
+\begin{textblock}{50}(60 , 229 )
+{
+\noindent <var:Name>
+}
+\end{textblock}
+
+\end{document}

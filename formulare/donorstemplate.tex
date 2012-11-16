@@ -1,0 +1,25 @@
+\documentclass[a4]{scrreprt}
+
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+\usepackage{pdflscape}
+\usepackage{longtable}
+
+\begin{document}
+
+\begin{landscape}
+\scriptsize
+
+\begin{longtable}{lllp{2cm}p{2cm}p{2cm}p{1cm}p{7.5cm}}
+Name & Vorname & Geb.Datum & Angeh"orige & Tod & Station & Arzt & Diags\\ \hline
+<foreach>
+<var:Name> & <var:Vorname> & <var:Geburtsdatum> & <var:NameAngehoeriger> (<var:TelAngehoerige>  <var:Telefon>) & <var:Todeszeitpunkt> & <var:Sterbeort> (<var:Stationstelefon>) & <var:EinweisenderArzt> &  <var:MedizinischeDiagnosen>
+\\ \hline
+</foreach>
+\end{longtable}
+\end{landscape}
+
+\end{document}

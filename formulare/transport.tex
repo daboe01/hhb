@@ -1,0 +1,36 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage[absolute]{<copytex:hhb/textpos.sty>}
+%\usepackage[absolute]{../textpos}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+%\usepackage{../wallpaper}
+\setlength{\headheight}{13\baselineskip}
+\pagenumbering{none}
+
+
+\begin{document}
+\baselineskip15pt
+
+\ThisCenterWallPaper{1}{<file:formulare/AUG-HHB-Hornhauttransporte-Anlage-B-5-7.pdf>}
+%\ThisCenterWallPaper{1}{AUG-HHB-Hornhauttransporte-Anlage-B-5-7.pdf}
+~
+\textblockorigin{1mm}{1mm}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\begin{textblock}{100}(170,70) 
+\noindent \Large<var:IDSpender><var:SPAuge>
+\end{textblock}
+\begin{textblock}{100}(55,85) 
+<var:Zentrum>
+\end{textblock}
+\begin{textblock}{100}(38,103) 
+<var:Vorname> <var:Name>  <var:Geburtsdatum>
+\end{textblock}
+\end{document}

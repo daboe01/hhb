@@ -1,0 +1,52 @@
+\documentclass[a4,10pt]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+\setlength{\headheight}{14\baselineskip}
+\CenterWallPaper{1}{<file:briefkopfHHB2.pdf>}
+
+
+\begin{document}
+\begin{table}
+\setcounter{secnumdepth}{0}
+\section{Zentrum: <var:Zentrum>}
+\subsection{Meldung durch: <var:Arzt>}
+\begin{tabular}{lp{12cm}} \hline
+Name & <var:Name> \\
+Vorname & <var:Vorname> \\
+Geburtsdatum & <var:Geburtsdatum> \\ \hline
+\\ \hline
+Anschrift & <var:Anschrift>,  <var:PLZ> <var:Ort>\\
+Telefon & <var:Telefon1>, <var:Telefon2>\\
+Wahlleistung (P) & <var:Privat>\\ \hline
+\\ \hline
+Auge & <var:Auge>\\
+Risiko & <var:Risiko>\\
+Zahl Kps (<var:Auge>) & <var:KeratoplastikAuge>\\
+OP-Verfahren & <var:OPVerfahren> (<var:Operateur>)\\ 
+Narkose & <var:Narkose>\\ 
+Augendiagnosen & <var:OPindikationsdiagnose>\\
+Allgemeindiagnosen & <var:Allgemeindiagnosen>\\ \hline
+Leidensdruck & <var:Leidensdruck>\\ \hline
+\\ \hline
+Warten aktiviert ab & <var:StartWarteliste>\\
+Operation ab & <var:KpAbDatum>\\ \hline
+\\ \hline
+Max. Mismatches & <var:MaxHLAMismatches>\\
+HLA Allele & <var:HLAString>\\
+Erwartete Wartezeit & 0MM: <var:WZ0MM>a; 1MM: <var:WZ1MM>a; 2MM: <var:WZ2MM>a\\ \hline
+\\ \hline
+Bemerkung & <var:Bemerkungen>\\ \hline
+\\
+\\
+\\
+<var:Datum> & Unterschrift\\
+
+\end{tabular}
+\end{table}
+
+\end{document}

@@ -1,0 +1,18 @@
+N
+LO120,0,340,38
+A60,45,0,3,1,2,N,"Spender <var:ID>R"
+A60,80,0,3,1,1,N,"Menschliches Augengewebe"
+A60,105,0,2,1,1,N,"LIONS Hornhautbank Freiburg"
+A60,125,0,2,1,1,N,"Kilianstr. 5, 79106 Freiburg"
+A60,145,0,2,1,1,N,"Tel. +497612704130"
+A60,165,0,2,1,1,N,"Corneoskleralscheibe in MEM"
+P1
+N
+LO120,0,340,38
+A60,45,0,3,1,2,N,"Spender <var:ID>L"
+A60,80,0,3,1,1,N,"Menschliches Augengewebe"
+A60,105,0,2,1,1,N,"LIONS Hornhautbank Freiburg"
+A60,125,0,2,1,1,N,"Kilianstr. 5, 79106 Freiburg"
+A60,145,0,2,1,1,N,"Tel. +497612704130"
+A60,165,0,2,1,1,N,"Corneoskleralscheibe in MEM"
+P1

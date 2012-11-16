@@ -1,0 +1,297 @@
+<comment>
+3.5.05, dr. boehringer: frontend for donors db, die Ÿber get_donors.pl an das KRZ gekoppelt ist.
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+</comment>
+
+<include src="hhb/faces.html">
+
+<table>
+<tr>
+<td valign=top>
+	<form:searchDGSpender label="Suche">
+		<var:PIZ edittype=text label="PIZ" editmode=inplace>
+		<var:Name edittype=text typeahead="donorsDG.Name" label="Name" editmode=inplace>
+		<var:Todeszeitpunkt edittype=text format:date="%d.%m.%y" label="Sterbedatum" editmode=inplace>
+		<button:Suchen class="btn" format:ajax="on">
+	</form>
+<button:Reload class="btn"  format:ajax="on" perl="reload">
+<button:Drucken class="btn" format:ajax="on" perl="print">
+<button:Statistik  class="btn primary"  perl="statistik">
+<button:Blut_anfordern  class="btn primary"  perl="blutanfordern">
+	<table class="datatable">
+		<caption>Verstorben</caption>
+		<th>Name</th>
+		<th>Vorname</th>
+		<th>Geburtsdatum</th>
+		<th>Sterbedatum</th>
+		<th>Anf.</th>
+		<foreach:donorsDG.open>
+		<tr>
+			<td><var:Name></td>
+			<td><var:Vorname></td>
+			<td><var:Geburtsdatum format:date="%d.%m.%Y"></td>
+			<td><var:Todeszeitpunkt format:date="%d.%m.%Y %H:%M"></td>
+			<td><var:praemortem_blut_anfordern edittype=boolean></td>
+		</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<form:donorsDG label="Stammdaten">
+		<var:PIZ edittype=text editmode=inplace label="PIZ" size="8">
+		<var:weiblich edittype=boolean editmode=inplace label="weiblich">
+		<var:Name edittype=text label="Name">
+		<var:Vorname edittype=text label="Vorname">
+		<var:Geburtsdatum edittype=text editmode=inplace label="Geburtsdatum" format:date="%d.%m.%Y" size="10">
+		<var:Anschrift edittype=text editmode=inplace label="Anschrift">
+		<var:PLZ edittype=text editmode=inplace label="PLZ" size="5">
+		<var:Ort edittype=text editmode=inplace label="Ort">
+		<var:Telefon edittype=text editmode=inplace label="Telefon">
+		<var:Todeszeitpunkt  edittype=text label="Sterbedatum" format:date="%d.%m.%y %H:%M">
+		<var:Bemerkungen edittype=textarea editmode=inplace label="Bemerkungen" cols="30" rows="6">
+	</form>
+	<foreach:augenklinikDG><div style="color:red;">Achtung! Augenklinikbesuche.</div><br></foreach>
+
+</td>
+<td valign=top>
+	<form:donorsDG label="Kontakt">
+		<var:NameAngehoeriger edittype=text label="Kontaktperson">
+		<var:AngehoerigenVerhaeltnis edittype=text label="Verh&auml;ltnis">
+		<var:TelAngehoerige edittype=text size="10" label="Tel.">
+		<var:TelefoniertMit edittype=text label="Telefoniert mit">
+		<button:so perl="copyRel" format:ajax="on">
+		<var:EinverstaendnisPerson edittype=text typeahead="verwandschaftDG.Name" label="Verwandschaftsgrad">
+		<var:ZeitpunktErsterKontaktaufnahme edittype=date format:date="%d.%m.%y %H:%M" size="10" label="am (dd.mm.yy HH:MM)">
+		<var:EinverstaendnisEingeholt edittype=popup format:lookup="mitarbeiterDG.Name" label="durch">
+		<var:IDVerwefungsgrundPrimary edittype=popup format:lookup="primaerVerworfenDG.Name" label="nicht entnommen weil">
+		<var:IDEinverstaendnisArt edittype=popup format:lookup="einverstaendnisDG.Name" label="Einverst&auml;ndnis / erteilt">
+		<var:PosEinverstaendnis edittype=boolean>
+	</form>
+</td>
+<td valign=top>
+	<form:donorsDG label="Med. Infos">
+		<var:Sterbeort edittype=text label="Sterbeort / Tel">
+		<var:Stationstelefon edittype=text size="10">
+		<var:EinweisenderArzt edittype=text label="EinweisenderArzt / Tel">
+		<var:TelEinweisenderArzt edittype=text size="10">
+		<var:HausArzt edittype=text label="Hausarzt / Tel">
+		<var:TelHausArzt edittype=text size="10">
+		<var:MedizinischeDiagnosen edittype=textarea label="Diagnosen" cols="35" rows="45">
+	</form>
+</td>
+<td valign=top>
+	<form:donorsDG label="keine KIs">
+		<button:Alles perl="allesMarkieren" format:ajax="on">
+		<var:KISepsis edittype=boolean editmode=inplace label="Res.Sepsis">
+		<var:KIHepatitis edittype=boolean editmode=inplace label="Hepatitis">
+		<var:KIHIV edittype=boolean editmode=inplace label="HIV">
+		<var:KIHIVRisiko edittype=boolean editmode=inplace label="HIVRisiko">
+		<var:KINeuroviral edittype=boolean editmode=inplace label="Neuroviral">
+		<var:KICJDRisiko edittype=boolean editmode=inplace label="CJDRisiko">
+		<var:KINeurolog edittype=boolean editmode=inplace label="Neurolog">
+		<var:KILeukaemie edittype=boolean editmode=inplace label="Leukaemie">
+		<hr>
+		<button:Uebertragen class="btn" perl="transfer" format:ajax="on">
+		<button:entfernen class="btn" perl="hide" format:ajax="on">
+	</form>
+</td>
+
+</table>
+
+</body>
+</html>
+
+
+<DisplayGroups>{
+donorsDG=
+{	table="StammdatenHornhautspender";
+	columns=
+	(	"ID","Name","Vorname","Geburtsdatum", "Anschrift", "PLZ", "Ort",  "Todeszeitpunkt", "Bemerkungen", "IDEinverstaendnisArt", "EinverstaendnisEingeholt", "EinverstaendnisPerson", "NameAngehoeriger",
+		"Koerpergroesse", "Koerpergewicht", "Telefon", "IDVerwefungsgrundPrimary", "PIZ", "MedizinischeDiagnosen", "weiblich", "Sterbeort", "Stationstelefon", "EinweisenderArzt", "HausArzt", "TelEinweisenderArzt",
+		"TelHausArzt", "Ablehnungsgrund", "ZeitpunktErsterKontaktaufnahme", "PosEinverstaendnis", "TelAngehoerige", "AngehoerigenVerhaeltnis", "TelefoniertMit",
+		"KISepsis", "KIHepatitis", "KIHIV", "KIHIVRisiko", "KINeuroviral", "KICJDRisiko", "KINeurolog", "KILeukaemie", "KIMalignom","praemortem_blut_anfordern"
+	);
+	primaryKey="ID";
+	connectionEnv="dbweb_connectionstring_verstorben";
+	types={ "ID"=int; "Geburtsdatum"=date; "Todeszeitpunkt"=date; "IDEinverstaendnisArt"=int; "EinverstaendnisEingeholt"=int; "Koerpergroesse"=int; "Koerpergewicht"=int;
+			"IDVerwefungsgrundPrimary"=int; "weiblich"=bool; "ZeitpunktErsterKontaktaufnahme"=date; "PosEinverstaendnis"=bool;
+			"KISepsis"=bool; "KIHepatitis"=bool; "KIHIV"=bool; "KIHIVRisiko"=bool; "KINeuroviral"=bool; "KICJDRisiko"=bool; "KINeurolog"=bool;
+			"KILeukaemie"=bool; "KIMalignom"=bool; "praemortem_blut_anfordern"=bool;};
+	filters=
+	{	open=( { col="PosEinverstaendnis";op="eq";val="0"}, { col="IDVerwefungsgrundPrimary";op="eqnull"} );
+	}
+	autoSort="standard";
+	bindToDG="searchDGSpender";
+	sortColumns=
+	{	standard=("Todeszeitpunkt");
+	};
+
+};
+einverstaendnisDG=
+{	table="StammdatenEinverstaendnisArt";
+	columns=("ID","Name");
+	primaryKey="ID";
+	cache=YES;
+	connectionEnvAuto=YES;
+};
+mitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","extern");
+	primaryKey="ID";
+	bindToDG="donorsDG";
+	cache=YES;
+	connectionEnvAuto=YES;
+};
+primaerVerworfenDG=
+{	table="StammdatenVerwerfungsgrund";
+	columns=("ID","Name");
+	primaryKey="ID";
+	bindToDG="donorsDG";
+	cache=YES;
+};
+verwandschaftDG=
+{	columns=("Name");
+	primaryKey="Name";
+	data=(("Vater"),("Mutter"),("Bruder"),("Schwester"),("Sohn"),("Tochter"),("Ehepartner/Lebensgefaehrte"),("Nichte/Neffe"));
+};
+hhspenderDG=
+{	table="StammdatenHornhautspender";
+	write_table="StammdatenHornhautspender";
+	bindToDG=searchDG1;
+	columns=
+	(	"ID","Name", "PIZ", "Vorname","Geburtsdatum", "Anschrift", "PLZ", "Ort",  "Todeszeitpunkt", "IDTodesursache", "IDQuelle", "IDEntnahmemethodeR", "IDEntnahmemethodeL", "IDExplanteur", "weiblich", "Bemerkungen",
+		"IDEinverstaendnisArt", "EinverstaendnisEingeholt", "EinverstaendnisPerson", "NameAngehoeriger", "Koerpergroesse", "Koerpergewicht", "TransfusionenExpander", "TransfusionenSalin", "TransfusionenRinger",
+		"TransfusionenDextrose", "Transfusionen", "Sepsis", "Risikogruppe", "Leukaemie", "Immunsuppression", "Entnahmezeitpunkt", "Telefon", "IDVerwefungsgrundPrimary", "IDSterbeort", "KontraindikationChecked",
+		"IDZentrum", "ExternalID" , "ExternalDonor" , "IDMelder","gekuehlt", "OrtAngehoeriger","PLZAngehoeriger","AnschriftAngehoeriger","persoenlicher_kontakt", "gespraechsnotiz", "time_contact1", "time_contact2","praemortem_blut_anfordern"
+	);
+	types={	"ID"=int; "PIZ"=int; "Todeszeitpunkt"=time; "IDTodesursache"=int; "IDQuelle"=int; "IDEntnahmemethodeR"=int; "IDEntnahmemethodeL"=int; "IDExplanteur"=int; "weiblich"=bool; "IDEinverstaendnisArt"=int;
+			"EinverstaendnisEingeholt"=int; "Koerpergroesse"=int; "Koerpergewicht"=int; "TransfusionenExpander"=int; "TransfusionenSalin"=int; "TransfusionenRinger"=int; "TransfusionenDextrose"=int;
+			"KontraindikationChecked"=bool; "Immunsuppression"=bool; "IDVerwefungsgrundPrimary"=int; "IDSterbeort"=int; "Risikogruppe"=bool; "Leukaemie"=bool; "IDZentrum"=int; "IDZentrum"=int;
+			"Transfusionen"=int; "Sepsis"=bool; "ExternalDonor"=bool; "Entnahmezeitpunkt"=time;  "Geburtsdatum"=date; "IDMelder"=int; "gekuehlt"=bool; "persoenlicher_kontakt"=bool; "time_contact1"=date; "praemortem_blut_anfordern"=bool;
+			"time_contact2"=date;};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+
+augenklinikDG=
+{	table="Overview";
+	columns=("Datum","PIZ");
+	primaryKey="ID";
+	connection="dbi:Pg:dbname=Ambulanzpatienten;user=root;host=localhost";
+	bindFromColumn="PIZ"; bindToDG=donorsDG; targetColumn="PIZ";
+};
+
+
+blutanfordernDG=
+{	table="blutanforderungsliste";
+	columns=
+	(	"PIZ", "Name", "Vorname","Geburtsdatum" );
+	types={	 "PIZ"=int; "Geburtsdatum"=date;};
+	primaryKey="ID";
+	connectionEnv="dbweb_connectionstring_verstorben";
+};
+
+
+}</DisplayGroups>
+
+<perlfunc name="_earlyauto_">
+{	$DG::donorsDG->deleteFilter('open') if ($DG::donorsDG->hasWhere());
+}</perlfunc>
+
+
+<include src="hhb/login3.dgw">
+
+<perlfunc name="reload">
+{	$main::ENV{PATH} = '/HHB/bin'; 								#untaint
+	system('/HHB/bin/get_donors.pl');
+}</perlfunc>
+<perlfunc name="_onload_">
+{	invokePerlfunc('reload');
+}</perlfunc>
+
+<perlfunc name="copyRel">
+{	$DG::donorsDG->updateSelectionWithDict({'EinverstaendnisPerson' => $DG::donorsDG->valueOfSelectedField('AngehoerigenVerhaeltnis'),
+											'TelefoniertMit' => $DG::donorsDG->valueOfSelectedField('NameAngehoeriger'),
+											'ZeitpunktErsterKontaktaufnahme' => currentTimeString() } );
+}</perlfunc>
+
+<perlfunc name="allesMarkieren">
+{	my $sdict=$DG::donorsDG->selectedDict();
+	my $ddict={};
+	for (keys %{ $sdict}) {$ddict->{$_}=1 if($_=~/^KI/)} ;
+	$DG::donorsDG->updateSelectionWithDict ( $ddict );
+
+}</perlfunc>
+
+<perlfunc name="transfer">
+{	my $sdict=$DG::donorsDG->dictsForWhereClauseDictRaw({ID=> $DG::donorsDG->selectedPK()}, undef, 1)->[0];
+use Data::Dumper;
+warn Dumper $sdict;
+	my $ddict={};
+	map { $ddict->{$_}=$sdict->{$_} if(defined $sdict->{$_} ) } ( @{ $DG::hhspenderDG->{columns} } ) ;	# kopieren
+	$ddict->{time_contact1}=$ddict->{ZeitpunktErsterKontaktaufnahme};
+	delete $ddict->{ZeitpunktErsterKontaktaufnahme};
+	delete $ddict->{ID};																				# aber id natuerlich nicht
+	$ddict->{PIZ}=substr($ddict->{PIZ},0,8);
+	$DG::hhspenderDG->insertDict($ddict) unless $DG::hhspenderDG->dictsForWhereClauseDictRaw($ddict);	#duplikate vermeiden
+
+	$DG::donorsDG->updateSelectionWithDict ( {'PosEinverstaendnis' => 1 } );
+
+# <!> bluttests anlegen
+#	my $allTests= $DG::allTestsDG->allDicts();
+#	$DG::bluttestsSpenderDG->insertDict({'BefundID'=> $_->{'ID'}, 'BriefID'=>$pk } ) for (@{$allTests});
+
+}</perlfunc>
+
+<perlfunc name="hide">
+{	$DG::donorsDG->updateSelectionWithDict ( {'PosEinverstaendnis' => 1 } );
+}</perlfunc>
+
+<perlfunc name="print" include="pdfgen.pl">
+{	my $arr=$DG::donorsDG->dictsForFilter('open');
+
+	foreach my $currEntry ( @{$arr} )
+	{	$currEntry->{Geburtsdatum}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/$3.$2.$1/go;
+
+		$currEntry->{MedizinischeDiagnosen}=~ s/\s+/ /ogs;
+		$currEntry->{MedizinischeDiagnosen}=~ s/, nicht n.her bezeichnet/ /ogs;
+		$currEntry->{MedizinischeDiagnosen}=~ s/, Lokalisation nicht n.her bezeichnet/ /ogs;
+		$currEntry->{MedizinischeDiagnosen}=~ s/, als (.*?) bezeichnet/ /ogs;
+		$currEntry->{MedizinischeDiagnosen}=~ s/, anderenorts nicht klassifiziert/ /ogs;
+		$currEntry->{MedizinischeDiagnosen}=~ s/: Nicht n.her bezeichnete Lokalisation/ /ogs;
+		$currEntry->{MedizinischeDiagnosen}=~ s/: Nicht n.her bezeichnet/ /ogs;
+		$currEntry->{MedizinischeDiagnosen}=~ s/nicht n.her/ /iogs;
+		$currEntry->{MedizinischeDiagnosen}=~ s/[\(\[].+?[\)\]]//ogs;
+		$currEntry->{MedizinischeDiagnosen}=~ s/ sonstiger n.her bezeichneter Lokalisationen/ /ogs;
+		foreach my $key (keys %$currEntry) {$currEntry->{$key}=~s/[&\\%]+/ /ogs};
+	}
+	LPRPrint(PDFForTemplateAndRef(getRessource('formulare/donorstemplate.tex'), $arr), 'LionsHHB', 1, 'sides=two-sided-short-edge -o media=LargeCapacity');
+
+}</perlfunc>
+
+<perlfunc name="statistik"  include="xlsgen.pl">
+{	my $sql = 'select * from (select date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt") as "Jahr", (date_part(\'quarter\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")) as "Quartal", count("StammdatenHornhautspender"."ID"), "StammdatenVerwerfungsgrund"."Name" from "StammdatenHornhautspender" join "StammdatenVerwerfungsgrund" on ("IDVerwefungsgrundPrimary"="StammdatenVerwerfungsgrund"."ID") group by date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt"), date_part(\'quarter\'::text, "StammdatenHornhautspender"."Todeszeitpunkt"), "StammdatenVerwerfungsgrund"."Name") a order by "Jahr","Quartal","Name"';
+	my $dbh = dbweb::getDBHForDG($DG::donorsDG);
+	returnXLSForSQLandDBH($sql,$dbh);
+}</perlfunc>
+
+<perlfunc name="blutanfordern"  include="pdfgen.pl">
+{	my $listR=$DG::blutanfordernDG->allDicts();
+	my $template=getRessource('formulare/mibitemplate.tex');
+	my $ddict= { list=> $listR, Date=>$date };
+	returnPDF(PDFForTemplateNameAndRef('hhb/formulare/blutanforderungstemplate.tex', $ddict));
+}</perlfunc>

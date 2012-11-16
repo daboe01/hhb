@@ -1,0 +1,615 @@
+<comment>
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+todo:
+warning on alloc on unsteril
+
+HLA-MM wie in failed Corneas-> extra mismatch
+
+</comment>
+
+<include src="hhb/faces.html">
+
+<table>
+<td valign=top>
+	<table class="datatable" width="350px">
+		<caption>Kultivierte Hornh&auml;ute</caption>
+		<th>Sp</th>
+		<th>A</th>
+		<th>KDges.</th>
+		<th>#</th>
+		<th>KD akt.</th>
+		<th>EZD</th>
+		<th>Sero</th>
+		<th>Ater</th>
+		<th>C</th>
+		<foreach:kultiviertDG.free classnameVar="IDLetztesMedium">
+			<tr>
+			<td><var:IDSpender format:link="spender.spDG"></td>
+			<td><var:Auge></td>
+			<td><var:KulturdauerGesamt></td>
+			<td><var:ZahlMedienwechsel></td>
+			<td><var:DatumLetzterMedienwechsel format:date="%d.%m.%y"></td>
+			<td><var:LetzteEZDNekrosen></td>
+			<td><var:ZahlNegativerTests></td>
+			<td><var:SpenderAlter></td>
+			<td><var:olc></td>
+			</tr>
+		</foreach>
+	</table> 
+	<table class="datatable" width="100%">
+		<caption>HLAMatcher</caption>
+		<tr>
+		<th>MM</th>
+		<th>&nbsp;</th>
+		<th>M</th>
+		<th>WZ</th>
+		<th>P</th>
+		<th>Name</th>
+		<th>Vorname</th>
+		<th>Alter</th>
+		</tr>
+		<foreach:allMatchesDG.HLA>
+			<tr>
+			<td><var:MProp1></td>
+			<td>&nbsp;</td>
+			<td><var:MaxHLAMismatches></td>
+			<td><var:WZ></td>
+			<td><var:privat></td>
+			<td><var:Name></td>
+			<td><var:Vorname></td>
+			<td><var:PatAlter></td>
+			</tr>
+		</foreach>
+		<condDG:allMatchesDG.HLA selection=empty>
+			<tr><td colspan="8" style="font-style: italic; color:#360; text-align:center;"> - No HLA (broad) matches - </td></tr>
+		</condDG:allMatchesDG>
+		<tr>
+		<th>TM</th>
+		<th>DR</th>
+		<th>M</th>
+		<th>WZ</th>
+		<th>P</th>
+		<th>Name</th>
+		<th>Vorname</th>
+		<th>Alter</th>
+		</tr>
+		<foreach:allMatchesDG.Triplet>
+			<tr>
+			<td><var:MProp1></td>
+			<td><var:MProp2></td>
+			<td><var:MaxHLAMismatches"></td>
+			<td><var:WZ></td>
+			<td><var:privat></td>
+			<td><var:Name></td>
+			<td><var:Vorname></td>
+			<td><var:PatAlter></td>
+			</tr>
+		</foreach>
+		<condDG:allMatchesDG.Triplet selection=empty>
+			<tr><td colspan="8" style="font-style: italic; color:#360; text-align:center;"> - No HLA class 1 triplet matches - </td></tr>
+		</condDG:allMatchesDG>
+	</table>
+	<table class="datatable" width="100%">
+		<caption>Match-Alternativen</caption>
+		<tr>
+		<th>Sp</th>
+		<th>MM</th>
+		<th>&nbsp;</th>
+		</tr>
+		<foreach:patMatchesDG.HLA>
+			<tr>
+			<td><var:IDOrgankultur lookup="organkulturDG.IDSpender"> <var:IDOrgankultur lookup="organkulturDG.Auge"></td>
+			<td><var:MProp1></td>
+			<td>&nbsp;</td>
+			</tr>
+		</foreach>
+		<tr>
+		<th>Sp</th>
+		<th>TM</th>
+		<th>DR</th>
+		</tr>
+		<foreach:patMatchesDG.Triplet>
+			<tr>
+			<td><var:IDOrgankultur lookup="organkulturDG.IDSpender"> <var:IDOrgankultur lookup="organkulturDG.Auge"></td>
+			<td><var:MProp1></td>
+			<td><var:MProp2></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<table:allMatchesDG.Random rows="38">
+		<caption>Warten (random)</caption>
+		<head>
+			<col:30px> WZ </col>
+			<col:10px> P </col>
+			<col:30px> FCY </col>
+			<col:80px> Name </col>
+			<col:80px> Vorname </col>
+			<col:30px> Alter </col>
+		</head>	
+		<foreach>
+			<cell><var:WZ></cell>
+			<cell><var:privat></cell>
+			<cell><var:WLID format:lookup="fancynrDG.info"></cell>
+			<cell><var:Name></cell>
+			<cell><var:Vorname></cell>
+			<cell><var:PatAlter></cell>
+		</foreach>
+	</table:allMatchesDG>
+</td>
+<td valign=top>
+	<table:allMatchesDG.lowmatch rows="38">
+		<caption>Warten (2MM)</caption>
+		<head>
+			<col:30px> WZ </col>
+			<col:10px> P </col>
+			<col:80px> Name </col>
+			<col:80px> Vorname </col>
+			<col:30px> Alter </col>
+		</head>	
+		<foreach>
+				<cell><var:WZ></cell>
+				<cell><var:privat></cell>
+				<cell><var:Name></cell>
+				<cell><var:Vorname></cell>
+				<cell><var:PatAlter></cell>
+		</foreach>
+	</table:allMatchesDG>
+</td>
+<td valign=top>
+
+	<foreach:wartelisteDG></foreach>
+	<foreach:patDG></foreach>
+
+	<form:patDG  label="Empfaenger">
+		<var:Name edittype=text label="Name">
+		<var:Vorname edittype=text label="Vorname">
+		<var:Geburtsdatum edittype=text label="Geburtsdatum" format:date="%d.%m.%Y">
+		<var:PLZ edittype=text label="PLZ   / Ort" size="5">
+		<var:Ort edittype=text size="12">
+		<var:Telefon1 edittype=text label="Telefon" size="8">
+		<var:Telefon2 edittype=text size="8">
+		<button:WL class="btn" format:ajax="on" perl="jumpToWL">
+	</form>
+	<form:wartelisteDG label="Warteliste">
+		<var:Auge edittype=text size="3" label="Auge / Prio">
+		<var:Prioritaet edittype=popup lookup="prioDG.Text">
+		<var:Privatpatient edittype=boolean label="P / Zentrum">
+		<var:IDZentrum edittype=popup lookup="allCentersDG.ZentrumName"><br>
+		<var:StartWarteliste edittype=text label="Start / KP ab Datum" size="12" format:date="%d.%m.%Y">
+		<var:KpAbDatum edittype=text size="12" format:date="%d.%m.%Y">
+		<var:IDOPIndikationsdiagnose edittype=popup lookup="wlPropertiesDG.AugenDiags.Name" label="OP Indikation">
+		<var:Narkosefrom edittype=popup lookup="narkoseDG.Text" label="Narkose"><br>
+		<var:IDOPArt edittype=popup lookup="opverfahrenDG.OPArt" label="OP-Verfahren">
+		<var:IDOperateur edittype=popup lookup="mitarbeiterDG.operiert.Name" label="Operateur/ max. HLA-MM"">
+		<var:MaxHLAMismatches edittype=text size="3">
+		<var:Bemerkungen edittype=textarea label="Bemerkungen" cols="37" rows="6">
+	</form>
+
+	<foreach:externalDG></foreach>
+	<foreach:zentrAnschrDG.rechAdr></foreach>
+
+	<condDG:zentrAnschrDG.rechAdr count="gt:const:1">
+		<form:externalDG label="Rechnung">
+				<var:AdressID edittype=popup format:lookup="zentrAnschrDG.rechAdr.Name" format:notNull="YES">
+		</form>
+	</condDG:zentrAnschrDG>
+	<form:wartelisteDG label="Allozieren">
+		<var:EndeWarteliste edittype=text editmode=inplace format:label="OP Datum" size="12" format:date="%d.%m.%Y">
+		<button:Alloc class="btn primary" perl="doAlloc" format:ajax="on" confirm="Wirklich allocieren?">
+		<table class="datatable">
+			<foreach:allocWarningsDG classnameVar="color">
+				<tr>
+					<td><var:WarnungsText"></td>
+				</tr>
+			</foreach>
+		</table>
+	</form>
+	<button:WZ class="btn" format:ajax="on" perl="calcWZ">
+	<table class="datatable">
+		<foreach:wzDG>
+			<tr>
+				<td><var:mm"></td>
+				<td><var:ErwarteteWartezeit"></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+</table>
+</body>
+</html>
+
+
+<DisplayGroups>{
+spDG=
+{	table="StammdatenHornhautspender";
+	write_table="StammdatenHornhautspender";
+	bindToDG=searchDG1;
+	columns=
+	(	"ID","PIZ","Name","Vorname","Geburtsdatum", "Anschrift", "PLZ", "Ort",  "Todeszeitpunkt", "IDTodesursache", "IDQuelle", "IDEntnahmemethodeR", "IDEntnahmemethodeL", "IDExplanteur", "weiblich", "Bemerkungen",
+		"IDEinverstaendnisArt", "EinverstaendnisEingeholt", "EinverstaendnisPerson", "NameAngehoeriger", "Koerpergroesse", "Koerpergewicht", "TransfusionenExpander", "TransfusionenSalin", "TransfusionenRinger",
+		"TransfusionenDextrose", "Transfusionen", "Sepsis", "Risikogruppe", "Leukaemie", "Immunsuppression", "Entnahmezeitpunkt", "Telefon", "IDVerwefungsgrundPrimary", "IDSterbeort", "KontraindikationChecked",
+		"IDZentrum", "ExternalID" , "ExternalDonor" , "IDMelder","gekuehlt", "OrtAngehoeriger","PLZAngehoeriger","AnschriftAngehoeriger","persoenlicher_kontakt", "gespraechsnotiz", "time_contact1", "time_contact2", "einwilligung_forschung",
+		"IDSpenderidentifikationDurch","IDSpenderidentifikationMittels", "IDPraemortemBlut", "id_vorops_r", "id_vorops_l","gesperrt"
+	);
+	types={	"ID"=int; "PIZ"=int; "Todeszeitpunkt"=time; "IDTodesursache"=int; "IDQuelle"=int; "IDEntnahmemethodeR"=int; "IDEntnahmemethodeL"=int; "IDExplanteur"=int; "weiblich"=bool; "IDEinverstaendnisArt"=int;
+			"EinverstaendnisEingeholt"=int; "Koerpergroesse"=int; "Koerpergewicht"=int; "TransfusionenExpander"=int; "TransfusionenSalin"=int; "TransfusionenRinger"=int; "TransfusionenDextrose"=int;
+			"KontraindikationChecked"=bool; "Immunsuppression"=bool; "IDVerwefungsgrundPrimary"=int; "IDSterbeort"=int; "Risikogruppe"=bool; "Leukaemie"=bool; "IDZentrum"=int; "IDZentrum"=int;
+			"Transfusionen"=int; "Sepsis"=bool; "ExternalDonor"=bool; "Entnahmezeitpunkt"=time;  "Geburtsdatum"=date; "IDMelder"=int; "gekuehlt"=bool; "persoenlicher_kontakt"=bool; "time_contact1"=date; "einwilligung_forschung"=int;
+			"time_contact2"=date; "IDSpenderidentifikationDurch"=int; "IDSpenderidentifikationMittels"=int; "IDPraemortemBlut"=int; "id_vorops_r"=int; "id_vorops_l"=int;"gesperrt"=bool;};
+
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+
+serologieCount=
+{	table="ErforderlicheZahlNegativerTests";
+	columns=("count");
+	types={"count"=int; };
+	connectionEnvAuto=YES;
+	cache=YES;
+};
+serologiePositiv=
+{	table="PositiveTests";
+	columns=("IDSpender","Test");
+	types={"IDSpender"=int; };
+	bindFromColumn="IDSpender"; bindToDG="kultiviertDG"; targetColumn="IDSpender";
+};
+mwBlocking=
+{	table="blocking_medienwechsel";
+	columns=("IDOrgankultur","name","block_op_arten");
+	types={"IDOrgankultur"=int; };
+	connectionEnvAuto=YES;
+};
+mwNonBlocking=
+{	table="nonblocking_medienwechsel";
+	columns=("IDOrgankultur","name","block_op_arten");
+	types={"IDOrgankultur"=int; };
+	connectionEnvAuto=YES;
+};
+
+kultiviertDG=
+{	table="KultivierteHornhaeute";
+	columns=
+	(	"IDOrgankultur","IDSpender","IDWarteliste","Auge","KulturdauerGesamt","KulturdauerAktuell","LetzteEZD", "LetzteEZDNekrosen", "DatumLetzteEZD","ZahlMedienwechsel",
+		"ZahlNegativerTests","SpenderAlter","PostMortemZeit","KontraindikationChecked","DatumLetzterMedienwechsel","DatumLetzteMiBi", "IDLetztesMedium",
+		"narben","SpenderWeiblich", "Expressbefundung","olc"
+	);
+	types={"IDWarteliste"=int; };
+	filters=
+	{	free= {col="IDWarteliste";op="eqnull";};
+		alloc={col="IDWarteliste";op=">";val="0";};
+	}
+	primaryKey="IDOrgankultur";
+	connectionEnvAuto=YES;
+	cache=YES;
+};
+organkulturDG=
+{	table="Organkultur";
+	columns=("ID","IDSpender", "Auge","IDWarteliste","EndOfCulture", "olc");
+	types={"ID"=int; "IDSpender"=int; "IDWarteliste"=int; "EndOfCulture"=int;};
+	primaryKey="ID";
+	bindFromColumn="ID"; bindToDG="kultiviertDG"; targetColumn="IDOrgankultur";
+};
+
+
+allMatchesDG=
+{	table="AllMatchesVerbose";
+	columns=
+	(	"Matchmode","WLID","MProp1","MProp2","WZ","IDPatient","IDOrgankultur","allocIDOrgankultur","Name","Vorname","PatAlter","IDZentrum","MaxHLAMismatches","privat","operateur"
+	);
+	filters=
+	{	HLA=({col="Matchmode";op="eq";val="2"},		{col="allocIDOrgankultur";op="eqnull";});
+		Triplet=({col="Matchmode";op="eq";val="1"},	{col="allocIDOrgankultur";op="eqnull";});
+		Random=({col="Matchmode";op="eq";val="3"},	{col="allocIDOrgankultur";op="eqnull";},{col="MProp1";op=">";val="2"}, {col="IDOrgankultur";op="eqnull";});
+		lowmatch=({col="Matchmode";op="eq";val="3"},{col="allocIDOrgankultur";op="eqnull";},{col="MProp1";op="<= ";  val="2"}, {col="IDOrgankultur";op="eqnull";});
+		free=({col="allocIDOrgankultur";op="eqnull";});
+	};
+	primaryKey="WLID";
+	bindFromColumn="IDOrgankultur"; bindToDG="kultiviertDG";
+	types={"WLID"=int; "allocIDOrgankultur"=int;"IDOrgankultur"=int; "Matchmode"=int; "MProp1"=int;};
+	cache=YES;
+};
+
+patMatchesDG=
+{	columns=("Matchmode","WLID","MProp1","MProp2","WZ","IDPatient","IDOrgankultur","allocIDOrgankultur","Name","Vorname","PatAlter","IDZentrum","MaxHLAMismatches","privat","operateur");
+	filters=
+	{	HLA=({col="Matchmode";		op="eq";	val="2"},	{col="allocIDOrgankultur";op="eqnull";});
+		Triplet=({col="Matchmode";	op="eq";	val="1"},	{col="allocIDOrgankultur";op="eqnull";});
+	};
+	primaryKey="WLID";
+	bindFromColumn="WLID"; bindToDG="wartelisteDG";
+	cache=YES;
+};
+
+
+wartelisteDG=
+{	table="Warteliste";
+	columns=("ID","PatientID","IDZentrum","WartenAktiviert","StartWarteliste","EndeWarteliste","IDZentrum", "KpAbDatum","Narkosefrom","Prioritaet", "KeratoplastikAuge","KeratoplastikGesamt","Auge","MaxHLAMismatches",
+	"GrundExitWL","Privatpatient","TransplantationenGesamt","TransfusionenGesamt","SchwangerschaftenGesamt","IDOperateur","TrepanTp","TrepanPat","IDOPArt","IDMeldenderArzt","ExternGemeldet","IDVermittelndesZentrum",
+	"IDOrgankultur","IDOPIndikationsdiagnose","Bemerkungen","MMBestaetigt","fancy_nummer");
+	primaryKey="ID";
+	bindFromColumn="ID"; bindToDG="allMatchesDG";
+	types={"ID"=int; "PatientID"=int; "IDZentrum"=int; "WartenAktiviert"=bool; "StartWarteliste"=date; "EndeWarteliste"=date;
+			"IDZentrum"=int; "KpAbDatum"=date;  "Narkosefrom"=int; "Prioritaet"=int; "KeratoplastikAuge"=int; "KeratoplastikGesamt"=int;
+			"MaxHLAMismatches"=int; "GrundExitWL"=int; "Privatpatient"=int; "TransplantationenGesamt"=int; "TransfusionenGesamt"=int; 
+			"SchwangerschaftenGesamt"=int; "IDOperateur"=int; "IDOPArt"=int; "IDMeldenderArzt"=int; "ExternGemeldet"=int;
+			"IDVermittelndesZentrum"=int; "IDOrgankultur"=int; "IDOPIndikationsdiagnose"=int; "MMBestaetigt"=bool; };
+
+};
+mitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","extern","operiert");
+	types={"ID"=int; "operiert"=bool; "extern"=bool;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+ 	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+	filters=
+	{	operiert=  {col="operiert";op="eq";val="1"};
+	}
+};
+
+patDG=
+{	table="StammdatenPatient";
+	columns=
+	(	"ID","Name","Vorname","Geburtsdatum", "Anschrift", "PLZ", "Ort", "weiblich", "Telefon1", "Telefon2", "VerstorbenAm", "PIZ", "ExternalID", "IDZentrum"
+	);
+	types={"ID"=int;  "ExternalID"=int; "IDZentrum"=int;};
+	primaryKey="ID";
+	bindFromColumn="ID"; bindToDG="wartelisteDG"; targetColumn="PatientID";
+};
+narkoseDG=
+{	table="StammdatenNarkose";
+	columns=("ID","Text");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+opverfahrenDG=
+{	table="StammdatenOPVerfahren";
+	columns=("ID","OPArt");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+prioDG=
+{	table="StammdatenPrioritaet";
+	columns=("ID","Text");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+allCentersDG=
+{	table="WartelisteZentren";
+	types={"ID"=int;};
+	columns=("ID","ZentrumName");
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+wlPropertiesDG=
+{	table="AufnahmeDiagnoseKategorie";
+	columns=("ID","DiagnoseID","Name","Auge","StationaerID","Kategorie1","Parameter");
+	types={"ID"=int; "Kategorie1"=int; "StationaerID"=int; };
+	primaryKey="ID";
+	bindFromColumn="StationaerID"; bindToDG="wartelisteDG";
+	filters=
+	{	AugenDiags={col="Kategorie1";op="eq";val="1"};
+		studien= {col="Kategorie1";op="eq";val="5"};
+
+	};
+};
+allocWarningsDG=
+{	columns=("IDOrgankultur","WarnungsText","Critical","color");
+	primaryKey="IDOrgankultur";
+	bindToDG="kultiviertDG"; bindFromColumn="IDOrgankultur";
+	cache=YES;
+};
+fancynrDG=
+{	columns=("ID","info");
+	table="fancy_nummer";
+	types={"ID"=int; };
+	primaryKey="ID";
+	bindToDG="kultiviertDG";
+cache=YES;
+};
+nameMediumDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("1","M1"),("2","M2"));
+};
+
+rechnungsDG=
+{	table="Transplantatversand";
+	columns=("ID","Rechnungsbetrag","RechnungBezahlt","IDOrgankultur","TransportDatum","IDRechnungsadresse","IDWL","Notfall", "IDVersandadresse","Rechnungsnummer");
+	types={"ID"=int; "Rechnungsbetrag"=int; "RechnungBezahlt"=int; "IDOrgankultur"=int; "TransportDatum"=time; "IDRechnungsadresse"=int; 
+			"IDWL"=int;	"Notfall"=bool; "IDVersandadresse"=int; "Rechnungsnummer"=int; };
+	primaryKey="ID";
+	bindFromColumn="IDOrgankultur"; bindToDG="kultiviertDG";
+};
+
+zentrAnschrDG=
+{	table="Zentrumsanschrift";
+	columns=("ID","Anrede","Titel","Name","Anschrift1","Anschrift2","PLZ", "Ort","Land","Kurzname", "Langanrede","Typ","Tel","Fax","IDZentrum");
+	primaryKey="ID";
+	bindFromColumn="IDZentrum"; bindToDG="wartelisteDG"; targetColumn="IDZentrum";
+	types={"ID"=int; "Typ"=int; "IDZentrum"=int; };
+	filters=
+	{	rechAdr= {col="Typ";op="eq";val="2";};
+	}
+};
+zentrenDG=
+{	table="WartelisteZentren";
+	columns=
+	(	"ID", "PreisRandom", "PreisMatch", "PreisTektonisch"
+	);
+	types={"ID"=int; "PreisRandom"=int; "PreisRandom"=int; "PreisTektonisch"=int; };
+	bindToDG="wartelisteDG";
+	primaryKey="ID";
+};
+
+externalDG=
+{	columns=("ID","AdressID");
+	primaryKey="ID";
+	cache=YES;
+};
+medienwechsel=
+{	table="MedienWechselLast";
+	write_table="Mediumwechsel";
+	columns=("ID","IDOrgankultur","KulturEinDatum","KulturAusDatum");
+	types={"ID"=int; "IDOrgankultur"=int; "KulturEinDatum"= time;  "KulturAusDatum"=time;  };
+	primaryKey="ID";
+	bindFromColumn="IDOrgankultur"; bindToDG="kultiviertDG"; targetColumn="IDOrgankultur";
+};
+
+
+HLAA1MaleDonors=
+{	table="HLAA1MaleDonors";
+	columns=("SpenderID");
+	primaryKey="SpenderID";
+	bindToDG="allMatchesDG";
+	cache=YES;
+};
+
+}</DisplayGroups>
+
+<perlfunc name="doAlloc">
+{	$DG::kultiviertDG->startTransaction();
+
+	my $IDOrgankultur=$DG::kultiviertDG->valueOfSelectedField('IDOrgankultur');
+	my $IDWL=$DG::wartelisteDG->selectedPK();
+	my $IDZentrum=$DG::wartelisteDG->valueOfSelectedField('IDZentrum');
+	my $zentrum=$DG::zentrenDG->dictsForWhereClauseDictRaw({'ID' => $IDZentrum})->[0];
+	$DG::allMatchesDG->updateSelectionWithDict({'allocIDOrgankultur' => $IDOrgankultur}, {cacheOnly=>1});
+	$DG::organkulturDG->updatePKWithDict($IDOrgankultur, {'IDWarteliste' => $IDWL} );
+	$DG::kultiviertDG->updateSelectionWithDict({'IDWarteliste' => $IDWL} , {cacheOnly=>1});
+	$DG::wartelisteDG->updateSelectionWithDict({'WartenAktiviert' => '0', 'IDOrgankultur' => $IDOrgankultur,'GrundExitWL'=> '1'});
+	my $IDletzterMW=$DG::medienwechsel->dictsForWhereClauseDict({'IDOrgankultur' => $IDOrgankultur})->[0]->{ID};
+	$DG::medienwechsel->updatePKWithDict($IDletzterMW,{KulturAusDatum=>$DG::wartelisteDG->valueOfSelectedField('EndeWarteliste')});
+
+
+	# externer Patient-> Rechung erzeugen
+	if($IDZentrum ne '1')	# externer EmpfŠnger? -> Rechnung schreiben
+	{	unless($DG::rechnungsDG->dictsForWhereClauseDictRaw( {'IDOrgankultur'=>$IDOrgankultur} ))
+		{	my $maxMM=$DG::wartelisteDG->selectedDict()->{MaxHLAMismatches};
+			my $preis=$maxMM <= 2? $zentrum->{PreisMatch} : $zentrum->{PreisRandom};
+			my $zweck=$DG::wartelisteDG->valueOfPath('opverfahrenDG.OPArt@IDOPArt');
+			$preis=$zentrum->{PreisTektonisch} if($zweck=~/deckend/i );
+			my $addrID=$DG::externalDG->dictForPK(0)->{AdressID};
+			$DG::rechnungsDG->insertDict( {	Rechnungsbetrag=> $preis,
+											IDRechnungsadresse=> $addrID, IDVersandadresse=> $addrID,
+											IDOrgankultur=> $IDOrgankultur, IDWL => $IDWL,
+											TransportDatum=> $DG::wartelisteDG->valueOfSelectedField('EndeWarteliste') } );
+		} else
+		{	warn 'rechnung scheint zu existieren';
+			# <!> vorhandene Rechung lšschen
+		}
+	}
+	$DG::kultiviertDG->invalidateSelection();
+	$DG::allMatchesDG->invalidateSelection();
+	$DG::kultiviertDG->commitTransaction();
+}</perlfunc>
+
+<include src="hhb/login3.dgw">
+
+<perlfunc name="_auto_">
+{	disableButton('Alloc') if($DG::allocWarningsDG->dictsForWhereClauseDictRaw({Critical=>1}));	# kritische warnungen drinne
+}</perlfunc>
+
+ <comment> ######  Warnungen erzeugen  ######
+</comment>
+<perlfunc name="_earlyauto_">
+{	my	$sok=$DG::kultiviertDG->selectedDict({filter=>'free', boost=>1});
+	my	$aok=$DG::allMatchesDG->selectedDict({filter=>'HLA', boost=>1});
+		$aok=$DG::allMatchesDG->selectedDict({filter=>'Triplet', boost=>1}) unless $aok;
+		$aok=$DG::allMatchesDG->selectedDict({filter=>'lowmatch', boost=>1}) unless $aok;
+		$aok=$DG::allMatchesDG->selectedDict({filter=>'Random', boost=>1}) unless $aok;
+	my	$wkl=$DG::wartelisteDG->selectedDict({boost=>1});
+	my	$mmm=$wkl->{MaxHLAMismatches};
+	my	$std=$DG::wlPropertiesDG->selectedDict({filter=>'studien', boost=>1});
+	my	$ser=$DG::serologieCount->allDicts()->[0]->{count};
+	my	$don=$DG::spDG->dictForPK( $sok->{IDSpender} );
+
+	# force valid rech adress in in-memory dg
+	$DG::externalDG->appendDictToCache({ID=>'0'}) unless $DG::externalDG->allDicts();
+	my $idzentrum=$wkl->{IDZentrum};
+	my $adicts=$DG::zentrAnschrDG->dictsForWhereClauseDict({IDZentrum=>$idzentrum, Typ=>2 });
+	my $addrID=$adicts? $adicts->[0]->{ID} : undef;
+	my $currAddrID=$DG::externalDG->dictForPK(0)->{AdressID};
+	$DG::externalDG->updatePKWithDict(0, {AdressID=>$addrID} )
+		if(!length $currAddrID || $DG::zentrAnschrDG->dictForPK($currAddrID)->{IDZentrum} !=  $idzentrum);
+
+	$DG::allocWarningsDG->clearCache();
+
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Keine Rechnungsadresse angegeben!', Critical=>1})
+		if(!(length $addrID) && $idzentrum!=1);
+
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Matchanforderung bestaetigt?', Critical=>1})
+		if(!$wkl->{MMBestaetigt});
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Spender gesperrt!', Critical=>1})
+		if($don->{gesperrt});
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Todesursache unklar!', Critical=>1})
+		if($don->{IDTodesursache}==15);
+
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Serologie', Critical=>1})
+		if($sok->{ZahlNegativerTests} < $ser);
+	my $d=$DG::serologiePositiv-> dictsForWhereClauseDictRaw({IDSpender=>$sok->{IDSpender}});
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Sero: '.$_->{Test}.'!', Critical=>0})
+		for( @$d);
+
+	my $opart= $wkl->{IDOPArt};
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Befundung: '.$_->{name}.'!', Critical=> 0 })
+		for grep {$_->{block_op_arten}=~/\b$opart\b/}
+		@{$DG::mwBlocking->dictsForWhereClauseDictRaw( {IDOrgankultur=> $sok->{IDOrgankultur} } )};
+	my $nbmw=$DG::mwNonBlocking->dictsForWhereClauseDictRaw( {IDOrgankultur=> $sok->{IDOrgankultur} } );
+	if($nbmw){
+		$DG::allocWarningsDG->appendDictToCache({color=>1, IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Tp: '.$_->{name}, Critical=> 0 }) for @{$nbmw};
+	}
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'KP noch nicht', Critical=>1})
+		if($wkl->{KpAbDatum} gt currentTimeString());
+
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Studie ('.$std->{Name}.')!', Critical=>0})
+		if($std);
+
+# <!> constraint op-datum und kultur-ein (Critical=>1)
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Altersunterschied', Critical=>0})
+		if($sok->{SpenderAlter} - $aok->{PatAlter} >20 );
+
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'H-Y/HLA-A1', Critical=>0}) if($DG::HLAA1MaleDonors->dictsForWhereClauseDictRaw({ SpenderID=> $sok->{IDSpender} }) && $DG::patDG->selectedDict({boost=>1})->{weiblich} );
+	my $ammr=$DG::allMatchesDG->dictsForWhereClauseDictRaw({WLID=>$wkl->{ID}, Matchmode=> 2, IDOrgankultur=>$sok->{IDOrgankultur} });
+	my $amm;
+	$amm=$ammr->[0]->{MProp1} if $ammr;
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Zu viele MM', Critical=>0}) if( $amm > $mmm || $mmm <= 2 && (!length $amm) );
+	$DG::allocWarningsDG->appendDictToCache({IDOrgankultur=>$sok->{IDOrgankultur}, WarnungsText=>'Narben', Critical=>0}) if( $sok->{narben} );	# legacy...
+}</perlfunc>
+
+<perlfunc name="_onload_">
+{	$DG::allMatchesDG->clearCache();
+	$DG::patMatchesDG->clearCache();
+	$DG::kultiviertDG->clearCache();
+
+	$DG::patMatchesDG->copyCacheFromDG($DG::allMatchesDG);
+}</perlfunc>
+
+<perlfunc name="jumpToWL">
+{	redirectToAppDGPK('warteliste','wartelisteDG',$DG::wartelisteDG->selectedPK());
+}</perlfunc>
+
+<include src="hhb/wartezeit.dgw">

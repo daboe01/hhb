@@ -1,0 +1,27 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage{supertabular}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+\CenterWallPaper{1}{<var:backimg>}
+\setlength{\headheight}{25\baselineskip}
+\setlength{\textheight} {155mm}
+
+\begin{document}
+
+\renewcommand{\arraystretch}{1.713}
+
+
+{\huge
+\begin{supertabular}{p{4cm}p{1cm}l}
+<foreach:list>
+<var:ID> & <var:m> & <var:Gebdat> \\ 
+</foreach:list>
+\end{tabular}
+}
+\end{document}

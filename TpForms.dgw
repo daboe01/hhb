@@ -1,0 +1,368 @@
+<comment>
+  Transplantatformulare: created 29.4.08 by dr. boehringer (refact.)
+	Transplantatbogen, Rechunung, BIS-Meldung (Tp).
+	Erwartet die Präsenz von wartelisteDG mit entsprechender selektion, um das zu druckende transplantat auszuwählen
+</comment>
+
+<DisplayGroups>{
+
+wartelisteUebersichtDG=
+{	table="WartelisteUebersicht";
+	columns=("WLID","PatientID", "Name", "Vorname","Geburtsdatum","IDZentrum", "EndeWarteliste", "KeratoplastikAuge","KeratoplastikGesamt","Auge","MaxHLAMismatches","TransplantationenGesamt","TransfusionenGesamt",
+			"SchwangerschaftenGesamt","IDOperateur","TrepanTp","TrepanPat","IDOPArt","IDMeldenderArzt","IDOrgankultur", "IDTrepanart","IDOPIndikationsdiagnose","Bemerkungen","weiblich");
+	primaryKey="WLID";
+	types={"WLID"=int;};
+	bindFromColumn="WLID"; bindToDG= wartelisteDG;
+};
+wlPropertiesDG=
+{	table="AufnahmeDiagnoseKategorie";
+	columns=("ID","DiagnoseID","Name","Auge","StationaerID","Kategorie1","Parameter");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindFromColumn="StationaerID"; bindToDG="wartelisteDG";
+};
+zentrenDG=
+{	table="WartelisteZentren";
+	columns=
+	(	"ID","ZentrumName", "MeldetPatienten", "PreisRandom", "PreisMatch", "PreisTektonisch", "KostentraegerTransport", "VermitteltPatienten", "RegistryEmail"
+	);
+	types={"ID"=int; "MeldetPatienten"=bool; "PreisRandom"=int; "PreisMatch"=int; "PreisTektonisch"=int; "KostentraegerTransport"=bool; "VermitteltPatienten"=bool; };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+rechnungsDG=
+{	table="Transplantatversand";
+	columns=("ID","Rechnungsbetrag","RechnungBezahlt","IDOrgankultur","TransportDatum","IDRechnungsadresse","IDWL","Notfall", "IDVersandadresse","Rechnungsnummer");
+	types={"ID"=int; "Rechnungsbetrag"=int; "RechnungBezahlt"=int; "IDOrgankultur"=int; "IDOrgankultur"=int; "IDRechnungsadresse"=int;
+			"IDWL"=int;	"Notfall"=int; "TransportDatum"=time; };
+	primaryKey="ID";
+	bindFromColumn="IDOrgankultur"; bindToDG="kultiviertDG"; targetColumn="IDOrgankultur";
+};
+opverfahrenDG=
+{	table="StammdatenOPVerfahren";
+	columns=("ID","OPArt");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+
+spDG=
+{	table="StammdatenHornhautspender";
+	columns=
+	(	"ID", "Name","Vorname","Geburtsdatum", "Anschrift", "PLZ", "Ort",  "Todeszeitpunkt", "IDTodesursache", "IDQuelle", "IDEntnahmemethodeR", "IDEntnahmemethodeL", "IDExplanteur", "weiblich", "Bemerkungen",
+		"IDEinverstaendnisArt", "EinverstaendnisEingeholt", "EinverstaendnisPerson", "NameAngehoeriger", "Koerpergroesse", "Koerpergewicht", "TransfusionenExpander", "TransfusionenSalin", "TransfusionenRinger", "TransfusionenDextrose", "Transfusionen", "Sepsis", "Risikogruppe", "Leukaemie", "Immunsuppression", "Entnahmezeitpunkt", "Telefon", "IDVerwefungsgrundPrimary", "IDSterbeort", "KontraindikationChecked", "IDZentrum", "ExternalID" , "ExternalDonor" 
+	);
+	primaryKey="ID";
+	types={"ID"=int;};
+	bindFromColumn="ID"; bindToDG=kultiviertDG; targetColumn="IDSpender";
+};
+
+serologieVerbose=
+{	table="SerologieVerbose";
+	columns=
+	(	"IDSpender", "Test","result" 
+	);
+	primaryKey="IDSpender";
+	types={"IDSpender"=int;};
+	bindFromColumn="IDSpender"; bindToDG=kultiviertDG; targetColumn="IDSpender";
+};
+
+einverstaendnisDG=
+{	table="StammdatenEinverstaendnisArt";
+	columns=("ID","Name");
+	primaryKey="ID";
+	bindToDG="spDG";
+};
+todesursacheDG=
+{	table="StammdatenTodesursache";
+	columns=("ID","Name","ICD","Code","Malignom","Leukaemie","Sepsis");
+	primaryKey="ID";
+	bindToDG="spDG";
+};
+HLASpDG=
+{	table="HLASpender";
+	columns=("ID","IDSpender","IDHLA","Datum");
+	types={"ID"=int; "IDSpender"=int;};
+	primaryKey="ID";
+	bindFromColumn="IDSpender"; bindToDG="spDG";
+};
+allHLAsDG=
+{	table="StammdatenHLA";
+	columns=("ID","Broad","Split","Klasse","PCR");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="HLAPatDG";
+};
+HLAPatDG=
+{	table="HLAPatient";
+	columns=("ID","IDPatient","IDHLA","Datum");
+	types={"ID"=int; "IDPatient"=int;};
+
+	primaryKey="ID";
+	bindFromColumn="IDPatient"; bindToDG="wartelisteDG"; targetColumn="PatientID";
+};
+rechnungsDG=
+{	table="Transplantatversand";
+	columns=("ID","Rechnungsbetrag","RechnungBezahlt","IDOrgankultur","TransportDatum","IDRechnungsadresse","IDWL","Notfall", "IDVersandadresse","Rechnungsnummer");
+	types={"ID"=int; "Rechnungsbetrag"=int; "RechnungBezahlt"=int; "IDOrgankultur"=int; "IDOrgankultur"=int; "IDRechnungsadresse"=int;
+			"IDWL"=int;	"Notfall"=int; "TransportDatum"=time; };
+	primaryKey="ID";
+	bindFromColumn="IDOrgankultur"; bindToDG="kultiviertDG"; targetColumn="IDOrgankultur";
+};
+
+
+zentrAnschrDG=
+{	table="Zentrumsanschrift";
+	columns=("ID","Anrede","Titel","Name","Anschrift1","Anschrift2","PLZ", "Ort","Land","Kurzname", "Langanrede","Typ","Tel","Fax","IDZentrum");
+	primaryKey="ID";
+	bindFromColumn="IDZentrum"; bindToDG="wartelisteDG"; targetColumn="IDZentrum";
+	types={"ID"=int; "Typ"=int; "IDZentrum"=int; };
+};
+
+allCentersDG=
+{	table="WartelisteZentren";
+	columns=("ID","ZentrumName");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+	cache=YES;
+};
+
+}</DisplayGroups>
+
+<perlfunc name="rechnungDrucken" include="pdfgen.pl">
+{	my $template=getRessource('formulare/rechnungstemplate.tex');
+	my $ddict={};
+	my $idok=$DG::kultiviertDG->selectedPK();
+	my $okDict=$DG::organkulturDG->dictForPK($idok);
+	my $idwl=$DG::wartelisteDG->selectedPK();
+
+	my $rechA=$DG::rechnungsDG->dictsForWhereClauseDictRaw( {IDOrgankultur=>$idok } );
+	unless( $rechA )
+	{	warn "Keine Rechnung angelegt worden?!";
+		return;
+	}
+	my $rechDict= $rechA->[0];
+	if($rechDict->{IDWL} != $idwl)	# wurde nochmal getauscht?
+	{	$DG::rechnungsDG->updatePKWithDict( $rechDict->{ID},  {IDWL => $idwl } )
+	}
+	my $wlDict=$DG::wartelisteUebersichtDG->dictForPK($idwl);
+	my $adrDict=$DG::zentrAnschrDG->dictForPK($rechDict->{IDRechnungsadresse});
+	my $assiA=$DG::zentrAnschrDG->dictsForWhereClauseDict({IDZentrum=> 1, Typ=>4});
+	my $assiDict= $assiA? $assiA->[0]:{};
+
+	$ddict->{RechZentrum}= $DG::wartelisteDG->valueOfPath('allCentersDG.ZentrumName@IDZentrum');
+
+	$ddict->{$_}=$wlDict->{$_}			for (  keys  %{$wlDict} );
+	$ddict->{'Rech'.$_}=$adrDict->{$_}  for (  keys %{$adrDict} );
+	$ddict->{$_}=$rechDict->{$_}		for (  keys %{$rechDict});
+	$ddict->{$_}=$okDict->{$_}			for (  keys  %{$okDict} );
+
+	$ddict->{Assi}=$assiDict->{Titel}.' '.$assiDict->{Name};
+	$ddict->{Datum}=currentTimeString();
+	$ddict->{Datum}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/$3.$2.$1/go;
+
+	for ( keys %{$ddict} )
+	{	$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0]+):([0]+):([0]+)/$3.$2.$1/go;
+		$ddict->{$_}=~ s/, $//o;
+		$ddict->{$_}=~ s/^([0-9]+)\.([0-9]+)$/$1,$2/o;
+	}
+
+	returnPDF(PDFForTemplateAndRef($template,$ddict));
+}</perlfunc>
+
+<perlfunc name="tpBogenDrucken" include="pdfgen.pl">
+{	# <!> refactor to pdfgen.pl
+	# copy bmp instead of pdf. use convert (imagemagick) to make a jpeg for inclusion.
+	sub performSCP { my ($host,$basepath,$spid, $dst)=@_;
+		$main::ENV{PATH} = '/usr/bin'; 			# untaint
+		my $tmpfilename=tempFileName('/tmp/dbweb', '');
+		my $sfindcall=(length $host)? 'ssh '.$host.' "( cd '.$basepath.'; find -name \\"*'.$spid.'*PDF\\" -and \\! -size 0)">'.$tmpfilename:
+													'( cd '.$basepath.'; find -name "*'.$spid.'*PDF" -and \\! -size 0)>'.$tmpfilename;
+		$sfindcall =$1 if($sfindcall =~/(.*)/os);	# untaint
+		system($sfindcall);
+		my $found=readFile($tmpfilename);
+		unlink($tmpfilename);
+		my @rows=split /\n/o, $found;
+		my $last=$rows[$#rows];
+		my $scpcall=(length $host)? 'scp '.$host.':'.$basepath.$last.' '.$dst:
+									 'cp '.$basepath.$last.' '.$dst;
+		$scpcall =$1 if($scpcall =~/(.*)/os);	# untaint
+warn   "$scpcall";
+		system($scpcall);
+	}
+	sub GlobalSetting { my ($key)=@_;
+		my $erg=$DG::GlobalSettings->dictsForWhereClauseDictRaw({Key=> $key});
+		return undef unless $erg;
+		return $erg->[0]->{Value};
+	}
+
+	sub printEtikett { my ($objc)=@_;
+		my  $str=LWP::Simple::get($dbweb::pathPrefix.'/hhb/formulare/tplabel.txt');
+		my  $offs=0;
+		if ($objc->{OPVerfahren}=~/deckend/i)	# farbkodierung
+		{	$offs=55*3;
+		}
+		my ($x1,$x2,$x3,$x4)=(60,120+$offs, 230+$offs,190-$offs);
+		($objc->{x1}, $objc->{x2}, $objc->{x3}, $objc->{x4})=($x1,$x2,$x3,$x4);
+		labelPrinter($str, $objc);
+	}
+
+	$DG::kultiviertDG->clearCache();
+	my $template=getRessource('formulare/tpbogentemplate.tex');
+	my $ddict={};
+	my $wlDict=$DG::wartelisteUebersichtDG->dictForPK($DG::wartelisteDG->selectedPK());
+	my $kuDict=$DG::kultiviertDG->selectedDict();
+	   $DG::spDG->selectPK($kuDict->{IDSpender});
+	my $spDict=$DG::spDG->selectedDict();
+	$ddict->{$_}=$wlDict->{$_} for ( keys %{$wlDict} );
+	$ddict->{$_}=$kuDict->{$_} for ( keys %{$kuDict} );
+
+	$ddict->{PersonKontrolle}=$DG::organkulturDG->valueOfPath('nameMitarbeiterDG.Name@IDMitarbeiter');
+	$ddict->{SPAuge}=$kuDict->{Auge};
+	$ddict->{OPAuge}=$wlDict->{Auge};
+	$ddict->{OPDiagnose}=$DG::wartelisteDG->valueOfPath('wlPropertiesDG.Name@IDOPIndikationsdiagnose');
+	$ddict->{Zentrum}= $DG::wartelisteDG->valueOfPath('allCentersDG.ZentrumName@IDZentrum');
+	$ddict->{Spendergenus}=$spDict->{weiblich}? 'weiblich':'m"annlich';
+	$ddict->{Patientengenus}=$wlDict->{weiblich}? 'weiblich':'m"annlich';
+	$ddict->{Datum}="$3.$2.$1" if(currentDateString() =~ /([0-9]+)-([0-9]+)-([0-9]+)/);
+	$ddict->{OPVerfahren}=$DG::wartelisteDG->valueOfPath('opverfahrenDG.OPArt@IDOPArt');
+	$ddict->{genehmigungsnummer}='Gen-Nr.: PEI.G.xx';
+	$ddict->{OKBemerkungen}=$DG::organkulturDG->selectedDict()->{Bemerkungen};
+
+	my %pcD=(0=>'perforierende Keratoplastik',1=>'hintere lamel. Keratopl.', 2=>'hintere lamel. Keratopl.', 3=>'vordere lamel. Keratopl.', 4=>"Notfallkeratoplastik", 5=>"tektonische Keratopl.",
+			 6=>"Limbo-Keratoplastik", 7=>'Femto-Keratoplastik', 8=> 'Excimer-Keratoplastik', 9=>'DMEK');
+	$ddict->{Verwendungszweck}=$pcD{$DG::organkulturDG->selectedDict()->{precuttype} };
+	$ddict->{Verwendungszweck}=$pcD{0} unless $ddict->{Verwendungszweck};
+	$ddict->{genehmigungsnummer}='' if $ddict->{Verwendungszweck}>=4;
+
+	my $host=	 GlobalSetting('EndothelHost');
+	my $basepath=GlobalSetting('EndothelBasepath');
+
+	# endothelbild kopieren
+	my $tpID=$ddict->{IDSpender}.$ddict->{SPAuge};
+	$ddict->{tpID}=$tpID;
+	my $dstpath='/tmp/'.$tpID.'.pdf';
+
+	unlink($dstpath) if( -e $dstpath);
+	if($basepath)
+	{	performSCP($host, $basepath.$DG::kultiviertDG->valueOfPath('DatumLetzteEZD','format:date="%Y/%m/%d/"'), $tpID, $dstpath);
+		performSCP($host, $basepath, $tpID, $dstpath) unless  -e $dstpath;		# bild falsch abgelegt? jetzt hilft nur noch das suchen im kompletten archiv
+		$template=getRessource('formulare/tpbogenohnebild.tex') unless  -e $dstpath;		# kein bild, jetzt die alternativvorlage benutzen
+		$ddict->{endothelpath}=$dstpath;
+	}
+	else
+	{	$template=getRessource('formulare/tpbogenohnebild.tex') unless   -e $dstpath;		# kein bild, jetzt die alternativvorlage benutzen
+	}
+	my	  $patHLA=$DG::HLAPatDG->allDicts();
+	if($#{$patHLA}>=0)
+	{	$ddict->{HLAPatient}=$DG::HLAPatDG->flattenForFaceAndDelim('allHLAsDG.Split@IDHLA',', ',1);
+		$ddict->{HLASpender}=$DG::HLASpDG-> flattenForFaceAndDelim('allHLAsDG.Split@IDHLA',', ',1);
+	} else { $template =~ s/HLA Splits Spender.*?HLA Splits Patient[^\\]+//os }
+
+	for( keys %{$ddict} )
+	{	$ddict->{$_}=~ s/, $//o;
+		$ddict->{$_}=~ s/\bdays\b/ Tage /o; $ddict->{$_}=~ s/\bday\b/ Tag /o;	# eindeutschen
+		$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0]+):([0]+):([0]+)/$3.$2.$1/go
+	}
+
+	
+	$template=~s/%IFINTERN(.+?)%\/IFINTERN//oegs if($ddict->{IDZentrum} > 1);
+	if ($__invokeParam ne 'PDF')
+	{	LPRPrint(PDFForTemplateAndRef($template,$ddict), 'LionsHHB' , 2, 'sides=two-sided-long-edge -o media=Lower');
+		printEtikett($ddict);
+		if ($ddict->{IDZentrum} > 1)
+		{	LPRPrint(getRessource('formulare/SAR_SAE_Form.pdf'), 'LionsHHB' , 1, 'media=Lower');
+			LPRPrint(PDFForTemplateAndRef(getRessource('formulare/qsbogentemplate.tex'), $ddict), 'LionsHHB'	, 1, 'media=Lower');
+			LPRPrint(PDFForTemplateAndRef(getRessource('formulare/transport.tex'), $ddict), 'LionsHHB'	, 1, 'media=Lower');
+		}
+	} else
+	{
+		returnPDF(PDFForTemplateAndRef($template,$ddict));
+	}
+
+}</perlfunc>
+<perlfunc name="tpBogenDruckenPDF">
+{	DG::invokePerlfunc('tpBogenDrucken','PDF');
+}</perlfunc>
+
+
+<perlfunc name="BISMeldungDrucken" include="pdfgen.pl">
+{	sub GlobalSetting { my ($key)=@_;
+		my $erg=$DG::GlobalSettings->dictsForWhereClauseDictRaw({Key=> $key});
+		return undef unless $erg;
+		return $erg->[0]->{Value};
+	}
+
+	my $template=getRessource('formulare/bismeldung.tex');
+
+	my $ddict={};
+	my $okDict=$DG::organkulturDG->selectedDict();
+	my $kuDict=$DG::kultiviertDG->selectedDict();
+	my ($idsp,$spauge)=($okDict->{IDSpender}, $okDict->{Auge}) ;
+	my  $spDict=$DG::spDG->dictForPK( $idsp );
+	$DG::spDG->selectPK( $idsp );
+	$ddict->{$_}=$spDict->{$_} for ( keys %{$spDict} );
+	$ddict->{$_}=$okDict->{$_} for ( keys %{$okDict} );
+	$ddict->{$_}=$kuDict->{$_} for ( keys %{$kuDict} );
+	$ddict->{'GenderMF'}=$ddict->{weiblich}?'W':'M';
+
+	my ($y,$m,$d,$h,$m0,$s)=$ddict->{Todeszeitpunkt}=~/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/o;
+	my ($DDMMYYYTodeszeitpunkt, $HHMMTodeszeitpunkt)=("$d.$m.$y","$h.$m0");
+	$ddict->{DDMMYYYTodeszeitpunkt}=$DDMMYYYTodeszeitpunkt;
+	$ddict->{HHMMTodeszeitpunkt}=$HHMMTodeszeitpunkt;
+	$ddict->{IDSpender}=$idsp.'/'.$spauge;
+	$ddict->{EinwilligungsArt}=$DG::spDG->valueOfPath('einverstaendnisDG.Name@IDEinverstaendnisArt');
+	$ddict->{ExternalID}=$ddict->{ET_Nr_cornea};
+	$ddict->{Todesursache}=$DG::spDG->valueOfPath('todesursacheDG.Name@IDTodesursache');
+	$ddict->{HLATyping}=$DG::HLASpDG-> flattenForFaceAndDelim('allHLAsDG.Split@IDHLA',', ',1);
+	$ddict->{$_}= (length $ddict->{HLATyping})? GlobalSetting($_):'' for qw/HLAInstitute HLAMaterial HLAMethod/;
+
+	my ($DDMMYYYEntnahmezeitpunkt, $HHMMEntnahmezeitpunk);
+	my ($y,$m,$d,$h,$m0,$s)=$ddict->   {Entnahmezeitpunkt}=~/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/o;
+	my ($DDMMYYYEntnahmezeitpunkt, $HHMMEntnahmezeitpunkt)=("$d.$m.$y","$h.$m0");
+	$ddict->{DDMMYYYEntnahmezeitpunkt}=$DDMMYYYEntnahmezeitpunkt;
+	$ddict->{HHMMEntnahmezeitpunkt}=$HHMMEntnahmezeitpunkt;
+	$ddict->{Explanteur}=$DG::spDG->valueOfPath('nameMitarbeiterDG.Vorname@IDExplanteur').' '.$DG::spDG->valueOfPath('nameMitarbeiterDG.Name@IDExplanteur');
+	$ddict->{ZentrumsName}=$DG::zentrenDG->dictForPK(1)->{ZentrumName};
+	$ddict->{MA}=$DG::zentrAnschrDG->dictsForWhereClauseDictRaw({IDZentrum=>1, Typ=>4})->[0]->{Name};
+	$ddict->{'Datum'}= currentTimeString();
+
+	$ddict->{'EZDR'}= ($okDict->{Auge} =~ /R/oi) ? $kuDict->{LetzteEZD}:'';
+	$ddict->{'EZDL'}= ($okDict->{Auge} =~ /L/oi) ? $kuDict->{LetzteEZD}:'';
+
+	$ddict->{StorageMedium}= 'Medium '. $kuDict->{IDLetztesMedium};
+	my ($y,$m,$d,$h,$m0,$s)=$kuDict->{DatumLetzteMiBi}=~/([0-9]+)-([0-9]+)-([0-9]+)/o;
+	my $DDMMYYYmibizeitpunkt="$d.$m.$y";
+	$ddict->{DDMMYYYmibizeitpunkt}=$DDMMYYYmibizeitpunkt;
+
+	$ddict->{Haemodill}='';
+	my $hasHD=0;
+	for(qw/TransfusionenExpander TransfusionenSalin TransfusionenRinger TransfusionenDextrose Transfusionen/)
+	{	if($spDict->{$_}) 
+		{	$hasHD=1;
+		} else
+		{	$spDict->{$_}=0;
+		}
+	}
+	if(0&& $hasHD)
+	{	$ddict->{Haemodill}=$spDict->{TransfusionenExpander}.' ml colloids, '.$spDict->{TransfusionenExpander}.' ml saline, '.$spDict->{TransfusionenRinger}.' ml Ringer solution, '.$spDict->{TransfusionenDextrose}.' ml dextrose solution, '.$spDict->{Transfusionen}.' ml erytrocyte concentrates. ';
+	}
+
+	my $sero=$DG::serologieVerbose->dictsForWhereClauseDictRaw({IDSpender => $idsp});
+	$ddict->{viro}=$sero;
+
+	for ( keys %{$ddict} )
+	{	$ddict->{$_}=~ s/, $//o; $ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/$3.$2.$1  $4:$5:$6/go;
+			$ddict->{$_}=~ s/[0]+:[0]+:[0]+//go
+	}
+	$ddict->{Name}= sprintf("%01.01s.",$ddict->{Name});
+	$ddict->{Vorname}= sprintf("%01.01s.",$ddict->{Vorname});
+	$ddict->{NameAngehoeriger}= sprintf("%01.01s.",$ddict->{Vorname});
+	$ddict->{Anschrift}= '';
+	$ddict->{Ort}= '';
+	$ddict->{PLZ}= '';
+use  XML::Dumper;
+warn pl2xml($ddict);
+	returnPDF(PDFForTemplateAndRef($template,$ddict));
+}</perlfunc>

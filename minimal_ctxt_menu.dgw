@@ -1,0 +1,10 @@
+contextmenu=
+({name="Selektieren";
+action="select";
+},
+{name="L&ouml;schen";
+action="delete";
+javascript="event.target.parentNode.parentNode.style.zOffset=1000;Effect.Puff(event.target.parentNode.parentNode);";
+confirm="Wirklich entfernen?";
+}
+);

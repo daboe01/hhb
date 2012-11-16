@@ -1,0 +1,977 @@
+<comment>
+18.8.05: Wertelisten editor
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</comment>
+
+<include src="hhb/faces.html">
+<script>
+{	showInsertDiag: function()
+	{	Effect.toggle('newdiag1','slide',{duration:0.1});
+		setTimeout(function(){$('newdiag1_Name0').select()}, 150);
+	}
+}</script>
+
+<table>
+<tr>
+<td></td><td></td>
+<td colspan=3>
+	<table class="datatable">
+	<tr>
+		<foreach:facesDG>
+			<td><var:Name style="font-size:150%"></td>
+		</foreach>
+	</tr>
+	</table>
+</td>
+</tr>
+</table>
+
+	<comment> ############# Narkose ############# </comment>
+	<condDG:facesDG var:ID="const:1">
+		<table class="datatable">
+			<tr><td class="insertvar">
+			<displayGroup:narkoseDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:narkoseDG perform:insert="var:Text" edittype=text>
+			</td></tr>
+			<foreach:narkoseDG>
+			<tr>
+				<td><var:Text></td>
+			</tr>
+			</foreach>
+			<tr><td>
+				<form:narkoseDG>
+					<var:Text  edittype=text>
+				</form>
+			</td></tr>
+		</table>
+	</condDG>
+
+	<comment> ############# OPVerfahren ############# </comment>
+	<condDG:facesDG var:ID="const:2">
+		<table class="datatable">
+			<tr><td class="insertvar">
+			<displayGroup:opverfahrenDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:opverfahrenDG perform:insert="var:OPArt" edittype=text>
+			</td></tr>
+			<foreach:opverfahrenDG>
+			<tr>
+				<td><var:OPArt></td>
+			</tr>
+			</foreach>
+			<tr><td>
+				<form:opverfahrenDG>
+					<var:ID edittype=text format:label="ID">
+					<var:OPArt edittype=text format:label="OP">
+					<var:Name edittype=text format:label="Name">
+				</form>
+			</td></tr>
+		</table>
+	</condDG>
+	<comment> ############# Mitarbeiter ############# </comment>
+	<condDG:facesDG var:ID="const:3">
+	<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><td class="insertvar" colspan="2">
+			<displayGroup:mitarbeiterDG perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<tr><th>ID</th>
+				<th>Name</th></tr>
+			<foreach:mitarbeiterDG>
+			<tr>
+				<td><var:ID></td>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+		</table>
+		</td>
+		<td valign=top>
+				<form:mitarbeiterDG>
+					<var:Name edittype=text format:label="Name">
+					<var:Vorname edittype=text size="15" editmode=inplace format:label="Vorname">
+					<var:Titel edittype=text size="10" editmode=inplace format:label="Titel">
+					<var:Funktion edittype=text size="10" editmode=inplace format:label="Funktion">
+					<var:extern edittype=boolean editmode=inplace format:label="extern">
+					<var:role edittype=popup format:lookup="roleDG.Name" editmode=inplace format:label="Aufgaben">
+					<var:operiert edittype=boolean format:label="operiert" editmode=inplace>
+					<var:weiblich edittype=boolean format:label="weiblich" editmode=inplace>
+				</form>
+		</td></tr>
+		</table>
+	</condDG>
+	<comment> ############# Brutschrank ############# </comment>
+	<condDG:facesDG var:ID="const:18">
+	<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><td class="insertvar">
+			<displayGroup:ordinalDG perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<tr><th>Name</th>
+			<foreach:ordinalDG>
+			<tr>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+		</table>
+		</td>
+		<td valign=top>
+				<form:ordinalDG>
+					<var:Name edittype=text format:label="Name">
+					<var:type edittype=text size="15" editmode=inplace format:label="typ">
+					<var:block_alloc edittype=boolean editmode=inplace format:label="Block alloc">
+					<var:block_op_arten edittype=text editmode=inplace format:label="inkompatibel mit op-arten">
+
+				</form>
+		</td></tr>
+		</table>
+	</condDG>
+
+	<comment> ############# Prio ############# </comment>
+	<condDG:facesDG var:ID="const:4">
+		<table class="datatable">
+			<tr><td class="insertvar">
+				<displayGroup:prioDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+				<displayGroup:prioDG perform:insert="var:Text" edittype=text>
+			</td></tr>
+			<foreach:prioDG>
+			<tr>
+				<td><var:Text></td>
+			</tr>
+			</foreach>
+			<tr><td>
+				<form:prioDG>
+					<var:Text edittype=text>
+				</form>
+			</td></tr>
+		</table>
+	</condDG>
+
+	<comment> ############# Trepan ############# </comment>
+	<condDG:facesDG var:ID="const:17">
+		<table class="datatable">
+			<tr><td class="insertvar">
+				<displayGroup:trepanDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+				<displayGroup:trepanDG perform:insert="var:Trepanart" edittype=text>
+			</td></tr>
+			<foreach:trepanDG>
+			<tr>
+				<td><var:Trepanart></td>
+			</tr>
+			</foreach>
+			<tr><td>
+				<form:trepanDG>
+					<var:Trepanart edittype=text>
+				</form>
+			</td></tr>
+		</table>
+	</condDG>
+
+	
+	<comment> ############# Sterbeort ############# </comment>
+	<condDG:facesDG var:ID="const:7">
+		<table class="datatable">
+			<tr><td class="insertvar">
+			<displayGroup:sterbeortDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:sterbeortDG perform:insert="var:Text" edittype=text>
+			</td></tr>
+			<foreach:sterbeortDG>
+			<tr>
+				<td><var:Text></td>
+			</tr>
+			</foreach>
+		<condDG:sterbeortDG selection=true>
+			<tr><td>
+				<form:sterbeortDG>
+					<var:Text edittype=text>
+				</form>
+			</td><td></td></tr>
+		</condDG>
+		</table>
+	</condDG>
+
+	<comment> ############# Todesursache ############# </comment>
+	<condDG:facesDG var:ID="const:6">
+	<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><td class="insertvar" colspan="2">
+			<displayGroup:todesursacheDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:todesursacheDG perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<tr><th>ID</th><th>Name</th>
+			<foreach:todesursacheDG>
+			<tr>
+				<td><var:ID></td>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+		</table>
+		</td>
+		<td valign=top>
+				<form:todesursacheDG>
+					<var:Name edittype=text format:label="Name">
+					<var:ICD edittype=text size="10" format:label="ICD">
+					<var:Malignom edittype=boolean size="10" format:label="Malignom">
+					<var:Sepsis edittype=boolean format:label="Sepsis">
+				</form>
+		</td></tr>
+		</table>
+	</condDG>
+	<comment> ############# Verwerfungsgrund ############# </comment>
+	<condDG:facesDG var:ID="const:8">
+		<table class="datatable">
+			<tr><td class="insertvar">
+				<displayGroup:verwerfungDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+				<displayGroup:verwerfungDG perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<foreach:verwerfungDG>
+			<tr>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+			<tr><td>
+				<form:verwerfungDG>
+					<var:Name edittype=text>
+				</form>
+			</td></tr>
+		</table>
+	</condDG>
+	<comment> ############# ExitWL ############# </comment>
+	<condDG:facesDG var:ID="const:11">
+		<table class="datatable">
+			<tr><td class="insertvar">
+				<displayGroup:exitwlDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+				<displayGroup:exitwlDG perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<foreach:exitwlDG>
+			<tr>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+			<tr><td>
+				<form:exitwlDG>
+					<var:Name edittype=text>
+				</form>
+			</td></tr>
+		</table>
+	</condDG>
+	<comment> ############# Quelle ############# </comment>
+	<condDG:facesDG var:ID="const:9">
+		<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><td class="insertvar" colspan="2">
+			<displayGroup:quelleDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:quelleDG perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<tr><th>Name</th>
+			<foreach:quelleDG>
+			<tr>
+				<td><var:ID></td>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+		</table>
+		</td>
+		<td valign=top>
+				<form:quelleDG>
+					<var:Name edittype=text format:label="Name">
+					<var:Intensivstation edittype=boolean size="10" format:label="Intensiv">
+					<var:Extern edittype=boolean format:label="Extern">
+					<var:anfahrtsweg edittype=integer format:label="Anfahrtsweg Hin+ Rueck (KM)">
+				</form>
+		</td></tr>
+		</table>
+	</condDG>
+	<comment> ############# Spender ID Sequence ############# </comment>
+	<condDG:facesDG var:ID="const:10">
+	<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><th>Name</th></tr>
+			<foreach:spseqName>
+			<tr>
+				<td><var:ID></td>
+			</tr>
+			</foreach>
+		</table>
+		</td>
+		<td valign=top>
+				<form:spseqName perl="setvalSp">
+					<var:last_value edittype=text size="10">
+				</form>
+		</td></tr>
+		</table>
+	</condDG>
+	<comment> ############# Zentren ############# </comment>
+	<condDG:facesDG var:ID="const:5">
+		<table>
+		<td valign=top>
+			<table class="datatable">
+				<caption>Zentren</caption>
+				<tr><td>
+					<displayGroup:zentrenDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich Zentrum l&ouml;schen?">
+					<displayGroup:zentrenDG perform:insert="var:ZentrumName" edittype=text>
+				</td></tr>
+				<th>Name Zentrum</th>
+				<foreach:zentrenDG>
+					<tr>
+					<td><var:ZentrumName></td></td>
+					</tr>
+				</foreach>
+			</table>
+		</td>
+		<td valign=top>
+			<form:zentrenDG label="Zentrumsdaten">
+				<var:ZentrumName edittype=text label="Name">
+				<var:MeldetPatienten edittype=boolean label="Meldet Patienten">
+				<var:VermitteltPatienten edittype=boolean label="Vermittelt Patienten">
+				<var:KostentraegerTransport edittype=boolean label="&Uuml;bernimmt Transportkosten">
+				<var:PreisRandom edittype=text label="Preis Random (EUR)" size=8>
+				<var:PreisMatch edittype=text label="Preis Match (EUR)" size=8>
+				<var:PreisTektonisch edittype=text label="Preis tektonisch (EUR)" size=8>
+				<var:land edittype=text label="Land">
+			</form>
+		</td>
+		<td valign=top>
+			<table class="datatable">
+				<tr><td class="insertvar" colspan=5>
+				<displayGroup:zentrAnschrDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich Anschrift l&ouml;schen?">
+				<displayGroup:zentrAnschrDG perform:insert="var:Typ" edittype=popup lookup="anschrNameDG.Typ">
+				</td></tr>
+				<tr>
+				<th>Typ</th>
+				<th>Name</th>
+				<th>Anschrift1</th>
+				<th>Ort</th></tr>
+				<foreach:zentrAnschrDG>
+				<tr>
+					<td><var:Typ lookup="anschrNameDG.Typ"></td>
+					<td><var:Name></td>
+					<td><var:Anschrift1></td>
+					<td><var:Ort></td>
+				</tr>
+				</foreach>
+			</table>
+		</td>
+		<td valign=top>
+			<form:zentrAnschrDG label="Anschriftdetails &auml;ndern">
+				<var:Typ edittype=popup lookup="anschrNameDG.Typ" editmode=inplace size=25>
+				<var:Titel edittype=text label="Titel" editmode=inplace size=35>
+				<var:Anrede edittype=text label="Anschrift Anrede" editmode=inplace size=35>
+				<var:Kurzname edittype=text label="Kurzname" editmode=inplace>
+				<var:Name edittype=text label="Name" editmode=inplace>
+				<var:Anschrift1 edittype=text label="Anschrift" size=35 editmode=inplace>
+				<var:PLZ edittype=text label="PLZ", size=7 editmode=inplace>
+				<var:Ort edittype=text label="Ort" editmode=inplace>
+				<var:Langanrede edittype=text label="Langanrede" size=35>
+				<var:Tel edittype=text label="Tel.">
+				<var:Fax edittype=text label="Fax.">
+			</form>
+		</td>
+	</condDG>
+	<comment> ############# Kataster ############# </comment>
+	<condDG:facesDG var:ID="const:14">
+		<table>
+		<tr>
+		<td valign=top>
+			<table class="datatable">
+			<caption>Medikamente AUG</caption>
+			<tr><td class="insertvar">
+			<displayGroup:allFUPropsDG.Augenmedis perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:allFUPropsDG.Augenmedis perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<tr><th>Name</th>
+			<foreach:allFUPropsDG.Augenmedis>
+			<tr>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+			</table>
+		</td>
+		<td valign=top>
+			<table class="datatable">
+			<caption>Medikamente Allg</caption>
+			<tr><td class="insertvar">
+			<displayGroup:allFUPropsDG.therapieSys perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:allFUPropsDG.therapieSys perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<tr><th>Name</th>
+			<foreach:allFUPropsDG.therapieSys>
+			<tr>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+			</table>
+		</td>
+		<td valign=top>
+			<table class="datatable">
+			<caption>Komplikationen</caption>
+			<tr><td class="insertvar">
+			<displayGroup:allFUPropsDG.komplikation perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:allFUPropsDG.komplikation perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<tr><th>Name</th>
+			<foreach:allFUPropsDG.komplikation>
+			<tr>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+			</table>
+		</td>
+		<td valign=top>
+			<table class="datatable">
+			<caption>Befunde</caption>
+			<tr><td class="insertvar" colspan="2">
+			<displayGroup:allFUPropsDG.befunde perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:allFUPropsDG.befunde perform:insert="var:Name" edittype=text>
+			</td></tr>
+			<tr><th>Name</th>
+				<th>auto</th>
+			<foreach:allFUPropsDG.befunde>
+			<tr>
+				<td><var:Name></td>
+				<td><var:auto edittype=boolean></td>
+			</tr>
+			</foreach>
+			</table>
+		</td>
+		<td valign=top>
+			<table class="datatable">
+			<caption>Applikationsfrequenz</caption>
+			<tr><td class="insertvar">
+			<displayGroup:applikationsFqDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:applikationsFqDG perform:insert="var:Frequenz" edittype=text>
+			</td></tr>
+			<tr><th>Name</th>
+			<foreach:applikationsFqDG>
+			<tr>
+				<td><var:Frequenz></td>
+			</tr>
+			</foreach>
+			</table>
+		</td>
+		</tr>
+		<tr>
+		<td valign=top>
+			<form:allFUPropsDG label="Text">
+				<var:ID edittype=text size="10" label="ID">
+				<var:Name edittype=text label="Text">
+			</form>
+		</td>
+		</tr>
+		</table>
+	</condDG>
+	<comment> ############# HLA ############# </comment>
+	<condDG:facesDG var:ID="const:12">
+		<table>
+		<td valign=top>
+			<table class="datatable">
+				<caption>Allele</caption>
+				<tr><td colspan="3">
+					<displayGroup:allHLAsDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich Zentrum l&ouml;schen?">
+					<displayGroup:allHLAsDG perform:insert="var:PCR" edittype=text format:label="PCR">
+				</td></tr>
+				<th>Broad</th>
+				<th>Split</th>
+				<th>PCR</th>
+				<foreach:allHLAsDG>
+					<tr>
+					<td><var:Broad></td>
+					<td><var:Split></td>
+					<td><var:PCR></td>
+					</tr>
+				</foreach>
+			</table>
+			<form:allHLAsDG>
+				<var:Broad edittype=text format:label="broad">
+				<var:Split edittype=text format:label="split">
+				<var:PCR   edittype=text format:label="pcr">
+			</form>
+		</td>
+		<td valign=top>
+			<table class="datatable">
+			</table>
+		</td>
+	</condDG>
+
+	<comment> ############# Diagnosen ############# </comment>
+	<condDG:facesDG var:ID="const:13">
+		<table>
+			<tr><td>
+				<form:diagsSearchDG>
+					<var:Name edittype=text format:lookup="diagsDG.Name" format:label="Name">
+					<var:Kategorie1 edittype=popup format:lookup="diagsRole1DG.Name" format:label="Kategorie1">
+					<var:Kategorie2 edittype=text format:label="Kategorie2">
+				</form>
+				<a href="javascript:dbweb.userscripts.showInsertDiag();"><strong>Einf&uuml;gen</strong></a>
+				<form:newDiagDG1 label="Neue Diagnose" style="display:none;" perl="insertDiag" id="newdiag1">
+					<var:Kategorie1 edittype=popup format:lookup="diagsRole1DG.Name" format:label="Kategorie1">
+				</form>
+			<td>
+			</tr>
+			<tr><td valign=top style="width:450px">
+				<table:diagsDG rows="20">
+				<head>
+					<col:300px> Name </col>
+					<col:50px> Kat </col>
+					<col:50px> Kat </col>
+				</head>	
+				<foreach>
+					<cell><var:Name></cell>
+					<cell><var:Kategorie1></cell>
+					<cell><var:Kategorie2></cell>
+				</foreach>
+			</table:diagsDG>
+		</td>
+		<td valign=top>
+		<form:diagsDG>
+			<var:ID edittype=text format:label="ID (no not change!)">
+			<var:Name edittype=text format:label="Name">
+			<var:ArztbriefName edittype=text format:label="Name (Arztbriefversion)">
+			<var:Kategorie1 edittype=popup format:lookup="diagsRole1DG.Name" format:label="Kategorie1">
+			<var:Kategorie2 edittype=text format:label="Kategorie2">
+			<var:BefundText edittype=textarea format:label="Befund" cols="40" rows="3">
+			<var:auto edittype=boolean format:label="auto">
+		</form>
+		<button:NeuWL format:ajax="on" perl="insertDiagWertelisteneintrag">
+		<a href="http://10.210.21.33/wiki/index.php/KatasterKonfig"> Doku </a>
+		</td>
+		<td valign=top>
+			<table class="datatable">
+			<foreach:diagnosenWerteliste.wl>
+				<tr>
+					<td><var:ID></td>
+					<td><var:Name edittype=text editmode=inplace></td>
+				</tr>
+			</foreach>
+			</table>
+		</td>
+		</tr>
+	</td>
+	</condDG>
+	<comment> ############# Studien ############# </comment>
+	<condDG:facesDG var:ID="const:15">
+		<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><td class="insertvar">
+			<displayGroup:diagsStudDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:diagsStudDG perform:insert="var:Name" edittype=text perl="insertStudie">
+			</td></tr>
+			<tr><th>Name</th>
+			<foreach:diagsStudDG.studien>
+			<tr>
+				<td><var:Name></td>
+			</tr>
+			</foreach>
+		</table>
+		</td>
+		<td valign=top>
+				<form:diagsStudDG>
+					<var:ID edittype=text format:label="ID">
+					<var:Name edittype=text format:label="Name">
+				</form>
+		</td></tr>
+		</table>
+	</condDG>
+	<comment> ############# Serologie ############# </comment>
+	<condDG:facesDG var:ID="const:16">
+		<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><td class="insertvar">
+			<displayGroup:allSerosDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" class="controlicon" confirm="Wirklich l&ouml;schen?">
+			<displayGroup:allSerosDG perform:insert="var:Test" edittype=text>
+			</td></tr>
+			<tr><th>Name</th>
+			<foreach:allSerosDG>
+			<tr>
+				<td><var:Test></td>
+			</tr>
+			</foreach>
+		</table>
+		</td>
+		<td valign=top>
+				<form:allSerosDG>
+					<var:Test edittype=text format:label="Name">
+					<var:uncritical edittype=boolean format:label="unkritisch">
+				</form>
+		</td></tr>
+		</table>
+	</condDG>
+
+</body>
+</html>
+
+
+<DisplayGroups>{
+facesDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("1","Narkose"), ("2","OPs"), ("3","Mitarbeiter"), ("4","Prio"), ("5","Zentren"), ("6","Todesursache"), ("7","Sterbeort"),("9","Quelle/Entnahmeort"), ("8","Verwerfung"), ("10","SpNr"), ("11","EndeWL"),
+			("12","HLA"), ("13","Diags"), ("14","Kataster"), ("15","Studien"), ("16","Serologie"), ("17","Trepan"), ("18","Brutschrank") );
+};
+allSerosDG=
+{	table="StammdatenSerologie";
+	columns=("ID","Test","Typ","uncritical");
+	primaryKey="ID";
+	types={"ID"=int; "uncritical"=bool; "Typ"=int;};
+	connectionEnvAuto=YES;
+};
+
+allHLAsDG=
+{	table="StammdatenHLA";
+	columns=("ID","Broad","Split","Klasse","PCR");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	types={"ID"=int; };
+	autoSort="standard";
+	sortColumns=
+	{	standard=("PCR");
+	};
+};
+
+
+narkoseDG=
+{	table="StammdatenNarkose";
+	types={"ID"=int; };
+	columns=("ID","Text");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+opverfahrenDG=
+{	table="StammdatenOPVerfahren";
+	columns=("ID","OPArt","Name");
+	types={"ID"=int; };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+mitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","extern","role","operiert","weiblich");
+	types={"ID"=int; "extern"=bool; "role"=int; "operiert"=bool;"weiblich"=bool;};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=("extern","Name");
+	};
+	contextmenu=
+	(	{	name="Selektieren";
+			action="select";
+		},
+		{	name="Entfernen";
+			action="delete";
+			javascript="Effect.Puff(event.target.parentNode.parentNode);";
+			confirm="Wirklich entfernen ?";
+		}, { separator="true"; },
+		{	name="Merge to selection";
+			perlfunc="merge_to_selection";
+		}
+	)
+};
+
+prioDG=
+{	table="StammdatenPrioritaet";
+	columns=("ID","Text");
+	types={"ID"=int; };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+
+todesursacheDG=
+{	table="StammdatenTodesursache";
+	columns=("ID","Name","ICD","Code","Malignom","Leukaemie","Sepsis");
+	types={"ID"=int; "Malignom"=bool;"Sepsis"=bool;};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+};
+
+spseqName=
+{	columns=("ID","last_value");
+	primaryKey="ID";
+	cache=YES;
+};
+
+dummySeqDG=
+{	columns=("sequence_name","last_value");
+	primaryKey="sequence_name";
+	connectionEnvAuto=YES;
+};
+
+quelleDG=
+{	table="StammdatenQuelle";
+	columns=("ID","Name","Intensivstation","Extern","anfahrtsweg");
+	types={"ID"=int; "Intensivstation"=bool; "Extern"=bool; anfahrtsweg=int; };
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+
+entnahmeDG=
+{	table="StammdatenEntnahmemethode";
+	columns=("ID","Name");
+	primaryKey="ID";
+	types={"ID"=int;  };
+	connectionEnvAuto=YES;
+};
+
+sterbeortDG=
+{	table="StammdatenSpenderSterbeort";
+	columns=("ID","Text");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Text");
+	};
+};
+
+verwerfungDG=
+{	table="StammdatenVerwerfungsgrund";
+	columns=("ID","Name");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+
+exitwlDG=
+{	table="StammdatenExitWL";
+	columns=("ID","Name");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+diagsDG=
+{	table="Diagnose";
+	columns=("ID","Name","ArztbriefName","Kategorie1","Kategorie2","BefundText","auto");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	bindToDG="diagsSearchDG";
+	autoSort="standard";
+	types={"ID"=int; "Kategorie1"=int; "Kategorie2"=int; "auto"=bool; };
+	sortColumns=
+	{	standard=("Kategorie1", "Kategorie2");
+	};
+	filters=
+	{	risiko=  {col="Kategorie1";op="eq";val="4"};
+		studien= {col="Kategorie1";op="eq";val="5"};
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+diagnosenWerteliste=
+{	table="Diagnose";
+	columns=("ID","Name","ArztbriefName","Kategorie1","Kategorie2","BefundText");
+	primaryKey="ID";
+	bindToDG="diagsDG"; bindFromColumn="Kategorie2";
+	autoSort="standard";
+	types={"ID"=int; "Kategorie1"=int; "Kategorie2"=int; };
+	sortColumns=
+	{	standard=("ID");
+	};
+	filters=
+	{	wl= {col="Kategorie1";op="eq";val="8"};
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+
+diagsRole1DG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("4","Risikoeinstufung"),
+		  ("5","Studien"),
+		  ("1","Augendiag"),
+		  ("0","Allg.diag"),
+		  ("6","Wartelistenfeld"),
+		  ("7","Katasterfeld"),
+		  ("8","Wertelisteneintrag")
+		);
+};
+
+diagsStudDG=
+{	table="Diagnose";
+	columns=("ID","Name","Kategorie1","Kategorie2","BefundText");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	bindToDG="diagsSearchDG";
+	autoSort="standard";
+	types={"ID"=int; "Kategorie1"=int; "Kategorie2"=int; "auto"=bool; };
+	sortColumns=
+	{	standard=("Kategorie1", "Kategorie2");
+	};
+	filters=
+	{	risiko=  {col="Kategorie1";op="eq";val="4"};
+		studien= {col="Kategorie1";op="eq";val="5"};
+	};
+};
+
+zentrenDG=
+{	table="WartelisteZentren";
+	columns=
+	(	"ID","ZentrumName", "MeldetPatienten", "PreisRandom", "PreisMatch", "PreisTektonisch", "KostentraegerTransport", "VermitteltPatienten", "RegistryEmail","land"
+	);
+	types={"ID"=int; "MeldetPatienten"=bool; "PreisRandom"=int; "PreisMatch"=int; "PreisTektonisch"=int; "KostentraegerTransport"=bool; "VermitteltPatienten"=bool; };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=("ZentrumName");
+	};
+};
+zentrAnschrDG=
+{	table="Zentrumsanschrift";
+	columns=("ID","Anrede","Titel","Name","Anschrift1","Anschrift2","PLZ", "Ort","Land","Kurzname", "Langanrede","Typ","Tel","Fax","IDZentrum");
+	types={"ID"=int; "Typ"=int; "IDZentrum"=int; };
+	primaryKey="ID";
+	bindFromColumn="IDZentrum"; bindToDG="zentrenDG";
+};
+anschrNameDG=
+{	table="StammdatenAnschrifttyp";
+	columns=("ID","Typ");
+	types={"ID"=int; "Typ"=int; };
+	primaryKey="ID";
+	bindToDG="zentrAnschrDG";
+};
+
+roleDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("0","Patienten"),
+		  ("1","Einverstaendnis"),
+		  ("2","Explanteur"),
+		  ("3","Endbefundung"),
+		  ("4","MTA")
+		);
+};
+
+allFUPropsDG=
+{	table="Befund";
+	columns=("ID","Name","Kategorie","auto");
+	types={"ID"=int; "Kategorie"=int; "auto"=bool;};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+	filters=
+	{	Augenmedis=		 {col="Kategorie";op="eq";val="1000"};
+		therapieSys=	 {col="Kategorie";op="eq";val="1001"};
+		komplikation=	 {col="Kategorie";op="eq";val="2000"};
+		operation=		 {col="Kategorie";op="eq";val="3000"};
+		befunde=		 {col="Kategorie";op="eq";val="4000"};
+	};
+};
+applikationsFqDG=
+{	table="Applikationsfrequenz";
+	columns=("ID","Frequenz","Kategorie");
+	types={"ID"=int; "Kategorie"=int;};
+	primaryKey="ID";
+	bindToDG="allFUPropsDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Frequenz");
+	};
+};
+
+
+trepanDG=
+{	table="Trepanart";
+	columns=("ID","Trepanart");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+ordinalDG=
+{	table="StammdatenEinstufungOrdinal";
+	columns=("ID","type","Name","block_alloc","block_op_arten");
+	types={"ID"=int; "type"=int; "block_alloc"=bool;};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	filters=
+	{	endothel_befundbarkeit={col="type";op="=";val="2"};
+		endothel_morph = {col="type";op="=";val="3"};
+		nekrosen = {col="type";op="=";val="5"};
+		spalt = {col="type";op="=";val="6"};
+	}
+};
+
+
+}</DisplayGroups>
+
+<include src="hhb/login3.dgw">
+
+<perlfunc name="_auto_">
+{
+
+	sub fillSeq { my ($key)=@_;
+		$DG::dummySeqDG->{table}=$key;
+		my $vals=$DG::dummySeqDG->dictsForWhereClauseDictRaw( {} );
+		$DG::spseqName->appendDictToCache({ID=>$key, last_value=> $vals->[0]->{last_value} });
+	}
+
+	$DG::spseqName->clearCache();
+	fillSeq('StammdatenHornhautspender_ID_seq');
+	# fillSeq('Rechnungsnummer_ID_seq');
+
+}</perlfunc>
+
+<perlfunc name="setvalSp">
+{	my $newVal=DG::mutablePendingInsertionDict()->{last_value};
+	my $statement='select setval(\'"'.$DG::spseqName->selectedPK().'"\', '.$newVal.');';
+	$DG::mitarbeiterDG->executeSQLStatement($statement);
+}</perlfunc>
+
+<perlfunc name="insertStudie">
+{	my $d=$DG::diagsStudDG->mutablePendingInsertionDict();
+	$d->{Kategorie1}=5;
+}</perlfunc>
+
+<perlfunc name="insertDiag">
+{	my $d=DG::mutablePendingInsertionDict();
+	$d->{Name}="Neue Diagnose";
+	$d->{Kategorie2}=2 if($d->{Kategorie1}<2);
+	$d->{auto}=1 if($d->{Kategorie1} == 6);
+	$DG::diagsDG->selectPK($DG::diagsDG->insertDict($d));
+}</perlfunc>
+
+<perlfunc name="insertDiagWertelisteneintrag">
+{	$DG::diagnosenWerteliste->insertDict({ Kategorie1=>8, Name=>"Wertelisteneintrag", Kategorie2=>$DG::diagsDG->selectedPK() });
+}</perlfunc>
+
+<perlfunc name="merge_to_selection">
+{	my $dst=$DG::mitarbeiterDG->selectedPK();
+	my $src= DG::pendingPrimaryKey();
+	warn "dst: $dst src: $src";
+}</perlfunc>
+

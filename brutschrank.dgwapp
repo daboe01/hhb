@@ -1,0 +1,561 @@
+<comment>
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  brutschrankverwaltung: created 16.4.05 by dr. boehringer
+</comment>
+
+<include src="hhb/faces.html">
+
+<table>
+<td valign=top>
+	<condDG:kultiviertDG selection=visible>
+	<table class="datatable">
+		<caption>Kultivierte Hornh&auml;ute</caption>
+		<th>Sp</th>
+		<th>A</th>
+		<th>DMW</th>
+		<th>KDg</th>
+		<th>EZD</th>
+		<th>MW</th>
+		<th>KDa</th>
+		<th>Sero</th>
+		<th>SPA</th>
+		<th>PMZ</th>
+		<th>OP</th>
+		<th>C</th>
+		<foreach:kultiviertDG classnameVar="IDLetztesMedium">
+			<tr>
+			<comment><td><var:ID></td></comment>
+			<td><var:IDSpender format:link="spender.spDG"></td>
+			<td><var:Auge></td>
+			<td><var:DatumLetzterMedienwechsel format:date="%d.%m.%Y"></td>
+			<td><var:KulturdauerGesamt></td>
+			<td><var:LetzteEZD></td>
+			<td><var:ZahlMedienwechsel></td>
+			<td><var:KulturdauerAktuell></td>
+			<td><var:ZahlNegativerTests></td>
+			<td><var:SpenderAlter></td>
+			<td><var:PostMortemZeit></td>
+			<td><var:IDWarteliste format:link="warteliste.wartelisteDG" format:lookup="const:OP"></td>
+			<td><var:olc></td>
+			</tr>
+		</foreach>
+	</table>
+	<a class="btn primary" href="<button:_Javascript_ perl="printMW">">Medienwechsel drucken</a>
+	</condDG:kultiviertDG>
+	<a class="btn" href="https://10.210.21.254:631/printers/LionsHHB">Drucker neu starten</a>
+</td>
+<td valign=top>
+
+	<foreach:organkulturDG></foreach>
+	<foreach:rechnungsDG>  </foreach>
+	<foreach:wartelisteDG> </foreach>
+
+	<form:organkulturDG label="Organkultur" perl="verwerfungChecken">
+		<var:IDSpender edittype=text format:label="Spender / Auge" size="5">
+		<var:Auge edittype=text size="2">
+		<var:BIS_gemeldet edittype=boolean  format:label="BIS">
+		<cond var:BIS_gemeldet=true>
+			<var:ET_Nr_cornea edittype=text format:label="ET_NR    / seit" size="10">
+			<var:BIS_seit edittype=text  format:date="%d.%m.%y" size="10">
+			<p><button:Meldebogen class="btn primary" perl="BISMeldungDrucken">
+		</cond>
+		<var:Verschickbar edittype=boolean format:label="Potenziell verschickbar">
+		<condDG:kultiviertDG selection=invisible>
+			<var:EndOfCulture edittype=boolean format:label="Ende Kultur">
+		</condDG:kultiviertDG>
+		<var:IDVoroperationen edittype=popup label="Voroperationen" format:lookup="voropDG.Text">
+		<var:Bemerkungen edittype=textarea label="Bemerkungen" cols="25" rows="6">
+		<var:olc edittype=text label="OLC" size="3">
+		<var:IDVerwerfungsgrund edittype=popup label="Verwerfungsgrund" format:lookup="verwerfungsgrundDG.Name">
+		<cond var:IDVerwerfungsgrund=nenull>
+			<var:id_verwendung_nach_verwerfung edittype=popup label="Langzeitverbleib" format:lookup="lz_verwendungDG.name">
+		</cond>
+		<var:IDMitarbeiter edittype=popup label="Befundung durch / MTA" format:lookup="nameMitarbeiterDG.endbef.Name" >
+		<var:IDMitarbeiter2 edittype=popup format:lookup="nameMitarbeiterDG.mta.Name">
+		<hr><var:precuttype edittype=popup label="Verwendungszweck" format:lookup="precuttypeDG.Name"> <button:Pruefprotokoll class="btn primary" perl="printPruefprotokoll"><hr>
+		<button:Herstellungsprotokoll class="btn primary" perl="printHerstellungsprotokoll">
+		<cond var:IDWarteliste=true>
+			<br>
+			<button:Dealloc format:ajax="on" class="btn" perl="handleDealloc"><br>
+			<button:TpBogen format:ajax="on" class="btn" perl="tpBogenDrucken">
+			<button:TpBogenPDF perl="tpBogenDruckenPDF" class="btn primary"><br>
+			<button:Ende confirm="Wirklich?" class="btn" format:ajax="on" perl="endeKultur"> <br>
+			<condDG:wartelisteDG var:IDZentrum="gt:const:1">
+				<condDG:kultiviertDG selection=visible>
+					<p><button:Rechnung class="btn primary" perl="rechnungDrucken">
+				</condDG:kultiviertDG>
+			</condDG:wartelisteDG>
+		</cond>
+	</form>
+	<table class="datatable">
+		<caption>Medienwechsel</caption>
+		<th> <displayGroup:medienwechselDG perform:insert="var:IDMedium" perl="neuerMedienwechsel" edittype=popup format:label="Neues" format:lookup="nameMediumDG.Name"></th>
+		<th>Ein</th>
+		<th>Aus</th>
+		<th>EZD</th>
+		<foreach:medienwechselDG>
+			<tr>
+			<comment><td><var:ID></td></comment>
+			<td><var:IDMedium format:lookup="nameMediumDG.Name"></td>
+			<td><var:KulturEinDatum format:date="%d.%m.%Y"></td>
+			<td><var:KulturAusDatum format:date="%d.%m.%Y"></td>
+			<td><var:EZD></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<form:medienwechselDG label="MiBi" perl="validateMW">
+		<var:KulturEinDatum edittype=text format:date="%d.%m.%y %H:%M" format:label="Datum ein (incl. Uhrzeit) / Datum aus" size="15">
+		<var:KulturAusDatum edittype=text format:date="%d.%m.%y" size="8">
+		<hr>
+		<var:DatumBakteriologieEntnahme edittype=text editmode=inplace format:date="%d.%m.%y" format:label="Datum Probe bakt." size="10">
+		<var:DatumBakteriologieErgebnis edittype=text editmode=inplace format:date="%d.%m.%y" format:label="Datum Steril &nbsp; / Aerob / Anaerob" size="10">
+		<var:AerobSteril edittype=boolean> &nbsp;&nbsp;
+		<var:AnaerobSteril edittype=boolean>
+<comment>
+		<hr>
+		<var:DatumEndbefund edittype=text editmode=inplace format:date="%d.%m.%y" format:label="Datum Befund / Endbefund" size="10">
+		<var:IsEndbefund edittype=boolean>
+</comment>
+	</form>
+	<form:medienwechselDG label="Endothel">
+		<button:analysieren class="btn" perl="endothelAnalyse" format:ajax="on">
+		<var:EndothelPotenziellTransplantierbar label="Potenziell transpl." edittype=boolean>
+		<var:BSSKontrolle edittype=boolean label="BSS  /  Bild / Endothel-Befundbarkeit / EZD">
+		<var:Befundbild edittype=boolean>
+		<var:BefundbarkeitEndothel edittype=popup format:lookup="ordinalDG.endothel_befundbarkeit.Name">
+		<var:EZD edittype=text size="5" editmode=inplace>
+		<var:AnteilNekrosen edittype=text size="8" editmode=inplace format:label="Nekrosen (%) / Klassifikation">
+		<var:NekrosenKlassifizierung edittype=popup format:lookup="ordinalDG.nekrosen.Name">
+		<var:Endothelscore edittype=popup format:lookup="ordinalDG.endothel_morph.Name" format:label="Endothel-Morphologie">
+	</form>
+	<form:medienwechselDG label="Spaltlampenbefunde">
+		<table class="datatable">
+			<tr>
+				<td class="insertvar">
+				<displayGroup:medienwechsel_stroma perform:insert="var:idbefund" edittype=popup lookup="ordinalDG.spalt.Name"></td>
+			</tr>
+			<foreach:medienwechsel_stroma>
+			<tr>
+				<td><var:idbefund lookup="ordinalDG.Name"></td>
+			</tr>
+			</foreach>
+		</table>
+	</form>
+	<form:medienwechselDG label="Bemerkungen">
+		<var:Bemerkungen edittype=textarea cols="40" rows="8">
+	</form>
+<comment>
+	<form:medienwechselDG label="obsolete">
+		<var:NarbeZentral edittype=boolean label="Narbe zentral / peripher">
+		<var:NarbePeripher edittype=boolean>
+		<var:pachy edittype=text size="6" label="Pachy" editmode=inplace>
+	</form>
+</comment>
+</td>
+<td valign=top>
+	<form:medienwechselDG label="Tracing">
+		<var:chargennummer edittype=text size="25" editmode=inplace format:label="Chargennummer">
+		<var:chargennummer_ncs edittype=text size="25" editmode=inplace format:label="NCS">
+		<var:chargennummer_bss edittype=text size="10" editmode=inplace format:label="BSS / Well-Plate">
+		<var:chargennummer_bss_wellplate edittype=text size="10" editmode=inplace>
+
+		<var:chargennummer_flasche edittype=text size="25" editmode=inplace format:label="Flasche">
+		<var:chargennummer_halter edittype=text size="25" editmode=inplace format:label="Halter">
+		<var:InstrumentID edittype=popup format:lookup="instrumentDG.Name" format:label="Instr.Nr.">
+		<var:InstrumentID2 edittype=popup format:lookup="instrumentDG.Name">
+		<var:InstrumentID3 edittype=popup format:lookup="instrumentDG.Name">
+		<var:steridate edittype=text size="10" editmode=inplace format:date="%d.%m.%y"  format:label="steridate1 / &nbsp;&nbsp;&nbsp; steridate2">
+		<var:steridate2 edittype=text size="10" editmode=inplace format:date="%d.%m.%y">
+		<var:IDMitarbeiter edittype=popup format:lookup="nameMitarbeiterDG.mta.Name" format:label="Mitarbeiter">
+	</form>
+</td>
+</table>
+</body>
+</html>
+
+
+<DisplayGroups>{
+
+kultiviertDG=
+{	table="KultivierteHornhaeute";
+	columns=
+	(	"IDOrgankultur","IDSpender","IDWarteliste","Auge","KulturdauerGesamt","KulturdauerAktuell","LetzteEZD", "DatumLetzteEZD","ZahlMedienwechsel", "ZahlNegativerTests","SpenderAlter","PostMortemZeit",
+		"KontraindikationChecked","DatumLetzterMedienwechsel","DatumLetzteMiBi", "IDLetztesMedium", "narben","SpenderWeiblich", "Expressbefundung","HaltbarBis","LetzteEZD","olc"
+	);
+	primaryKey="IDOrgankultur";
+	connectionEnvAuto=YES;
+	cache=YES;
+	contextmenu=
+	(	{	name="Selektieren";
+			action="select";
+		},
+		{	name="Partnerauge";
+			perlfunc="augenwechsel";
+		}
+	)
+};
+organkulturDG=
+{	table="Organkultur";
+	columns=("ID","IDSpender","IDWarteliste","IDVerwerfungsgrund","Auge","IDVoroperationen","Bemerkungen", "IDMitarbeiter","IDMitarbeiter2","EndOfCulture","Verschickbar",
+			 "ET_Nr_cornea","BIS_seit", "BIS_gemeldet","precuttype","olc", "id_verwendung_nach_verwerfung");
+	types={"ID"=int; "IDSpender"=int; "IDWarteliste"=int; "IDVerwerfungsgrund"=int; "IDVoroperationen"=int; "IDMitarbeiter"=int; "IDMitarbeiter2"=int; "EndOfCulture"=bool; "Verschickbar"=bool;
+			"BIS_gemeldet"=bool; "BIS_seit"=date; "precuttype"=int; "id_verwendung_nach_verwerfung"=int;};
+
+	primaryKey="ID";
+	bindFromColumn="ID"; bindToDG="kultiviertDG";
+};
+
+medienwechselDG=
+{	table="Mediumwechsel";
+	columns=("ID","KulturEinDatum","KulturAusDatum","DatumBakteriologieEntnahme","DatumBakteriologieErgebnis","AerobSteril","AnaerobSteril", "BSSKontrolle","EZD","MethodeEZD","BefundbarkeitEpithel","Epithelscore",
+				"BefundbarkeitEndothel","Endothelscore","BefundbarkeitStroma", "Stromascore","NarbePeripher",
+				"NarbeZentral","IDOrgankultur","IsEndbefund","IDMedium","EndothelPotenziellTransplantierbar", "Befundbild", "DatumEndbefund","Bemerkungen", "AnteilNekrosen","IDMitarbeiter","pachy",
+				"InstrumentID","InstrumentID2","InstrumentID3","chargennummer","steridate","steridate2","NekrosenKlassifizierung","chargennummer_ncs","chargennummer_flasche","chargennummer_halter", "chargennummer_bss","chargennummer_bss_wellplate","idcellfinder");
+
+	types={"ID"=int; "IDOrgankultur"=int; "KulturEinDatum"= time; "DatumEndbefund"= time; "KulturAusDatum"=time; "DatumBakteriologieEntnahme"=time; "DatumBakteriologieErgebnis"=time; "AerobSteril"=bool;
+			"AnaerobSteril"=bool; "BSSKontrolle"=bool; "EZD"=int; "MethodeEZD"=int;
+			"BefundbarkeitEndothel"=int; "Endothelscore"=int; "BefundbarkeitStroma"=int; "Stromascore"=int; "BefundbarkeitEpithel"=int; "Epithelscore"=int;
+			"IDMedium"=int; "NarbePeripher"=bool; "NarbeZentral"=bool; "IsEndbefund"=bool; "IDMitarbeiter"=int; "InstrumentID"=int; "InstrumentID2"=int; "InstrumentID3"=int; "AnteilNekrosen"=int; "Befundbild"=bool;
+			"EndothelPotenziellTransplantierbar"=bool; "steridate"=date; "steridate2"=date; "NekrosenKlassifizierung"=int; "idcellfinder"=int;};
+
+	primaryKey="ID";
+	bindFromColumn="IDOrgankultur"; bindToDG="kultiviertDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=({col="KulturEinDatum"; op="desc"},{col="IDMedium"; op="desc"});
+	};
+	contextmenu=
+	(	{	name="Selektieren";
+			action="select";
+		},
+		{	name="L&ouml;schen";
+			action="delete";
+			javascript="event.target.parentNode.parentNode.style.zOffset=1000;Effect.Puff(event.target.parentNode.parentNode);";
+			confirm="Wirklich entfernen?";
+		},
+		{	name="Befundboegen drucken";
+			perlfunc="printMWForms";
+		}
+	)
+};
+letzteMedienwechselDG=
+{	table="MedienWechselLast";
+	write_table="Mediumwechsel";
+	columns=("ID","IDOrgankultur","KulturEinDatum","KulturAusDatum");
+	types={"ID"=int; "IDOrgankultur"=int; "KulturEinDatum"= time;  "KulturAusDatum"=time;  };
+	primaryKey="ID";
+	bindFromColumn="IDOrgankultur"; bindToDG="kultiviertDG"; targetColumn="IDOrgankultur";
+};
+
+wartelisteDG=
+{	table="Warteliste";
+	columns=("ID","PatientID","IDZentrum","EndeWarteliste","WartenAktiviert","IDOPIndikationsdiagnose","IDOrgankultur");
+	types={"ID"=int; "PatientID"=int; "IDZentrum"= int;  "WartenAktiviert"=bool; "IDOPIndikationsdiagnose"= int; "IDOrgankultur"=int;};
+	primaryKey="ID";
+	bindFromColumn="ID"; bindToDG="organkulturDG"; targetColumn="IDWarteliste";
+};
+
+instrumentDG=
+{	table="StammdatenInstrumente";
+	types={"ID"=int; };
+	columns=("ID");
+	primaryKey="ID";
+	bindToDG="organkulturDG";
+};
+herstellungsprotokoll=
+{	table="herstellungsprotokoll";
+	columns=("tp_id","medium","inkulturnahme", "chargennummer_medium", "chargennummer_ncs", "chargennummer_halter", "chargennummer_flasche", "chargennummer_bss", "chargennummer_bss_wellplate",
+			"Endothelscore","NekrosenKlassifizierung","BefundbarkeitEndothel","AnteilNekrosen","EZD","stroma", "bemerkungen",
+			"instrument1", "instrument2", "instrument3",
+			"mitarbeiter");
+	primaryKey="tp_id";
+	bindToDG="organkulturDG";
+};
+nameMediumDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("1","M1"),("2","M2"),("0","TM"));
+};
+precuttypeDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("0","PKP"),("1","DSAEK"),("2","fsDSAEK"),("9","DMEK"),("3","DALK"), ("4","Notfall"), ("5","Tektonisch"), ("6","Limbus"), ("7","Femto"), ("8","Excimer"));
+};
+lz_verwendungDG=
+{	columns=("id","name");
+	primaryKey="id";
+	data=(("0","tiefgefroren"),("1","Projekt: Eberwein"),("2","Projekt: Neuburger"),("3","Projekt: Maier 1"), ("4","Projekt: Maier 2"), ("5","Projekt: Heinzelmann 1"), ("6","Projekt: Heinzelmann 2"), ("7","Projekt: Boehringer 1"),("10","Entsorgt"));
+};
+nameMitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","Strasse","PLZ","Ort","Telefon","Mobil","Fax","extern","role");
+	primaryKey="ID";
+	bindToDG="medienwechselDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+	cache=YES;
+	filters=
+	{	mta={col="role";op=">=";val="3"};
+		endbef={col="role";op="eq";val="3"};
+	}
+};
+ordinalDG=
+{	table="StammdatenEinstufungOrdinal";
+	columns=("ID","type","Name","block_alloc");
+	types={"ID"=int; "type"=int; "block_alloc"=bool;};
+	primaryKey="ID";
+	bindToDG="medienwechselDG";
+	filters=
+	{	endothel_befundbarkeit={col="type";op="=";val="2"};
+		endothel_morph = {col="type";op="=";val="3"};
+		nekrosen = {col="type";op="=";val="5"};
+		spalt = {col="type";op="=";val="6"};
+	}
+};
+
+medienwechsel_stroma=
+{	table="medienwechsel_stroma";
+	columns=("id","idmedienwechsel","idbefund");
+	types={"id"=int; "idmedienwechsel"=int; "idbefund"=int;};
+	primaryKey="id"; bindFromColumn="idmedienwechsel";
+	bindToDG="medienwechselDG";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+
+verwerfungsgrundDG=
+{	table="StammdatenVerwerfungsgrund";
+	columns=("ID","Name");
+	primaryKey="ID";
+	bindToDG="medienwechselDG";
+	cache=YES;
+};
+voropDG=
+{	table="StammdatenSpenderVoroperation";
+	types={"ID"=int; };
+	columns=("ID","Text");
+	primaryKey="ID";
+	bindToDG="medienwechselDG";
+};
+
+GlobalSettings=
+{	table="GlobalSettings";
+	columns=("Key","Value");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+
+}</DisplayGroups>
+
+<include src="hhb/TpForms.dgw">
+<include src="hhb/login3.dgw">
+
+
+<perlfunc name="_onload_">
+{	$DG::kultiviertDG->clearCache();
+}</perlfunc>
+
+
+<perlfunc name="neuerMedienwechsel">
+{	sub GlobalSetting { my ($key)=@_;
+		my $erg=$DG::GlobalSettings->dictsForWhereClauseDictRaw({Key=> $key});
+		return undef unless $erg;
+		return $erg->[0]->{Value};
+	}
+	my $insertionDict=$DG::medienwechselDG->mutablePendingInsertionDict();
+	$insertionDict->{$_}=GlobalSetting($_) for qw/chargennummer_ncs chargennummer_flasche chargennummer_halter/;
+	$insertionDict->{chargennummer}=GlobalSetting('chargennummer_m'.$insertionDict->{IDMedium});
+
+	$insertionDict->{KulturEinDatum}=currentDateString();
+	$insertionDict->{DatumEndbefund}=$insertionDict->{KulturEinDatum};	# untersuchungsdatum
+
+	if($insertionDict->{IDMedium} == 2)
+	{	$insertionDict->{IsEndbefund}=1;
+	}
+	my $mw=$DG::medienwechselDG->selectedDict();
+	my $r= $DG::medienwechselDG->executeSQLStatement('select count(*) from "Mediumwechsel" where "IDOrgankultur"='.$mw->{IDOrgankultur}.' and "IDMedium"=1' );
+	my $second=($r && $r->[0]->[0]==1)? 1 : 0;
+	if($insertionDict->{IDMedium} == 2|| $second)
+	{	$insertionDict->{$_}=GlobalSetting($_) for qw/chargennummer_bss chargennummer_bss_wellplate/;
+	}
+	my $currDict=$DG::medienwechselDG->allDicts()->[0];
+	my $currID=$currDict->{ID};
+
+	$insertionDict->{NarbePeripher}=1 if($currDict->{NarbePeripher});
+	$insertionDict->{NarbeZentral} =1 if($currDict->{NarbeZentral} );
+
+	my $name=$DG::LOGIN->valueOfSelectedField('user');
+	my $userDict=$DG::passwordDG->dictsForWhereClauseDictRaw({name=>$name})->[0];
+	$insertionDict->{IDMitarbeiter}=$userDict->{IDMitarbeiter};
+
+	$DG::medienwechselDG->updatePKWithDict($currID,{'KulturAusDatum'=> $insertionDict->{KulturEinDatum},
+													'DatumBakteriologieEntnahme'=>$insertionDict->{KulturEinDatum}
+												   });
+}</perlfunc>
+
+<perlfunc name="handleDealloc">
+{	my $idwl=$DG::organkulturDG->selectedDict()->{IDWarteliste};
+	if($idwl)
+	{	$DG::organkulturDG->updateSelectionWithDict({'IDWarteliste' => undef, 'EndOfCulture'=>0  } );			# wieder in Brutschrank
+		$DG::wartelisteDG->updatePKWithDict ($idwl, {'WartenAktiviert' => '1', 'IDOrgankultur'=>undef});		# wieder auf Warteliste
+
+		# <!> datumEnde Lšschen, Grund Ende lšschen
+		my $IDOrgankultur=$DG::organkulturDG->selectedPK();
+		my $IDletzterMW=$DG::letzteMedienwechselDG->dictsForWhereClauseDict({'IDOrgankultur' => $IDOrgankultur})->[0]->{ID};
+		$DG::letzteMedienwechselDG->updatePKWithDict($IDletzterMW,{KulturAusDatum => undef});
+	}
+}</perlfunc>
+
+<perlfunc name="verwerfungChecken">
+{	if ($DG::organkulturDG->pendingUpdateDict()->{IDVerwerfungsgrund})
+	{	$DG::organkulturDG->updateSelectionWithDict({'EndOfCulture'=>1});
+		$DG::medienwechselDG->updateSelectionWithDict({'KulturAusDatum'=> currentDateString(), 'DatumEndbefund'=> currentDateString(), 'IsEndbefund'=>1})
+			unless(length $DG::medienwechselDG->selectedDict()->{KulturAusDatum});
+	}
+}</perlfunc>
+
+<perlfunc name="_auto_">
+{	$template=~s/class=\"classIDLetztesMedium1\"//ogs;
+
+	$DG::medienwechselDG->disableUIElement('IDMitarbeiter');
+
+	$template=~s/>([0-9]+) day[ s0-9:]*</>$1 d</ogs;
+
+	if($DG::kultiviertDG->hasSelection() )
+	{	my $selectedKultur = $DG::kultiviertDG->selectedDict();
+
+		$template=~s/<option value=2 > M2//ogs					if($selectedKultur->{IDLetztesMedium} == 2);
+		$DG::organkulturDG->disableUIElement('IDMitarbeiter2')	if($selectedKultur->{IDLetztesMedium} != 2);
+	###$template=~s/<option value=3 > VM//ogs unless($DG::rechnungsDG->selectedDict() );
+
+		disableButton('TpBogen') unless(length $selectedKultur->{DatumLetzteEZD} );
+		$DG::organkulturDG->disableUIElement('Verschickbar') if($selectedKultur->{narben} || $DG::organkulturDG->selectedDict()->{IDVoroperationen});
+
+		my  $wkl=$DG::organkulturDG->selectedDict();
+	} else
+	{	disableButton('TpBogen');
+	}
+}</perlfunc>
+
+
+
+<perlfunc name="printMW" include="pdfgen.pl">
+{	my $date=currentDateString();
+	my $sql='select "IDSpender", a."Auge", "Geburtsdatum", "Date", b."IDMedium" as m  from	(select "Organkultur"."IDSpender", "Organkultur"."Auge", "IDOrgankultur","IDWarteliste", max("Mediumwechsel"."KulturAusDatum") as "Date", "Geburtsdatum" from "Organkultur" join "Mediumwechsel" on ("IDOrgankultur"="Organkultur"."ID") join "StammdatenHornhautspender" on ("StammdatenHornhautspender"."ID"="IDSpender") where  "IDVerwerfungsgrund" is null group by "Organkultur"."IDSpender", "Organkultur"."Auge","IDOrgankultur","IDWarteliste","Geburtsdatum") a join "Mediumwechsel" b on  (b."IDOrgankultur"=a."IDOrgankultur" and b."KulturAusDatum"="Date") left join "Warteliste" on ("IDWarteliste"="Warteliste"."ID")  where "Date"=\''.$date.'\' or "Date"=\''.$date.'\'::date + interval \'1 day\' and "IDZentrum" !=1 order by "IDSpender"'; 
+	my $listR=$DG::organkulturDG->executeSQLStatement($sql);
+	my @list;
+	foreach my $r (@{$listR})
+	{	my $g=$r->[2];
+		$g=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/$3.$2.$1/go;
+		push @list, { ID=>$r->[0].$r->[1], Gebdat=>$g, m=>$r->[4] };
+	}
+	$date=~ s/([0-9]+)-([0-9]+)-([0-9]+)/$3.$2.$1/go;
+	my $template=getRessource('formulare/mibitemplate.tex');
+	my $ddict= { list=> \@list, Date=>$date };
+	$ddict->{backimg}= PDFFilenameForTemplateNameAndRef('hhb/formulare/mibitemplate.tex',$ddict);
+	returnPDF(PDFForTemplateNameAndRef('hhb/formulare/mibilisttemplate.tex', $ddict));
+}</perlfunc>
+
+<perlfunc name="printHerstellungsprotokoll" include="pdfgen.pl">
+{	my $ddict =$DG::organkulturDG->selectedDict();
+	$ddict->{Langzeitverbleib}='Transplantiert am '. $DG::organkulturDG->valueOfPath('wartelisteDG.EndeWarteliste@IDWarteliste', 'format:date="%d.%m.%Y"') if $DG::organkulturDG->selectedDict()->{IDWarteliste};
+	$ddict->{Langzeitverbleib}='Verwerfungsgrund: '. $DG::organkulturDG->valueOfPath('verwerfungsgrundDG.Name@IDVerwerfungsgrund') if $DG::organkulturDG->selectedDict()->{IDVerwerfungsgrund};
+	my $tpID= $ddict->{IDSpender}.$ddict->{Auge};
+	my $listR=$DG::herstellungsprotokoll->dictsForWhereClauseDictRaw({tp_id=> $tpID});
+	returnPDF(PDFForTemplateNameAndRef('hhb/formulare/herstellungstemplate.tex', { list=> $listR, TPID=> $tpID, Date=> currentDateString(), Langzeitverbleib=>$ddict->{Langzeitverbleib} } ));
+}</perlfunc>
+
+
+
+<perlfunc name="printPruefprotokoll" include="pdfgen.pl">
+{	my $ddict=$DG::kultiviertDG->selectedDict();
+	returnPDF(PDFForTemplateNameAndRef('hhb/formulare/Pruefprotokoll.tex', $ddict));
+}</perlfunc>
+
+
+<perlfunc name="endeKultur">
+{	$DG::organkulturDG->updateSelectionWithDict({EndOfCulture=>1});
+	my $ausDatum=$DG::medienwechselDG->valueOfSelectedField('KulturAusDatum');
+	$ausDatum=currentDateString() unless length $ausDatum;
+	$DG::medienwechselDG->updateSelectionWithDict({KulturAusDatum=>$ausDatum, IsEndbefund=>1 });
+	$DG::kultiviertDG->clearCache();
+	$DG::kultiviertDG->invalidateSelection();
+}</perlfunc>
+
+<perlfunc name="augenwechsel">
+{	my $d=$DG::kultiviertDG->dictForPK( $DG::kultiviertDG->pendingPrimaryKey() );
+	my ($spid, $eye)=( $d->{IDSpender}, $d->{Auge} );
+	my $newID=$DG::organkulturDG->dictsForWhereClauseDictRaw({IDSpender => $spid, Auge => ($eye eq 'L') ? 'R':'L'})->[0]->{ID};
+	$DG::kultiviertDG->selectPK($newID);
+}</perlfunc>
+
+<perlfunc name="validateMW">
+{	my $d=DG::mutablePendingUpdateDict( );	# da postgres 8.4 keine komplexen deferrable checks unterstŸtzt (hšhere medienwechsel nicht vordatieren) machen wir das hier von hand...
+	if($d->{KulturEinDatum})
+	{	my $mw=$DG::medienwechselDG->selectedDict();
+		my $r=$DG::medienwechselDG->executeSQLStatement('select max("KulturEinDatum") from "Mediumwechsel" where "IDOrgankultur"='.$mw->{IDOrgankultur}.' and "IDMedium"<'.$mw->{IDMedium} );
+		my $s=$DG::medienwechselDG->executeSQLStatement("select '$d->{KulturEinDatum}'::timestamp" );
+		if($r && $s && $r->[0]->[0] gt $s->[0]->[0] )
+		{	DG::abortPendingUpdate();
+			addUserscript("alert('Achtung: dieser Medienwechsel (MW) darf nicht vor dem letzten MW datieren (Uhrzeit!)')");
+		}
+	}
+}</perlfunc>
+
+
+<perlfunc name="endothelAnalyse" include="pdfgen.pl">
+{	my $idtrial =14;
+	my $suffix='png';
+	my $ddict=$DG::kultiviertDG->selectedDict();
+	my $tpID= $ddict->{IDSpender}.$ddict->{Auge};
+	my $filename='/tmp/hhbscreen_capture'.$tpID.'.'.$suffix;
+
+	if(-e $filename)
+	{	use LWP::UserAgent;
+		my $browser = LWP::UserAgent->new;
+		my $response = $browser->post( 'http://localhost/cellfinder_image',
+			[	idtrial => $idtrial,
+				filedata =>  $filename,
+				filename => $tpID.'_'.$DG::medienwechselDG->valueOfPath('KulturEinDatum','format:date="%Y%m%d"').".$suffix"
+			]
+		);
+		my $image_pk=$response->decoded_content;
+		if($image_pk)
+		{	$DG::medienwechselDG->updateSelectionWithDict({idcellfinder=> $image_pk});
+			$browser->post( 'http://localhost/cellfinder_image/'.$image_pk.'?spc=addanalysis');
+			DG::redirectToAppDGPK('endothelanalysis', 'imagesDG',$image_pk);
+		}
+	} else
+	{	addUserscript('alert("Bild wurde noch nicht gespeichert!")');
+	}
+
+}</perlfunc>
+
+<perlfunc name="printMWForms" include="pdfgen.pl">
+{	my $ddict=$DG::medienwechselDG->selectedDict();
+	my $kdict=$DG::kultiviertDG->selectedDict();
+	$ddict->{IDSpender}=$kdict->{IDSpender};
+	$ddict->{Name}= $DG::medienwechselDG->valueOfPath('nameMitarbeiterDG.Name@IDMitarbeiter');
+
+#	returnPDF(PDFForTemplateNameAndRef('hhb/formulare/mw_protokoll.tex', $ddict));
+	LPRPrint (PDFForTemplateNameAndRef('hhb/formulare/mw_protokoll.tex', $ddict), 'LionsHHB' , 1, 'media=Lower');
+
+}</perlfunc>
+
+

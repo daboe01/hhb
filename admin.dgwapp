@@ -1,0 +1,234 @@
+<comment>
+18.8.05: Wertelisten editor
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</comment>
+
+
+<include src="hhb/faces.html">
+<table>
+<tr>
+<td></td><td></td>
+<td colspan=3>
+	<table class="datatable">
+	<tr>
+		<foreach:facesDG>
+			<td><var:Name style="font-size:150%"></td>
+		</foreach>
+	</tr>
+	</table>
+</td>
+</tr>
+</table>
+
+	<comment> ############# System ############# </comment>
+	<condDG:facesDG var:ID="const:1">
+	<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><td class="insertvar">
+			<displayGroup:systemDG perform:insert="var:Key" edittype=text>
+			</td></tr>
+			<foreach:systemDG>
+			<tr>
+				<td><var:Key></td>
+			</tr>
+			</foreach>
+		</table>
+		</td>
+		<td valign=top>
+				<form:systemDG>
+					<var:Key edittype=text format:label="Key" size="80">
+					<var:Value edittype=textarea format:label="Val" rows=3 cols=80>
+				</form>
+		</td></tr>
+	</table>
+	</condDG>
+	
+	<comment> ############# Password ############# </comment>
+	<condDG:facesDG var:ID="const:2">
+	<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><td class="insertvar">
+				<displayGroup:passwordDG perform:insert="var:name" edittype=text>
+			</td></tr>
+			<foreach:passwordDG>
+				<tr>
+					<td><var:name></td>
+				</tr>
+			</foreach>
+		</table>
+		</td>
+		<td valign=top>
+			<form:passwordDG>
+				<var:ldap edittype=boolean format:label="ldap-name">
+				<var:name edittype=text format:label="Name">
+				<cond var:ldap="const:0">
+					<var:password edittype=password format:label="Password">
+				</cond>
+				<var:level edittype=popup format:lookup="levelsDG.Name" format:label="Permission-Level">
+				<var:IDMitarbeiter edittype=popup format:lookup="nameMitarbeiterDG.hhbma.Name" format:label="Mitarbeiter">
+				
+			</form>
+		</td></tr>
+	</table>
+	</condDG>
+	<comment> ############# SQL Query ############# </comment>
+	<condDG:facesDG var:ID="const:3">	<comment> SQL Queries </comment>
+	<td valign=top>
+		<foreach:sqlDG></foreach>
+		<form:sqlDG label="Query">
+			<var:SQLText edittype=textarea cols="80" rows="20">
+		</form>
+		<button:Query perl="performQuery">
+		<hr><a href="http://10.210.21.33/wiki/index.php/DebugEEBA"> Hinterlegte Abfragen </a>
+	</td>
+	</condDG>
+	<comment> ############# SQL Audits ############# </comment>
+	<condDG:facesDG var:ID="const:4">	<comment> SQL Audits </comment>
+	<table>
+		<tr>
+		<td valign=top>
+		<table class="datatable">
+			<tr><td class="insertvar">
+			<displayGroup:sqlauditDG perform:insert="var:comment" edittype=text>
+			</td></tr>
+			<foreach:sqlauditDG>
+			<tr>
+				<td><var:comment></td>
+			</tr>
+			</foreach>
+		</table>
+	</td>
+	<td valign=top>
+		<form:sqlauditDG>
+					<var:comment edittype=text size="80" format:label="Name">
+					<var:email edittype=text size="80" format:label="email">
+					<var:exclude edittype=boolean format:label="exclude">
+					<var:sql_query edittype=textarea cols="80" rows="20", label="Query">
+		</form>
+	</tr>
+	</td>
+	</table>
+	</condDG>
+</body>
+</html>
+
+
+<DisplayGroups>{
+facesDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("2","Users"),("1","System"),("3","SQLQuery"),("4","SQLAudits") );
+};
+
+
+systemDG=
+{	table="GlobalSettings";
+	columns=("Key","Value");
+	primaryKey="Key";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Key");
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+
+
+passwordDG=
+{	table="Password";
+	columns=("ID","name","password","level","IDMitarbeiter","ldap");
+	types={"ID"=int; level=int;"ldap"=bool; "IDMitarbeiter"=int;};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=("name");
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+
+nameMitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","Strasse","PLZ","Ort","Telefon","Mobil","Fax","extern","role");
+	types={"ID"=int; "extern"=bool; "role"=int; };
+	primaryKey="ID";
+	bindToDG="medienwechselDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+	connectionEnvAuto=YES;
+	filters=
+	{	hhbma={col="role";op=">=";val="2"};
+	}
+};
+
+sqlauditDG =
+{	table="sql_auditing";
+	columns=("id","comment","sql_query","exclude","email");
+	types={"id"=int; "exclude"=bool; };
+	primaryKey="id";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("id");
+	};
+	connectionEnvAuto=YES;
+};
+
+LOGIN=
+{	columns=("AppName","user","password");
+	DataInSession=YES;
+};
+
+levelsDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("6","Admin"),
+		  ("4","HHB-Arzt"),
+		  ("3","HHB-MTA"),
+		  ("1","Ext.Arzt"),
+		  ("0","gesperrt")
+		);
+};
+sqlDG=
+{	columns=("id","SQLText");
+	primaryKey="id";
+	cache="YES";
+};
+
+}</DisplayGroups>
+
+<perlfunc name="_earlyauto_">
+{
+	$DG::sqlDG->appendDictToCache({id=>1,SQLText=>'select * from "Organkultur"'}) unless $DG::sqlDG->allDicts();
+
+}</perlfunc>
+
+<perlfunc name="_auto_">
+{	my $userDict=$DG::passwordDG->dictsForWhereClauseDict({name=>$DG::LOGIN->valueOfSelectedField('user')});
+	$DG::LOGIN->rejectLogin() if(!(length $userDict) || (length $userDict->[0]->{password}) && ( $DG::LOGIN->valueOfSelectedField('password') ne $userDict->[0]->{password}) || $userDict->[0]->{level}<6 );
+	warn $DG::LOGIN->valueOfSelectedField('user');
+}</perlfunc>
+
+<perlfunc name="performQuery"  include="xlsgen.pl">
+{	my $sql = $DG::sqlDG->valueOfSelectedField('SQLText');
+	my $dbh = dbweb::getDBHForDG($DG::systemDG);
+	returnXLSForSQLandDBH($sql,$dbh);
+}</perlfunc>

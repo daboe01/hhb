@@ -1,0 +1,22 @@
+
+<DisplayGroups>{
+LOGIN=
+{	columns=("AppName","user","password");
+	DataInSession=YES;
+};
+passwordDG=
+{	table="Password";
+	columns=("ID","name","password","level","IDMitarbeiter");
+	types={"ID"=int; "level"=int; "IDMitarbeiter"=int; };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	bindFromColumn="name"; bindToDG="LOGIN"; targetColumn="user";
+};
+
+}</DisplayGroups>
+
+<perlfunc name="_auto_">
+{	my $name=$DG::LOGIN->valueOfSelectedField('user');
+	warn $name;
+}</perlfunc>
+

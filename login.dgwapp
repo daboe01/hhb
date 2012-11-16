@@ -1,0 +1,182 @@
+<comment>
+	2.2.2005 dr. boehringer: loginprogramm hhb
+</comment>
+
+<head>
+<link rel=stylesheet type="text/css" href="/dbwebressources2/style.css">
+</head>
+
+<body>
+
+
+<div id="loginpanel" style="width:250px;">
+<form:LOGIN label="Hornhautbank" action="redirectToApp">
+	<var:AppName edittype=popup label="Application" lookup="allAppsDG.Name" class="dbweb_delayedBinding" editmode=inplace>
+	<var:user edittype=text editmode=inplace label="name" id="namefield">
+	<var:password edittype=password editmode=inplace label="password">
+	<hr>
+	<button:change_password editmode=inplace perl="showChangePassword" format:ajax="on" class="btn"><br>
+	<button:store_for_autologin perl="store_in_cookie" class="btn small" format:ajax="on">
+	<foreach:errorDG> <tr> <td><var:Message  style="color:red;"></td> </tr> </foreach>
+</form>
+</div>
+<condDG:LOGIN var:changepwd="const:1">
+<foreach:passwordDG></foreach>
+<div id="loginpanel" style="width:250px;">
+	<form:passwordDG label="change Password">
+		<var:name edittype=text label="user">
+		<var:password edittype=password label="password">
+		<button:hide class="btn" perl="hidePassword" format:ajax="on">
+	</form>
+</div>
+</condDG>
+<hr><a href="http://auginfo/dbweb/amnion" class="btn primary"> Zur Amnionkartei</a>
+
+
+<DisplayGroups>{
+LOGIN=
+{	columns=("AppName","user","password","changepwd");
+	DataInSession=YES;
+};
+allAppsDG=
+{	columns=("File","Name","level");
+	primaryKey="File";
+	data=(("warteliste","Warteliste",3),
+		("brutschrank","Brutschrank",3),
+		("spender","Spender",3),
+		("allokation","Allokation",3),
+		("kataster","Kataster",1),
+		("tpversand","Transplantatversand",3),
+		("verstorbene","Verstorbene",3),
+		("wertelisten","Konfiguration",3),
+		("statistik","Statistik",1),
+		("femto","Femto",1),
+		("admin","Admin",6)
+	);
+};
+
+passwordDG=
+{	table="Password";
+	columns=("ID","name","password","level","IDMitarbeiter");
+	types={"ID"=int; "level"=int; "IDMitarbeiter"=int; };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=("name");
+	};
+};
+errorDG=
+{	columns=("Message");
+	primaryKey="Message";
+	cache=YES;
+};
+
+
+}</DisplayGroups>
+
+<perlfunc name="_earlyauto_">
+{	unless ($DG::LOGIN->valueOfSelectedField('changepwd'))
+	{	if(DBLoginState() )
+		{	$DG::errorDG->appendDictToCache( {Message =>'no access to database!'} );
+			addUserscript('Effect.Shake("loginpanel",{duration:0.2});');
+		}
+		if( getGlobal('authaccept') eq '2')
+		{	$DG::errorDG->appendDictToCache( {Message =>'credentials invalid/insufficient'} );
+			addUserscript('Effect.Shake("loginpanel",{duration:0.2});');
+		}
+	}
+}</perlfunc>
+
+<perlfunc name="redirectToApp" include="ldapaccess.pl">
+{
+########################### fix ldap->ldap_name(text) in schema
+
+	sub success
+	{	my $user=shift;
+		my $destination=shift;
+		setGlobal ( {authaccept => 1} );
+		#  myvar.benutzer is indirectly read by patched audittrail package: table_log.c l.392->tablelog_username()
+		setGlobal ( {_autosql_ => "set myvar.benutzer = '$user->{name}'"} );
+		$DG::LOGIN->redirectTo($destination);
+	}
+
+	$DG::errorDG->clearCache();
+	my $login=$DG::LOGIN->selectedDict();
+	my $destination=$login->{AppName};
+	if($login && $destination )
+	{	setGlobal( {authaccept => 2 } );
+		my $user=$DG::passwordDG->dictsForWhereClauseDictRaw({name=> $login->{user} });
+		if(!$user)	# potentially a new user-> try to init from ldapÉ
+		{	if(LDAPChallenge ( $login->{user}, $login->{password} ) )	# known to ldap?
+			{	my ($vorname, $nachname);
+				my $isAug=isAugenklinik($login->{user},\$vorname, \$nachname);
+				if($isAug)		# create new user if known to ldap and augenklinik
+				{	Encode::encode('latin1', $_) for($vorname, $nachname);
+					$user={ldap=> 1, name=> $login->{user}, level=>2};
+					$DG::passwordDG->insertDict($user);
+#<!> send email to admin for fixing this guess-entry
+				}
+			}		
+		} else {$user=$user->[0]};
+		if ($user->{level}< $login->{level})
+		{	$DG::errorDG->appendDictToCache( {Message =>'insufficient privs'} );
+		} else
+		{	if($user->{ldap})
+			{	if(LDAPChallenge ($login->{user}, $login->{password} ) )	# password korrekt?
+				{	success($user, $destination);
+				}
+			} else	# for backward compatibility only: ldap-less auth...
+			{
+
+				if( ( $login->{password} eq $user->{password} ) ||  !$user->{password} )
+				{	success($user, $destination);
+				} else
+				{	$DG::errorDG->appendDictToCache( {Message =>'password incorrect'} ) if (getGlobal('authaccept') ne 1);
+				}
+			}
+		}
+	}
+}</perlfunc>
+
+<perlfunc name="_onload_" include="ldapaccess.pl">
+{	my $centername;
+	my @uriComponents=split /\//o, $dbweb::URI;
+	$centername=$uriComponents[$#uriComponents] if scalar @uriComponents >3;
+
+	addUserscript('$("namefield").select()');
+	$DG::LOGIN->updateSelectionWithDict({AppName=> $centername || 'warteliste'});
+	my ($name,$password)=readUserAndPasswortFromCookie();	# password is already decrypted
+	if($name&&$password)
+	{	$DG::LOGIN->updateSelectionWithDict({user=>$name, password=>$password});
+		DG::invokePerlfunc("redirectToApp");
+	}
+}</perlfunc>
+
+
+<perlfunc name="showChangePassword">
+{	my $userDictR=$DG::passwordDG->dictsForWhereClauseDict({name=>$DG::LOGIN->valueOfSelectedField('user')});
+	my $userDict=$userDictR? $userDictR->[0]: undef;
+warn $userDict;
+	if($userDict&& ( !(length $userDict->{password}) || ( $DG::LOGIN->valueOfSelectedField('password') eq $userDict->{password}) ))
+	{	$DG::LOGIN->updateSelectionWithDict({changepwd=>1});
+		my $pwID=$DG::passwordDG->dictsForWhereClauseDict({name=>$DG::LOGIN->valueOfSelectedField('user')})->[0]->{ID};
+		$DG::passwordDG->selectPK($pwID);
+		$dbweb::logger->log_error("PWDchange ".$userDict->{name}.' '.$userDict->{password}.' changepwd '.$DG::LOGIN->valueOfSelectedField(changepwd) );
+	} else
+	{
+		$DG::errorDG->clearCache();
+		$DG::errorDG->appendDictToCache( { Message => 'you have to provide the current password in order to change it!' } );
+		addUserscript('Effect.Shake("loginpanel",{duration:0.2});');
+	}
+}</perlfunc>
+
+<perlfunc name="hidePassword">
+{	$DG::LOGIN->updateSelectionWithDict({changepwd=>0});
+}</perlfunc>
+
+<perlfunc name="store_in_cookie" include="ldapaccess.pl">
+{	my $login=$DG::LOGIN->selectedDict();
+	saveUserAndPasswortToCookie($login->{user}, $login->{password});
+}</perlfunc>
+

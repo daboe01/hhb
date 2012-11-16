@@ -1,0 +1,249 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{graphicx}
+\usepackage{<copytex:hhb/formular.sty>}
+\usepackage[absolute]{<copytex:hhb/textpos.sty>}
+\usepackage[final]{pdfpages}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+\setlength{\headheight}{13\baselineskip}
+\pagenumbering{none}
+
+\newFRMfield{Long}{65mm}
+\newFRMfield{Name}{15mm}
+\newFRMfield{Vorname}{15mm}
+\newFRMfield{date}{10mm}
+\newFRMfield{time}{10mm}
+\newFRMfield{datetime}{20mm}
+
+\setFRMinlinestyle 
+\newFRMenvironment{env6}{Innerhalb der letzten 48 Studen wurden verabreicht:}{2}
+\newFRMenvironment{env5}{Dokumentation der Gespraeche}{2}
+\newFRMenvironment{env4}{Körperliche Untersuchung}{2}
+\newFRMenvironment{env3}{Besonderheiten bei der Entnahme}{3}
+\newFRMenvironment{env2}{Bemerkungen}{2}
+\newFRMenvironment{env1}{Lokalbefund}{1}
+\newFRMenvironment{env0}{Ergebnis der koerperlichen Untersuchung (siehe Checkliste):}{2}
+\newFRMfield{ort}{10mm}[Ort][Freiburg] 
+\setFRMruledstyle 
+\newFRMfield{sigf}{50mm}[Stempel/Unterschrift]
+\newFRMfield{sigfA}{50mm}[Stempel/Unterschrift Verantwortliche Person nach \S20b AMG]
+
+\setFRMruledstyle 
+\newFRMfield{check3}{4mm}[][ ] 
+\newFRMfield{number}{12mm}[][ ] 
+\newFRMfield{IS1}{70mm}[]
+\newFRMfield{IS4}{120mm}[]
+\newFRMfield{IS3}{40mm}[]
+\newFRMfield{IS2}{30mm}[]
+
+%%%%%%%%%%%%%%%%%%%
+
+\newFRMfield{Erreger}{40mm}[Erreger]
+\newFRMfield{Dauer}{38mm}[Dauer]
+\newFRMfield{Augendiagnosen}{20mm}[ICD]
+
+\newFRMcontainer{Kontras} 
+{	\setFRMruledstyle 
+	\newFRMfield{check}{4mm}[][--] 
+	\newFRMfield{check2}{4mm}[][ ] 
+}{% 
+\scriptsize
+\parbox[t]{0.5\linewidth}{\baselineskip18pt 
+\useFRMfield{check2} Sepsis \useFRMfield{Erreger} \hfill \newline  
+\useFRMfield{check2} Dialyse \useFRMfield{Dauer}  \hfill \newline  
+\useFRMfield{check} HIV/HBV/HCV Infektion bekannt \hfill \newline  
+\useFRMfield{check} STD-Risiko (Drogen, Prostitution) \hfill \newline  
+\useFRMfield{check2} Fernreisen in Risikogebiete \hfill \newline  
+\useFRMfield{check2} Augenerkranungen \useFRMfield{Augendiagnosen}  \hfill \newline  
+\useFRMfield{check2} Photorefraktiver Eingriff (LASIK, PRK, ...) \hfill \newline
+\useFRMfield{check2} Z.n. Impfung mit Lebendimpfstoff  \hfill \newline  
+\useFRMfield{check2} Z.n. Hetero-/ Xenotransplantation 
+} 
+\scriptsize
+\parbox[t]{0.7\linewidth}{\baselineskip18pt 
+\useFRMfield{check2} Neurolog. Erkrankung (z.B. Alzheimer, MS, CJD) \useFRMfield{Augendiagnosen} \hfill \newline  
+\useFRMfield{check} CJD-Risiko (STH, Dura mater etc.)  \hfill \newline  
+\useFRMfield{check2} Leukämie, Lymphom  \hfill \newline  
+\useFRMfield{check2} Sonst. Malignom \useFRMfield{Augendiagnosen} \hfill \newline 
+\useFRMfield{check2} Unklare Todesursache  \hfill \newline 
+\useFRMfield{check2} Autoimmunerkrankung \useFRMfield{Augendiagnosen} \hfill \newline 
+\useFRMfield{check2} Hinweis auf Tollwut \hfill \newline 
+\useFRMfield{check2} Alle genannten Punkte treffen nicht zu 
+}% 
+} 
+
+
+\begin{document}
+\setlength{\oddsidemargin}{-13mm} 
+\addtolength{\textwidth}{22cm}
+{\tiny
+\setlength{\headheight}{10\baselineskip}
+\baselineskip14.3pt
+\ThisCenterWallPaper{1}{<file:briefkopfHHB2.pdf>}
+
+\setcounter{secnumdepth}{0}
+\section{Entnahmeprotokoll: Sp<var:ID>}
+
+\noindent \useFRMfield{check3}[~] Die Einwilligung zur Hornhautspende wurde "uberpr"uft \\
+\noindent \useFRMfield{check3}[~] Das Fehlen aller Kontraindikationen wurde "uberpr"uft (siehe Einwilligungsformular/Checkliste)\\
+\noindent \useFRMfield{check3}[~] Die Raumbedingungen entsprechen den Vorgaben der Checkliste f"ur Entnahmer"aume \\
+ {\tiny{\it  \hspace{2cm} (falls nein bitte Checkliste (AUG-HHB-Entnahme-B-1-18) f"ur diese Entnahme ausf"ullen)}}\\
+\noindent Bei Vorliegen einer Zustimmung zur Hornhauspende erfolgte die Spenderidentifikation anhand des Fusszetttels am Spender durch   \useFRMfield{Name}[<var:Explanteur>] \\
+\noindent Aufbewahrung des Spenders: \useFRMfield{Name}[<var:Entnahmeort>]. Modalit"at: \useFRMfield{Name}[<var:modality>].
+
+\noindent Pr"aparations-/ Entnahmezeitpunkt: \useFRMfield{date}[<var:Entnahmezeitpunkt>]. Todeszeitpunkt: \useFRMfield{datetime}[<var:Todeszeitpunkt>].
+
+\noindent Ort der Entnahme: \useFRMfield{Name}[<var:Entnahmeort>].
+Explanteur:  \useFRMfield{Name}[<var:Explanteur>].
+
+\noindent
+\useFRMfield{check3}[~]  RA \useFRMfield{check3}[~]   LA  Methode:\useFRMfield{Name}[<var:Entnahmemethode>]. Entnahme-Set Nr.:\useFRMfield{Name}[]  \\ 
+Charge des Transportmediums: \useFRMfield{Name}[<var:ChargeTM>]   Haltbarkeitsdatum: \useFRMfield{Name}[ ] 
+
+\noindent \useFRMfield{check3}[~] Blutentnahme f"ur Serologie \useFRMfield{check3}[~] HLA Typisierung  \useFRMfield{check3}[~] Identit"at der Beschriftung kontrolliert\\
+\noindent R"uckstellprobe \useFRMfield{check3}[~] Ja \useFRMfield{check3}[~] Nein  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\useFRMfield{check3}[~] Identit"at der Beschriftung kontrolliert\\
+\noindent \begin{env1}~\end{env1}
+\noindent  Pseudophakie: \useFRMfield{check3}[~] RA \useFRMfield{check3}[~]  LA  \useFRMfield{check3}[~]  keine.~~  Sonst. OP: \useFRMfield{Long}[] 
+
+\noindent
+\begin{env0}~\end{env0} 
+\begin{env2}<var:Bemerkungen>\end{env2} \vspace{0.3cm}
+
+\noindent Kontrolle des Temperaturloggers (10-38 Grad Celsius) bei Ankunft in der Hornhautbank:\\
+\noindent  \useFRMfield{check3}[~] Keine Abweichung, \useFRMfield{check3}[~]Abweichung,  verantwortliche Person ist informiert.\\ 
+
+\noindent Freiburg, <var:Datum>, \hfill \useFRMfield{sigf}\\ \\
+
+
+\noindent Negatives  infektiologisches Ergebnis: \useFRMfield{check3}[~] HIV Combo ~ \useFRMfield{check3}[~] HBsAg \useFRMfield{check3}[~] Anti-HBc \useFRMfield{check3}[~] HBV-PCR \useFRMfield{check3}[~] Anti-HCV \useFRMfield{check3}[~] HCV-PCR  \useFRMfield{check3}[~] Syphilis\\ 
+\noindent Nach ausf"uhrlicher Pr"ufung der freigaberelevanten Parameter k"onnen die entnommenen Gewebe nach \S8d Abs. 1 Satz 2 Nr. 4 des Transplantationsgesetzes f"ur die Aufarbeitung, Be- und Verarbeitung, Konservierung und Aufbewahrung freigegeben werden. \\ 
+
+\noindent Freiburg, <var:Datum>, \hfill \useFRMfield{sigfA}
+
+}
+\newpage
+\ThisCenterWallPaper{1}{<file:briefkopfHHB2.pdf>}
+\setlength{\headheight}{9\baselineskip}
+\scriptsize \baselineskip18pt
+\subsection{Hornhautspenderakte (Einwilligung): Sp<var:ID>}
+\noindent 
+ \\ \\ Frau/Herrn \useFRMfield{Name}[<var:Name>], \useFRMfield{Vorname}[<var:Vorname>], geboren am \useFRMfield{date}[<var:Geburtsdatum>],\\
+\noindent
+ist zum Zeitpunkt \useFRMfield{datetime}[<var:Todeszeitpunkt>]  verstorben. \\
+\noindent Sterbeort: \useFRMfield{Name}[<var:Sterbeort>]. Todesursache: \useFRMfield{Name}[<var:Todesursache>].\\
+\noindent Grunderkrankung: \useFRMfield{Long}[] \\ \\
+\noindent Die/der zust"andige  Person (z.B. Stationsarzt) \useFRMfield{Name}[<var:EinwilligungArzt>] erhielt die Einwilligung in die Hornhautspende\\
+\noindent \useFRMfield{Name}[<var:EinwilligungsArt>].\\
+\noindent Abgeh"origengespr"ach mit  \useFRMfield{Name}[<var:NameAngehoeriger>] (\useFRMfield{Name}[<var:EinverstaendnisPerson>]). \noindent \useFRMfield{check3}[<var:pers_kontakt>] Pers"onlicher Kontakt in den letzten 2 Jahren war vorhanden.\\ \\
+\noindent Anschrift:  \useFRMfield{Name}[<var:AnschriftAngehoeriger>]  \useFRMfield{Name}[<var:PLZAngehoeriger>]  \useFRMfield{Name}[<var:OrtAngehoeriger>]. Telefon:  \useFRMfield{Name}[<var:Telefon>].\\ \\
+\noindent Zeitpunkt der Kontaktaufnahme:  \useFRMfield{Name}[<var:time_contact1>].  Zweite Kontaktaufnahme:  \useFRMfield{Name}[<var:time_contact2>]\\ \\
+\begin{env5}<var:gespraechsnotiz>\end{env5}\\\\ \\
+
+\noindent Freiburg, <var:Datum>, \hfill \useFRMfield{sigf}
+\newpage
+\ThisCenterWallPaper{1}{<file:formulare/checkliste_donor.pdf>}
+\textblockorigin{1mm}{1mm}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+~
+\begin{textblock}{50}(135 , 35 )
+{
+\noindent \Huge <var:ID>
+}
+\end{textblock}
+
+\newpage
+\includepdf[pages=2]{<file:formulare/checkliste_donor.pdf>} 
+
+\setlength{\headheight}{9\baselineskip}
+\ThisCenterWallPaper{1}{<file:briefkopfHHB2.pdf>}
+\section{Spenderakte (Spendereignung): Sp<var:ID>}
+
+\subsubsection{Medizinische Anamnese und Verhaltensanamnese:}
+{\scriptsize
+\useFRMfield{check3}[] Krankenakte \useFRMfield{check3}[] Angeh"orige/Bekannter \useFRMfield{check3}[]  Behandelnder Arzt \useFRMfield{check3}[] Hausarzt  \useFRMfield{check3}[] Autopsie      \useFRMfield{check3}[] Untersuchung
+}
+
+\begin{Kontras} 
+\end{Kontras}
+
+\subsubsection{Folgende Medikamente/Blutprodukte wurden verabreicht:} 
+
+{\scriptsize \baselineskip18pt 
+\noindent \begin{env6}<var:Blutprodukte>\end{env6}\\\\
+\noindent \useFRMfield{check3} keine intraven"osen Medikamente wurden verabreicht.\\ 
+\noindent Zeitl. gewichtete Blutverd"unnung: \useFRMfield{number}[<var:ProzentualeBlutverduennung>]  \%.  (Die Blutprobe ist ungeeignet bei Werten "uber 50\%)\\
+
+\noindent Immunsuppressiva/Chemo \useFRMfield{IS1} Dauer \useFRMfield{IS2}\\ \\
+}
+\begin{env4} Koerpergroesse: <var:Koerpergroesse> cm. Gewicht <var:Koerpergewicht> kg. \end{env4}\vspace{0.5cm}
+\noindent {\bf Obduktion durchgef"uhrt \useFRMfield{check3} Ja \useFRMfield{check3} Nein.}  Bericht schriftlich/m"undlich erhalten: \useFRMfield{check3} Ja \useFRMfield{check3} Nein \\ 
+\noindent {\bf Der/Die Verstorbene ist als Hornhautspender/in geeignet \useFRMfield{check3} Ja \useFRMfield{check3} Nein.}\\ 
+
+Freiburg, <var:Datum>, \hfill \useFRMfield{sigf}
+
+
+\newpage
+
+\ThisCenterWallPaper{1}{<file:formulare/virologie_wallpaper.pdf>}
+~
+\textblockorigin{1mm}{1mm}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\begin{textblock}{100}(130,55) 
+Sp<var:ID>
+\end{textblock}
+\begin{textblock}{100}(130,71) 
+<var:Geburtsdatum>
+\end{textblock}
+\begin{textblock}{100}(65,95) 
+<var:Explanteur>
+\end{textblock}
+\begin{textblock}{100}(105,121) 
+<var:Datum>
+\end{textblock}
+\begin{textblock}{100}(150,121) 
+<var:Uhrzeit>
+\end{textblock}
+
+\newpage
+
+\ThisCenterWallPaper{1}{<file:formulare/lues.pdf>}
+.
+\begin{textblock}{50}(78 , 55 )
+{
+\noindent <var:Entnahmezeitpunkt>
+}
+\end{textblock}
+
+
+\begin{textblock}{50}(25 , 120 )
+{\huge
+\noindent <var:ID>
+}
+\end{textblock}
+\begin{textblock}{50}(100 , 120 )
+{\huge
+\noindent <var:Geburtsdatum>
+}
+\end{textblock}
+
+\begin{textblock}{50}(75 , 121 )
+{\Large
+\noindent <var:geschlecht>
+}
+\end{textblock}
+
+\begin{textblock}{50}(48 , 270 )
+{
+\noindent <var:Datum>
+}
+\end{textblock}
+
+\end{document}

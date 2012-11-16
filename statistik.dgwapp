@@ -1,0 +1,956 @@
+ <comment>
+  EEBA Fragebogen:  16.6.2006 by dr. boehringer
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</comment>
+
+<include src="hhb/faces.html">
+
+<table>
+<tr>
+<td></td><td></td>
+<td colspan=3>
+	<table class="datatable">
+	<tr>
+		<foreach:facesDG>
+			<td><var:Name style="font-size:150%"></td>
+		</foreach>
+	</tr>
+	</table>
+</td>
+</tr>
+</table>
+
+<table>
+<condDG:facesDG var:ID="const:1">		<comment> EEBA Statistik </comment>
+<tr>
+<td valign=top>
+		<displayGroup:year perform:insert="var:year" edittype=popup format:lookup="years.year" format:label="Jahr" perl="doCalc">
+		<table class="datatable">
+		<foreach:year>
+			<tr>
+			<td><var:year></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<table class="datatable">
+		<th>Item</th>
+		<th>Antwort</th>
+		<foreach:items>
+			<tr>
+			<td><var:Item></td>
+			<td><var:Value></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+</condDG:facesDG>
+
+<condDG:facesDG var:ID="const:5">		<comment> Management Review Statistik </comment>
+<tr>
+<td valign=top>
+		<displayGroup:year2 perform:insert="var:year" edittype=popup format:lookup="years.year" format:label="Jahr" perl="doCalc2">
+		<table class="datatable">
+		<foreach:year2>
+			<tr>
+			<td><var:year></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<table class="datatable">
+		<th>Item</th>
+		<th>Antwort</th>
+		<foreach:items2>
+			<tr>
+			<td><var:Item></td>
+			<td><var:Value></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+</condDG:facesDG>
+
+
+<condDG:facesDG var:ID="const:7">		<comment> PEI Statistik </comment>
+<tr>
+<td valign=top>
+		<displayGroup:year4 perform:insert="var:year" edittype=popup format:lookup="years.year" format:label="Jahr" perl="doCalcPEI">
+		<table class="datatable">
+		<foreach:year4>
+			<tr>
+			<td><var:year></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<table class="datatable">
+		<th>Item</th>
+		<th>Antwort</th>
+		<foreach:items4>
+			<tr>
+			<td><var:Item></td>
+			<td><var:Value></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+</condDG:facesDG>
+
+
+<condDG:facesDG var:ID="const:2">	<comment> Monatsstatistik </comment>
+<td valign=top>
+		<displayGroup:year3 perform:insert="var:year" edittype=popup format:lookup="years.year" format:label="Jahr" format:progress="15">
+		<table class="datatable">
+		<foreach:year3>
+			<tr>
+			<td><var:year></td>
+			</tr>
+		</foreach>
+	</table>
+	<condDG:year3 selection=true>
+	<table class="datatable">
+		<th>Jahr</th>
+		<th>Tx</th>
+		<th>Dx</th>
+		<foreach:jahre>
+			<tr>
+			<td><var:Year></td>
+			<td><var:ZahlTransplantiert></td>
+			<td><var:ZahlVerworfen></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<table class="datatable">
+		<th>Monat</th>
+		<th>Sp Alter</th>
+		<th>KD</th>
+		<th>PMZ</th>
+		<th>Tx</th>
+		<foreach:monate>
+			<tr>
+			<td><var:Month></td>
+			<td><var:MinSpenderalter>-<var:MaxSpenderalter> (<var:MeanSpenderalter>)</td>
+			<td><var:MinKDgesamt>-<var:MsxKDgesamt> (<var:MeanKDgesamt>)</td>
+			<td><var:MinPMZ>-<var:MaxPMZ> (<var:MeanPMZ>)</td>
+			<td><var:ZahlTransplantiert></td>
+			<td><var:ZahlVerworfen></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<table class="datatable">
+		<th>Abgegeben</th>
+		<th>#</th>
+		<foreach:versand>
+			<tr>
+				<td><var:Zentrum></td>
+				<td><var:ZahlVersand></td>
+			</tr>
+		</foreach>
+	</table>
+	<table class="datatable">
+		<th>Verwerfungsgrund</th>
+		<th>#</th>
+		<foreach:verwerfung>
+			<tr>
+			<td><var:Verwerfungsgrund></td>
+			<td><var:ZahlVerworfen></td>
+			</tr>
+		</foreach>
+	</table>
+	<table class="datatable">
+		<th>Quelle</th>
+		<th>#</th>
+		<foreach:quelle>
+			<tr>
+			<td><var:NameQuelle></td>
+			<td><var:count></td>
+			</tr>
+		</foreach>
+	</table>
+	</condDG:year3>
+</td>
+</td></tr>
+</condDG:facesDG>
+
+
+
+<condDG:facesDG var:ID="const:4">	<comment> Gruppensuche </comment>
+<td valign=top>
+	<button:Suchen format:ajax="on" perl="suchen">
+	<table class="datatable">
+		<tr><td colspan=2>
+			<displayGroup:searchPropertiesDG perform:delete="selected" edittype=img src="/dbwebressources2/delete.gif" confirm="Wirklich l&ouml;schen?" class="controlicon">
+		</td></tr>
+		<th colspan=2>Risikoeinstufung</th><tr>
+		<td class="insertvar" colspan=2>
+			<displayGroup:searchPropertiesDG.risiko perform:insert="var:DiagnoseID" edittype=popup lookup="allDiagsDG.risiko.Name" size="25">
+		</td></tr>
+		<foreach:searchPropertiesDG.risiko>
+			<tr><td colspan=2>
+				<var:DiagnoseID lookup="allDiagsDG.Name">
+			</td></tr>
+		</foreach>
+		<th>Studie</th>
+		<th>Gruppe</th>
+		<tr><td class="insertvar" colspan=2>
+			<displayGroup:searchPropertiesDG.studien perform:insert="var:DiagnoseID" edittype=popup lookup="allDiagsDG.studien.Name" size="25">
+		</td></tr>
+		<foreach:searchPropertiesDG.studien>
+			<tr><td>
+				<var:DiagnoseID lookup="allDiagsDG.Name"></td>	<td><var:Parameter edittype=text size="5">
+			</td></tr>
+		</foreach>
+		<th colspan=2>Augendiags</th>
+		<tr><td class="insertvar" colspan=2>
+			<displayGroup:searchPropertiesDG.AugenDiags perform:insert="var:DiagnoseID" edittype=combo lookup="allDiagsDG.AugenDiags.Name" size="25">
+		</td></tr>
+		<foreach:searchPropertiesDG.AugenDiags>
+			<tr><td colspan=2>
+				<var:DiagnoseID lookup="allDiagsDG.Name">
+			</td></tr>
+		</foreach>
+	</table>
+	<form:wartelisteSearchDG>
+		<var:IDZentrum edittype=popup format:lookup="allCentersDG.ZentrumName"><br>
+		<var:IDMeldenderArzt edittype=popup format:lookup="mitarbeiterDG.Name" format:label="Meldung durch">
+		<var:IDOPArt edittype=popup format:lookup="opverfahrenDG.OPArt" format:label="OP-Verfahren">
+		<var:IDTrepanart edittype=popup lookup="trepanDG.Trepanart" label="Trephine">
+		<var:IDOperateur edittype=popup lookup="mitarbeiterDG.operiert.Name" label="Operateur">
+	</form>
+</td>
+<td valign=top>
+	<button:NeueSuche perl="neusuchen">
+	<button:Akten perl="aktenBestellen">
+	<button:DocsCal perl="termineAnzeigen">
+	<table class="datatable">
+		<caption>Gefunden</caption>
+		<th>Name</th>
+		<th>Vorname</th>
+		<th>Geburtsdatum</th>
+		<th>Auge</th>
+		<th>OPDatum</th></tr>
+		<foreach:wartelisteDG>
+		<tr>
+			<td><var:PIZ></td>
+			<td><var:Name></td>
+			<td><var:Vorname></td>
+			<td><var:Geburtsdatum format:date="%d.%m.%Y"></td>
+			<td><var:Auge></td>
+			<td><var:EndeWarteliste format:date="%d.%m.%Y"></td>
+		</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+<td valign=top>
+	<table class="datatable">
+		<foreach:docscalDG>
+		<tr>
+			<td><var:Termin format:date="%d.%m.%Y"></td>
+		</tr>
+		</foreach>
+	</table>
+</td>
+</condDG:facesDG>
+
+<condDG:facesDG var:ID="const:6">	<comment> Fehlersuche </comment>
+<button:AusgetrageneHornhaeute perl="ausgetrageneHornhaeute">
+<button:EntnahmeBlank perl="entnahmeblank">
+<button:VerwerfungBlank perl="verwerfungblank">
+<button:BulbiListe perl="BulbiListe">
+<button:OPDatumProbListe perl="OPDatumProbListe">
+<a href="http://ha21033/wiki/index.php/kpl_statistik_fehlersuche"> Wertvolle Tipps </a>
+
+</condDG:facesDG>
+
+</tr>
+
+</table>
+</body>
+</html>
+
+
+<DisplayGroups>{
+
+donorsDG=
+{	table="StammdatenHornhautspender";
+	columns=
+	(	"ID","Name","Vorname","Geburtsdatum", "Anschrift", "PLZ", "Ort",  "Todeszeitpunkt", "Bemerkungen", "IDEinverstaendnisArt", "EinverstaendnisEingeholt", "EinverstaendnisPerson", "NameAngehoeriger", "Koerpergroesse", "Koerpergewicht", "Telefon", "IDVerwefungsgrundPrimary", "PIZ", "MedizinischeDiagnosen", "weiblich", "Sterbeort", "Stationstelefon", "EinweisenderArzt", "HausArzt", "TelEinweisenderArzt", "TelHausArzt", "Ablehnungsgrund", "ZeitpunktErsterKontaktaufnahme", "PosEinverstaendnis", "TelAngehoerige", "AngehoerigenVerhaeltnis", "TelefoniertMit", "KISepsis", "KIHepatitis", "KIHIV", "KIHIVRisiko", "KINeuroviral", "KICJDRisiko", "KINeurolog", "KILeukaemie", "KIMalignom"
+	);
+	primaryKey="ID";
+	connectionEnv="dbweb_connectionstring_verstorben";
+};
+
+statistik=
+{	table="StatistikJahr";
+	columns=
+	(	"Year"
+	);
+	primaryKey="Year";
+	connectionEnvAuto=YES;
+};
+
+year=
+{	columns=("year");
+	primaryKey="year";
+	cache="YES";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+year2=
+{	columns=("year");
+	primaryKey="year";
+	cache="YES";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+year3=
+{	columns=("year");
+	primaryKey="year";
+	cache="YES";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+year4=
+{	columns=("year");
+	primaryKey="year";
+	cache="YES";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+years=
+{	columns=("year");
+	primaryKey="year";
+	data=(("2003"), ("2004"), ("2005"), ("2006"), ("2007"), ("2008"), ("2009"), ("2010"), ("2011"), ("2012"), ("2013"));
+};
+items=
+{	columns=("ID", "Year" ,"Item","Value");
+	primaryKey="ID";
+	cache="YES";
+	bindFromColumn="Year"; bindToDG="year"
+};
+items2=
+{	columns=("ID", "Year" ,"Item","Value");
+	primaryKey="ID";
+	cache="YES";
+	bindFromColumn="Year"; bindToDG="year2"
+};
+items4=
+{	columns=("ID", "Year" ,"Item","Value");
+	primaryKey="ID";
+	cache="YES";
+	bindFromColumn="Year"; bindToDG="year4"
+};
+
+facesDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=( ("2","Monat"),("1","EEBA"),("5","Review"),("7", "PEI"), ("4", "Gruppensuche"), ("6", "Fehlersuche"));
+};
+
+jahre=
+{	table="StatistikJahr";
+	columns=
+	(	"Year", "MinSpenderalter", "MaxSpenderalter","MeanSpenderalter", "MinKDgesamt", "MsxKDgesamt", "MeanKDgesamt", "MinPMZ", "MaxPMZ", "MeanPMZ",
+		"ZahlVerworfen","ZahlTransplantiert", "HLAMM"
+	);
+	primaryKey="Year";
+	connectionEnvAuto=YES;
+	cache=YES;
+	bindFromColumn="Year"; bindToDG="year3"
+	sortColumns=
+	{	standard=("Year");
+	};
+};
+monate=
+{	table="StatistikMonat";
+	columns=
+	(	"Year", "Month", "YMonth", "MinSpenderalter", "MaxSpenderalter","MeanSpenderalter", "MinKDgesamt", "MsxKDgesamt", "MeanKDgesamt", "MinPMZ", "MaxPMZ", "MeanPMZ",
+		"ZahlVerworfen","ZahlTransplantiert", "HLAMM"
+	);
+	primaryKey="YMonth";
+	bindFromColumn="Year"; bindToDG="jahre";
+	cache=YES;
+};
+versand=
+{	table="StatistikMonatVersand";
+	columns=
+	(	"YMonth", "Zentrum", "ZahlVersand"
+	);
+	primaryKey="YMonth";
+	bindFromColumn="YMonth"; bindToDG="monate"; targetColumn="YMonth";
+	cache=YES;
+};
+verwerfung=
+{	table="StatistikMonatVerwerfung";
+	columns=
+	(	"YMonth", "Verwerfungsgrund", "ZahlVerworfen"
+	);
+	primaryKey="YMonth";
+	bindFromColumn="YMonth"; bindToDG="monate"; targetColumn="YMonth";
+	cache=YES;
+};
+quelle=
+{	table="StatistikMonatQuelle";
+	columns=
+	(	"YMonth", "NameQuelle", "count"
+	);
+	primaryKey="YMonth";
+	bindFromColumn="YMonth"; bindToDG="monate"; targetColumn="YMonth";
+	cache=YES;
+};
+
+
+organkulturDG=
+{	table="Organkultur";
+	columns=("ID","IDSpender","IDWarteliste","IDVerwerfungsgrund","Auge","IDVoroperationen","EndOfCulture","Bemerkungen");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+
+wlPropertiesDG=
+{	table="AufnahmeDiagnoseKategorie";
+	columns=("ID","DiagnoseID","Name","Auge","StationaerID","Kategorie1","Parameter");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	cache=YES;
+};
+wartelisteDG=
+{	columns=("WLID","PatientID", "Name", "Vorname","Geburtsdatum","IDZentrum", "EndeWarteliste", "KeratoplastikAuge","KeratoplastikGesamt","Auge","MaxHLAMismatches","TransplantationenGesamt","TransfusionenGesamt",
+			 "SchwangerschaftenGesamt","IDOperateur","TrepanTp","TrepanPat","IDOPArt","IDMeldenderArzt","IDOrgankultur", "PIZ", "IDTrepanart","IDOPIndikationsdiagnose","IDOPIndikationsdiagnose","Bemerkungen");
+	primaryKey="WLID";
+	cache=YES;
+};
+wartelistenLoaderDG=
+{	table="WartelisteUebersicht";
+	columns=(	"WLID","PatientID", "Name", "Vorname","Geburtsdatum","IDZentrum", "EndeWarteliste", "KeratoplastikAuge","KeratoplastikGesamt","Auge","MaxHLAMismatches","TransplantationenGesamt","TransfusionenGesamt",
+				"SchwangerschaftenGesamt","IDOperateur","TrepanTp","TrepanPat","IDOPArt","IDMeldenderArzt","IDOrgankultur", "PIZ", "IDTrepanart","IDOPIndikationsdiagnose","IDOPIndikationsdiagnose","Bemerkungen");
+	primaryKey="WLID";
+	connectionEnvAuto=YES;
+	bindToDG="wartelisteSearchDG";
+	types={"WLID"=int;};
+};
+
+allDiagsDG=
+{	table="Diagnose";
+	columns=("ID","Name","Kategorie1","Kategorie2");
+	types={"ID"=int; "Kategorie1"=int;"Kategorie2"=int; };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	filters=
+	{	risiko=		{col="Kategorie1";op="eq";val="4"};
+		studien=	{col="Kategorie1";op="eq";val="5"};
+		AugenDiags=({col="Kategorie1";op="eq";val="1"});
+		diagsAllg=  {col="Kategorie1";op="eq";val="0"};
+	};
+};
+searchPropertiesDG=
+{	cache="YES";
+	columns=("DiagnoseID","Kategorie1","Parameter");
+	primaryKey="DiagnoseID";
+	bindToDG="allDiagsDG";
+};
+
+mitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","extern","operiert");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+ 	autoSort="standard";
+	types={"operiert"=bool; };
+	sortColumns=
+	{	standard=("Name");
+	};
+	filters=
+	{	operiert=  {col="operiert";op="eq";val="1"};
+	}
+};
+opverfahrenDG=
+{	table="StammdatenOPVerfahren";
+	columns=("ID","OPArt");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+ 	autoSort="standard";
+	sortColumns=
+	{	standard=("ID");
+	};
+};
+allCentersDG=
+{	table="WartelisteZentren";
+	columns=("ID","ZentrumName","VermitteltPatienten");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	filters=
+	{	meldung=  {col="VermitteltPatienten";op="!=";val="0"};
+	};	
+	autoSort="standard";
+	sortColumns=
+	{	standard=("ZentrumName");
+	};
+};
+trepanDG=
+{	table="Trepanart";
+	columns=("ID","Trepanart");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+docscalDG=
+{	columns=("PIZ","Termin");
+	primaryKey="PIZ";
+	cache=YES;
+};
+amnionDG=
+{	table="amnion";
+	columns=("id","idwarteliste");
+	primaryKey="id";
+	connectionEnv="dbweb_connectionstring_amnion";
+};
+
+}</DisplayGroups>
+
+<include src="hhb/login3.dgw">
+
+<perlfunc name="doCalc">
+{
+#### eeba
+	my $jahr=$DG::year->mutablePendingInsertionDict()->{year};
+	my $itemid;
+
+	sub screeningFails { my ($jahr)=@_;
+		my $sql='select "StammdatenVerwerfungsgrund"."Name",count(*) from   "StammdatenHornhautspender" join  "StammdatenVerwerfungsgrund" on "IDVerwefungsgrundPrimary"="StammdatenVerwerfungsgrund"."ID" where date_part(\'year\', "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr.' group by "StammdatenVerwerfungsgrund"."Name"';
+		return $DG::donorsDG->executeSQLStatement($sql);
+	}
+	sub screeningZahl { my ($jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr;
+		return $DG::donorsDG->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub gefragteZahl { my ($jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where "IDMelder" in (1,2,6,8,9) and date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub einwilligungsZahl { my ($jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where "PosEinverstaendnis"=true and date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr;
+		return $DG::donorsDG->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub countEntnahme { my ($auge, $methode, $jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."IDEntnahmemethode'.$auge.'") from "StammdatenHornhautspender" where "StammdatenHornhautspender"."IDEntnahmemethode'.$auge.'"='.$methode.' and date_part(\'year\'::text, "StammdatenHornhautspender"."Entnahmezeitpunkt")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub primarilyExcluded { my ($jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."IDVerwefungsgrundPrimary") from "StammdatenHornhautspender" where "StammdatenHornhautspender"."IDVerwefungsgrundPrimary" is not null and date_part(\'year\'::text, "StammdatenHornhautspender"."Entnahmezeitpunkt")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub verworfen { my ($jahr)=@_;
+		my $sql='select "StammdatenVerwerfungsgrund"."Name", count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("MedienWechselFirst"."IDOrgankultur" = "Organkultur"."ID" )  join "StammdatenVerwerfungsgrund" on ("Organkultur"."IDVerwerfungsgrund"="StammdatenVerwerfungsgrund"."ID") where "Organkultur"."IDVerwerfungsgrund" is not null and date_part(\'year\', "KulturEinDatum")='.$jahr.' group by "StammdatenVerwerfungsgrund"."Name"';
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub verworfen2 { my ($jahr)=@_;
+		my $sql='select count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("MedienWechselFirst"."IDOrgankultur" = "Organkultur"."ID" )  join "StammdatenVerwerfungsgrund" on ("Organkultur"."IDVerwerfungsgrund"="StammdatenVerwerfungsgrund"."ID") where "Organkultur"."IDVerwerfungsgrund" is not null and date_part(\'year\', "KulturEinDatum")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub pseudophak { my ($jahr)=@_;
+		my $sql='SELECT count("Organkultur"."ID") from "Organkultur" JOIN "MedienWechselLast"  ON ("Organkultur"."ID" = "MedienWechselLast"."IDOrgankultur" ) where "Organkultur"."IDVoroperationen" =1  and date_part(\'year\'::text, "MedienWechselLast"."KulturAusDatum")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub ezd { my ($jahr)=@_;
+		my $sql='SELECT avg("MedienWechselLast"."EZD") from "MedienWechselLast" where date_part(\'year\'::text, "MedienWechselLast"."KulturAusDatum")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub pmz { my ($jahr)=@_;
+		my $sql='select date_trunc(\'minute\', avg(pmz)), date_trunc(\'day\', avg(donor_age)), date_trunc(\'minute\', avg(kd)) from (SELECT "IDSpender","StammdatenHornhautspender"."ID","Entnahmezeitpunkt", "MedienWechselFirst"."KulturEinDatum", age("StammdatenHornhautspender"."Entnahmezeitpunkt", "StammdatenHornhautspender"."Todeszeitpunkt") AS pmz,  age("StammdatenHornhautspender"."Todeszeitpunkt", "StammdatenHornhautspender"."Geburtsdatum") as donor_age, age("MedienWechselFirst"."KulturEinDatum","MedienWechselLast"."KulturAusDatum") as kd FROM "StammdatenHornhautspender" join "Organkultur" on "Organkultur"."IDSpender"="StammdatenHornhautspender"."ID" join "MedienWechselFirst" on  "MedienWechselFirst"."IDOrgankultur"="Organkultur"."ID" join "MedienWechselLast" on  "MedienWechselLast"."IDOrgankultur"="Organkultur"."ID"  ) a where  date_part(\'year\',"Entnahmezeitpunkt" )='.$jahr;
+		my $erg=$DG::statistik->executeSQLStatement($sql);
+		return ($erg->[0]->[0], $erg->[0]->[1], $erg->[0]->[2] );
+	}
+	sub transport_zeit { my ($jahr)=@_;
+		my $sql='select date_trunc(\'minute\', avg(transport_time)) from (  SELECT "IDSpender","StammdatenHornhautspender"."ID","Entnahmezeitpunkt", "KulturEinDatum", age("StammdatenHornhautspender"."Entnahmezeitpunkt", "StammdatenHornhautspender"."Todeszeitpunkt") AS "PostMortemZeit",  age("KulturEinDatum","StammdatenHornhautspender"."Entnahmezeitpunkt") as transport_time     FROM "StammdatenHornhautspender" join "Organkultur" on "Organkultur"."IDSpender"="StammdatenHornhautspender"."ID" join "MedienWechselFirst" on  "MedienWechselFirst"."IDOrgankultur"="Organkultur"."ID") a where  date_part(\'year\',"Entnahmezeitpunkt" )='.$jahr;
+		my $erg=$DG::statistik->executeSQLStatement($sql);
+		return ($erg->[0]->[0] );
+	}
+	sub transport_eval_zeit { my ($jahr)=@_;
+		my $sql='select date_trunc(\'minute\', avg(transport_time)) from (  SELECT "IDSpender","StammdatenHornhautspender"."ID","Entnahmezeitpunkt", "KulturEinDatum", age("StammdatenHornhautspender"."Entnahmezeitpunkt", "StammdatenHornhautspender"."Todeszeitpunkt") AS "PostMortemZeit",  age("KulturEinDatum","StammdatenHornhautspender"."Todeszeitpunkt") as transport_time     FROM "StammdatenHornhautspender" join "Organkultur" on "Organkultur"."IDSpender"="StammdatenHornhautspender"."ID" join "MedienWechselFirst" on  "MedienWechselFirst"."IDOrgankultur"="Organkultur"."ID" ) a where  date_part(\'year\',"Entnahmezeitpunkt" )='.$jahr;
+		my $erg=$DG::statistik->executeSQLStatement($sql);
+		return ($erg->[0]->[0] );
+	}
+	sub matches { my ($jahr)=@_;
+		my $sql='select count(*) from "AllHLAMismatches" join "Warteliste" on "Warteliste"."PatientID"="AllHLAMismatches"."IDPatient" join "Organkultur" on "Organkultur"."ID"="Warteliste"."IDOrgankultur"  and "Organkultur"."IDSpender"="AllHLAMismatches"."SpenderID" join "MedienWechselFirst" on "MedienWechselFirst" ."IDOrgankultur"="Organkultur"."ID" where "MM"<=2 and date_part(\'year\', "KulturEinDatum")='.$jahr;
+		my $erg=$DG::statistik->executeSQLStatement($sql);
+		return $erg->[0]->[0];
+	}
+	sub serologie { my ($jahr)=@_;
+		my $sql='SELECT "Test" , count("SpenderNegativeTests"."IDTest" ) AS positives FROM "SpenderNegativeTests"  join "StammdatenHornhautspender" on "IDSpender"="StammdatenHornhautspender"."ID" join "StammdatenSerologie" on ("IDTest"="StammdatenSerologie" ."ID") join "Organkultur" on  "Organkultur"."IDSpender"= "SpenderNegativeTests"."IDSpender" WHERE ("SpenderNegativeTests"."Ergebnis" <> true and  date_part(\'year\',"StammdatenHornhautspender"."Entnahmezeitpunkt" )='.$jahr.' ) GROUP by "Test"';
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub trepan { my ($jahr)=@_;
+		my $sql='select coalesce( "StammdatenOPVerfahren"."OPArt", \'nicht angegeben\'), count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("MedienWechselFirst"."IDOrgankultur" = "Organkultur"."ID" ) join "Warteliste" on ("Warteliste"."IDOrgankultur"="Organkultur"."ID") left join "StammdatenOPVerfahren" on ("Warteliste"."IDOPArt"="StammdatenOPVerfahren"."ID") where  date_part(\'year\', "KulturEinDatum")='.$jahr.' group by "StammdatenOPVerfahren"."OPArt"';
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub achaud { my ($jahr)=@_;
+		my $sql='select  count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("MedienWechselFirst"."IDOrgankultur" = "Organkultur"."ID" ) join "Warteliste" on ("Warteliste"."IDOrgankultur"="Organkultur"."ID") join "AufnahmeDiagnose" on ("Warteliste"."ID"="AufnahmeDiagnose"."StationaerID") join "Diagnose" on ("Diagnose"."ID"="AufnahmeDiagnose"."DiagnoseID") where  date_part(\'year\', "KulturEinDatum")='.$jahr.' and ("Diagnose"."Name" ~* \'chaud\' or "Warteliste"."Bemerkungen" ~* \'chaud\' )';
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub extern { my ($jahr)=@_;
+		my $sql='select  count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("MedienWechselFirst"."IDOrgankultur" = "Organkultur"."ID" ) join "Warteliste" on ("Warteliste"."IDOrgankultur"="Organkultur"."ID") where  date_part(\'year\', "KulturEinDatum")='.$jahr.' and "Warteliste"."IDZentrum">1';
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub extern_land { my ($jahr)=@_;
+		my $sql='select  "WartelisteZentren".land,count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("MedienWechselFirst"."IDOrgankultur" = "Organkultur"."ID" ) join "Warteliste" on ("Warteliste"."IDOrgankultur"="Organkultur"."ID") join "WartelisteZentren" on "Warteliste"."IDZentrum"="WartelisteZentren"."ID"  where  date_part(\'year\', "KulturEinDatum")='.$jahr.' and "Warteliste"."IDZentrum">1 group by "WartelisteZentren".land';
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub multispender { my ($jahr)=@_;
+		my $sql='select count(*) from "StammdatenHornhautspender" join "StammdatenQuelle" on ("StammdatenHornhautspender"."IDMelder"="StammdatenQuelle"."ID") join "Organkultur" on ("Organkultur"."IDSpender"= "StammdatenHornhautspender"."ID") join "MedienWechselFirst"  ON ("Organkultur"."ID" = "MedienWechselFirst"."IDOrgankultur") where "StammdatenQuelle"."Name" ~* \'multi\' and date_part(\'year\', "KulturEinDatum")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub hlatypings { my ($jahr)=@_;
+		my $sql='select  count(*) from "StammdatenHornhautspender" left join (select distinct "IDSpender" from "HLASpender") a on "IDSpender" ="StammdatenHornhautspender"."ID" where date_part(\'year\', "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr.' and "IDSpender" is not null';
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub amnion { my ($jahr)=@_;
+		my $sql='select count(*) from amnion join warteliste on warteliste.id=idwarteliste where date_part(\'year\', praeparationsdatum)='.$jahr;
+		return $DG::amnionDG->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub amnion_total { my ($jahr)=@_;
+		my $sql='select count(*) from amnion  where  date_part(\'year\', praeparationsdatum)='.$jahr;
+		return $DG::amnionDG->executeSQLStatement($sql)->[0]->[0];
+	}
+
+	my $screening= screeningZahl($jahr)*2;
+	my $wholeEye=countEntnahme('R', '2', $jahr) + countEntnahme('L', '2', $jahr);
+	my $corneoscleral=countEntnahme('R', '1', $jahr) + countEntnahme('L', '1', $jahr);
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'total number of corneas announced',Value=> $screening});
+
+	my $gefragte=gefragteZahl($jahr)*2;
+	my $einwilligungen= einwilligungsZahl($jahr)*2;
+	my $q=$einwilligungen/$gefragte;
+	use POSIX;
+	$einwilligungen= ceil($screening*$q/2);
+###	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'total number of consented corneas',Value=> $einwilligungen});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'reason for no-retrieval:'.$_->[0],Value=>$_->[1]*2}) for  @{screeningFails($jahr)};
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'total number not retrieved',Value=> $screening-($wholeEye+$corneoscleral)});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'WholeEye entnommen',Value=>$wholeEye});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Corneoscleral entnommen',Value=>$corneoscleral});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'OrganCulture (Summe der 2 Posten)',Value=>$wholeEye+$corneoscleral});
+
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Pos. Grafts:'.$_->[0],Value=>$_->[1]}) for  @{serologie($jahr)};
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Pseudophak',Value=>pseudophak($jahr)});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanEZD',Value=>sprintf("%4.0f",ezd($jahr))});
+	my( $pmz,$spenderalter, $KD )= pmz($jahr);
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanPMZ',Value=>$pmz});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanTransportZeit',Value=> transport_zeit($jahr) });
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanDeathEvalZeit',Value=> transport_eval_zeit($jahr) });
+
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanDonorAge',Value=>$spenderalter});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanKulturdauerAlle',Value=>$KD});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'GematchteTps (2MM)',Value=>matches($jahr)});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'verworfen (gesamt)', Value=>verworfen2($jahr)});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'VG:'.$_->[0],Value=>$_->[1]}) for @{verworfen($jahr)};
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'HLA typed donors',Value=> hlatypings($jahr)});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Multiorganspender',Value=>multispender($jahr)});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Tp:'.$_->[0],Value=>$_->[1]}) for @{trepan($jahr)};
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'davon a chaud',Value=>achaud($jahr)});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'nach extern abgegeben',Value=>extern($jahr)});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Abgabeland:'.$_->[0],Value=>$_->[1]}) for  @{extern_land($jahr)};
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Amnions: Generiert',Value=>amnion_total($jahr)});
+	$DG::items->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Amnions: Transplantiert',Value=>amnion($jahr)});
+}</perlfunc>
+
+
+<perlfunc name="doCalc2">
+{
+##### Mangement review
+	$DG::items2->clearCache();
+	my $jahr=$DG::year->mutablePendingInsertionDict()->{year};
+	my $itemid;
+
+	sub BISHH { my ($jahr)=@_;
+#select "PIZ","StammdatenPatient"."Name","EndeWarteliste" from "Warteliste" join "StammdatenPatient" on ("PatientID"="StammdatenPatient"."ID") where "ExternGemeldet" =TRUE and "IDOrgankultur" is null and "WartenAktiviert"=false and "Warteliste"."IDZentrum"=1 order by "EndeWarteliste"
+	}
+
+	sub screeningZahl { my ($jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr;
+		return $DG::donorsDG->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub verlust24HRegel { my ($jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where  "IDVerwefungsgrundPrimary"=22 and date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr;
+		return $DG::donorsDG->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub zustimmungsQuote { my ($jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where "IDVerwefungsgrundPrimary" =6 and date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr;
+		my $abgelehnt= $DG::donorsDG->executeSQLStatement($sql)->[0]->[0];
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where "IDEinverstaendnisArt" is not null and date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr;
+		my $eingewilligt= $DG::donorsDG->executeSQLStatement($sql)->[0]->[0];
+		return sprintf("%4.2f",($eingewilligt / ($abgelehnt+$eingewilligt))*100.0);
+	}
+	sub entnahmeQuote { my ($jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr;
+		my $gesamtspender=$DG::donorsDG->executeSQLStatement($sql)->[0]->[0];
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where "IDEinverstaendnisArt" is not null and date_part(\'year\'::text, "StammdatenHornhautspender"."Todeszeitpunkt")='.$jahr;
+		my $eingewilligt=$DG::donorsDG->executeSQLStatement($sql)->[0]->[0];
+		return sprintf("%4.2f",($eingewilligt/$gesamtspender)*100.0);
+	}
+	sub herkunft { my ($jahr)=@_;
+		my $sql='SELECT "StammdatenQuelle"."Name", count("Organkultur"."ID") from "Organkultur" JOIN "MedienWechselFirst"  ON ("Organkultur"."ID" = "MedienWechselFirst"."IDOrgankultur" ) JOIN "StammdatenHornhautspender" ON "Organkultur"."IDSpender" = "StammdatenHornhautspender"."ID" LEFT JOIN "StammdatenQuelle" ON "StammdatenQuelle"."ID" = "StammdatenHornhautspender"."IDQuelle" where  date_part(\'year\'::text, "StammdatenHornhautspender"."Entnahmezeitpunkt")='.$jahr.'group by "StammdatenQuelle"."Name" ';
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub countEntnahme { my ($auge, $jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."ID") from "StammdatenHornhautspender" where ("StammdatenHornhautspender"."IDEntnahmemethode'.$auge.'"< 3 or "StammdatenHornhautspender"."IDEntnahmemethode'.$auge.'" is null) and date_part(\'year\'::text, "StammdatenHornhautspender"."Entnahmezeitpunkt")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub stillInStorage { my ($jahr)=@_;
+		my $sql='SELECT count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("Organkultur"."ID" = "MedienWechselFirst"."IDOrgankultur" ) left join "MedienWechselLast" on ("Organkultur"."ID" = "MedienWechselLast"."IDOrgankultur" )  where date_part(\'year\'::text, "MedienWechselFirst"."KulturEinDatum")='.($jahr-1).' and ( date_part(\'year\'::text, "MedienWechselLast"."KulturAusDatum")='.$jahr.' or "MedienWechselLast"."KulturAusDatum" is null)';
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub stillInStorage2 { my ($jahr)=@_;
+		my $sql='SELECT count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("Organkultur"."ID" = "MedienWechselFirst"."IDOrgankultur" ) left join "MedienWechselLast" on ("Organkultur"."ID" = "MedienWechselLast"."IDOrgankultur" )  where date_part(\'year\'::text, "MedienWechselFirst"."KulturEinDatum")='.$jahr.' and ( date_part(\'year\'::text, "MedienWechselLast"."KulturAusDatum")>'.$jahr.' or "MedienWechselLast"."KulturAusDatum" is null)';
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub verworfen { my ($jahr)=@_;
+		my $sql='select "StammdatenVerwerfungsgrund"."Name", count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("MedienWechselFirst"."IDOrgankultur" = "Organkultur"."ID" )  join "StammdatenVerwerfungsgrund" on ("Organkultur"."IDVerwerfungsgrund"="StammdatenVerwerfungsgrund"."ID") where "Organkultur"."IDVerwerfungsgrund" is not null and date_part(\'year\', "KulturAusDatum")='.$jahr.' group by "StammdatenVerwerfungsgrund"."Name"';
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub verworfen2 { my ($jahr)=@_;
+		my $sql='select count("Organkultur"."ID") from "Organkultur" join "MedienWechselFirst" on ("MedienWechselFirst"."IDOrgankultur" = "Organkultur"."ID" )  join "StammdatenVerwerfungsgrund" on ("Organkultur"."IDVerwerfungsgrund"="StammdatenVerwerfungsgrund"."ID") where "Organkultur"."IDVerwerfungsgrund" is not null and date_part(\'year\', "KulturAusDatum")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub transplantiert { my ($jahr)=@_;
+		my $sql='SELECT count("Organkultur"."ID") from "Organkultur" JOIN "MedienWechselLast"  ON ("Organkultur"."ID" = "MedienWechselLast"."IDOrgankultur" ) where "Organkultur"."IDWarteliste" is not null and date_part(\'year\'::text, "MedienWechselLast"."KulturAusDatum")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub extern { my ($jahr)=@_;
+		my $sql='SELECT count("Organkultur"."ID") from "Organkultur" JOIN "MedienWechselLast"  ON ("Organkultur"."ID" = "MedienWechselLast"."IDOrgankultur" ) JOIN "Warteliste"  ON ("Warteliste"."ID" = "Organkultur"."IDWarteliste" )  where "Warteliste"."IDZentrum">1 and date_part(\'year\'::text, "MedienWechselLast"."KulturAusDatum")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub pmz { my ($jahr, $transplantiert)=@_;
+		my $sql='SELECT date_part(\'epoch\'::text, avg("GesamtstatistikOrgankultur"."PostMortemZeit")), avg("GesamtstatistikOrgankultur"."SpenderAlter"), date_part(\'epoch\'::text, avg("GesamtstatistikOrgankultur"."KulturdauerGesamt")) from "GesamtstatistikOrgankultur" join "MedienWechselLast" on ("GesamtstatistikOrgankultur"."IDOrgankultur" = "MedienWechselLast"."IDOrgankultur" ) where date_part(\'year\'::text, "MedienWechselLast"."KulturAusDatum")='.$jahr;
+			$sql.=' and "GesamtstatistikOrgankultur"."IDVerwerfungsgrund" is null' if $transplantiert;
+		my $erg=$DG::statistik->executeSQLStatement($sql);
+		return ($erg->[0]->[0]/(60*60*24), $erg->[0]->[1], $erg->[0]->[2]/(60*60*24) );
+	}
+	sub matches { my ($jahr)=@_;
+		my $sql='Select count(*) from ( SELECT "IDWL", "SpenderID", "Organkultur"."ID" as "OKID", count("IDPatient") AS "MatchCount" FROM "Organkultur" join   (SELECT DISTINCT "StammdatenHLA"."Broad", "Warteliste"."PatientID" as "IDPatient", "Warteliste"."ID" as "IDWL" FROM "HLAPatient"    JOIN "Warteliste" on ("HLAPatient"."IDPatient"="Warteliste"."PatientID")    JOIN "StammdatenHLA" ON ("StammdatenHLA"."ID" = "HLAPatient"."IDHLA")    JOIN "Organkultur" on ("Organkultur"."IDWarteliste"="Warteliste"."ID") ) as "HLAAllelesPatientBroad" on ("Organkultur"."IDWarteliste"= "HLAAllelesPatientBroad"."IDWL")   join ( SELECT DISTINCT "StammdatenHLA"."Broad", "HLASpender"."IDSpender" as "SpenderID" FROM "HLASpender"   JOIN "StammdatenHLA" ON ("StammdatenHLA"."ID" = "HLASpender"."IDHLA") ) as "HLAAllelesSpenderBroad"   on ("Organkultur"."IDSpender"="HLAAllelesSpenderBroad"."SpenderID") where "HLAAllelesPatientBroad"."Broad"::text = "HLAAllelesSpenderBroad"."Broad"::text   Group BY "HLAAllelesPatientBroad"."IDWL", "HLAAllelesSpenderBroad"."SpenderID","Organkultur"."ID" ) as "MatchCountBroad"   join   (SELECT count ("HLAAllelesSpenderBroad"."Broad" ) as "AlleleCount", "HLAAllelesSpenderBroad"."SpenderID" from    (SELECT DISTINCT "StammdatenHLA"."Broad", "HLASpender"."IDSpender" as "SpenderID" FROM "HLASpender" JOIN "StammdatenHLA" ON ("StammdatenHLA"."ID" = "HLASpender"."IDHLA") ) as "HLAAllelesSpenderBroad"   group by "HLAAllelesSpenderBroad"."SpenderID" ) as "HLAAllelesCountSpenderBroad"   on ("HLAAllelesCountSpenderBroad"."SpenderID"="MatchCountBroad"."SpenderID") join "MedienWechselFirst" on ("MedienWechselFirst"."IDOrgankultur" = "MatchCountBroad"."OKID" ) where ("AlleleCount"-"MatchCount")<=2 and  date_part(\'year\', "KulturEinDatum")='.$jahr;
+		my $erg=$DG::statistik->executeSQLStatement($sql);
+		return $erg->[0]->[0];
+	}
+	sub serologie { my ($jahr)=@_;
+		my $sql='SELECT "Test"  , count("SpenderNegativeTests"."IDTest" ) AS positives FROM "SpenderNegativeTests"  join "StammdatenHornhautspender" on "IDSpender"="StammdatenHornhautspender"."ID" join "StammdatenSerologie" on ("IDTest"="StammdatenSerologie" ."ID") WHERE ("SpenderNegativeTests"."Ergebnis" <> true and  date_part(\'year\',"StammdatenHornhautspender"."Entnahmezeitpunkt" )='.$jahr.' ) GROUP by "Test"';
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub triples { my ($jahr)=@_;
+		my $sql='select count(*) from "Warteliste" where date_part(\'year\'::text, "EndeWarteliste")='.$jahr.' and "IDOrgankultur" is not null and "IDZentrum"=1 and "IDOPArt"=7';
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub entfernung_wohnort { my ($jahr)=@_;
+		my $sql='select avg(distance) from (select (point(a.lat,a.lon) <->  point(48.0055721652502, 7.84227981730455) )* 112 as distance from "StammdatenPatient" left join latlonplz a on ("StammdatenPatient"."PLZ"=plz::text) join "Warteliste" on ("PatientID"="StammdatenPatient"."ID") where "Warteliste"."IDZentrum"=1 and date_part(\'year\'::text, "EndeWarteliste")='.$jahr.') a';
+
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub amnion { my ($jahr)=@_;
+		my $sql='select count(*) from amnion join warteliste on warteliste.id=idwarteliste where date_part(\'year\', opdatum)='.$jahr;
+		return $DG::amnionDG->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub amnion_total { my ($jahr)=@_;
+		my $sql='select count(*) from amnion  where verworfen=false and date_part(\'year\', praeparationsdatum)='.$jahr;
+		return $DG::amnionDG->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub trepan { my ($jahr)=@_;
+		my $sql='select coalesce( "StammdatenOPVerfahren"."OPArt", \'nicht angegeben\'), count("Organkultur"."ID") from "Organkultur" join "MedienWechselLast" on ("MedienWechselLast"."IDOrgankultur" = "Organkultur"."ID" ) join "Warteliste" on ("Warteliste"."IDOrgankultur"="Organkultur"."ID") left join "StammdatenOPVerfahren" on ("Warteliste"."IDOPArt"="StammdatenOPVerfahren"."ID") where  date_part(\'year\', "KulturAusDatum")='.$jahr.' and "Warteliste"."IDZentrum"=1 group by "StammdatenOPVerfahren"."OPArt"';
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub auf_wl { my ($jahr)=@_;
+		my $sql='select count(*) from "Warteliste" where  date_part(\'Year\',"StartWarteliste")<='.$jahr.' and (("WartenAktiviert" and "EndeWarteliste" is null ) or (date_part(\'Year\',"EndeWarteliste")>'.($jahr +1).' ))';
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub auf_wl2 { my ($jahr)=@_;
+		my $sql='select count(*) from "Warteliste" where  date_part(\'Year\',"StartWarteliste")<='.$jahr.' and (("WartenAktiviert" and "EndeWarteliste" is null and "IDZentrum"=1 ) or (date_part(\'Year\',"EndeWarteliste")>'.($jahr +1).' ))';
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'ScreeningZahl',			Value=>screeningZahl	($jahr)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Verlust durch 24 Stunden Regel',	Value=>verlust24HRegel	($jahr)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'EntnahmeQuote',			Value=>entnahmeQuote	($jahr)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'ZustimmungsQuote',		Value=>zustimmungsQuote	($jahr)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Quelle:'.$_->[0],Value=>$_->[1]}) for  @{herkunft($jahr)};
+	my $entnommen=countEntnahme('R',$jahr)+countEntnahme('L',$jahr);
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'#Entnahme',Value=>$entnommen });
+	my $gesamt=$entnommen+stillInStorage($jahr);
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'#Kultur',Value=>$gesamt });
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'#Verworfen (gesamt)', Value=>verworfen2($jahr)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'#Transplantiert',Value=>transplantiert($jahr) });
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'#nach extern',Value=>extern($jahr) });
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'#Matches',Value=>matches($jahr) });
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'VG:'.$_->[0],Value=>$_->[1].' ('.sprintf("%4.2f",($_->[1]/$gesamt)*100.0).'%)' }) for  @{verworfen($jahr)};
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Pos. Spender:'.$_->[0],Value=>$_->[1]}) for  @{serologie($jahr)};
+	my( $pmz1,$spenderalter1, $KD1 )= pmz($jahr);
+	my( $pmz2,$spenderalter2, $KD2 )= pmz($jahr,1);
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanPMZ alle',Value=>sprintf("%3.2f",$pmz1)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanDonorAge alle',Value=>sprintf("%3.2f",$spenderalter1)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanKulturdauer alle',Value=>sprintf("%3.2f",$KD1)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanPMZ tp',Value=>sprintf("%3.2f",$pmz2)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanDonorAge tp',Value=>sprintf("%3.2f",$spenderalter2)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'MeanKulturdauer tp',Value=>sprintf("%3.2f",$KD2)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Triples',Value=>triples($jahr) } );
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'# in Kultur Jahreswechsel ('.($jahr-1). " auf $jahr)",   Value=>  stillInStorage($jahr)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'# in Kultur Jahreswechsel ('.$jahr." auf ".($jahr+1).')', Value=> stillInStorage2($jahr)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Mittlere Entfernung Wohnort [km]:', Value=>sprintf("%3.2f", entfernung_wohnort ($jahr)) });
+
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Amnions: Generiert',Value=>amnion_total($jahr)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Amnions: Transplantiert',Value=>amnion($jahr)});
+
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Tp (FR):'.$_->[0],Value=>$_->[1]}) for @{trepan($jahr)};
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Auf Warteliste Ende '.($jahr-1), Value =>auf_wl($jahr)});
+	$DG::items2->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Auf Warteliste (nur FR) Ende '.($jahr-1), Value =>auf_wl2($jahr)});
+}</perlfunc>
+
+
+<perlfunc name="doCalcPEI">
+{	$DG::items4->clearCache();
+	my $jahr=$DG::year4->mutablePendingInsertionDict()->{year};
+	my $itemid;
+
+	sub countEntnahme { my ($auge, $methode, $jahr)=@_;
+		my $sql='SELECT count("StammdatenHornhautspender"."IDEntnahmemethode'.$auge.'") from "StammdatenHornhautspender" where "StammdatenHornhautspender"."IDEntnahmemethode'.$auge.'"='.$methode.' and date_part(\'year\'::text, "StammdatenHornhautspender"."Entnahmezeitpunkt")='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql)->[0]->[0];
+	}
+	sub countAusgang { my ($methode, $jahr)=@_;
+		my $sql='SELECT sum("count"), fate from "PEIAusgang" where "entnahmemethode"='.$methode.' and "ausgangsjahr"='.$jahr.' group by fate';
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub countUebertrag { my ($methode, $jahr)=@_;
+		my $sql='SELECT "count", fate from "PEIAusgang" where "entnahmemethode"='.$methode.' and (ausgangsjahr='.($jahr+1).' or ausgangsjahr is null) and eingangsjahr='.$jahr;
+		return $DG::statistik->executeSQLStatement($sql);
+	}
+	sub amnion_verworfen { my ($jahr)=@_;
+		my $sql='select count(*) from amnion  where verworfen=true and date_part(\'year\', praeparationsdatum)='.$jahr;
+		return $DG::amnionDG->executeSQLStatement($sql)->[0]->[0];
+	}
+
+	my $wholeEye=	  countEntnahme('R', '2', $jahr) + countEntnahme('L', '2', $jahr);
+	my $corneoscleral=countEntnahme('R', '1', $jahr) + countEntnahme('L', '1', $jahr);
+	$DG::items4->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'WholeEye entnommen',Value=>$wholeEye});
+	$DG::items4->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Corneoscleral entnommen',Value=>$corneoscleral});
+
+	$DG::items4->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Korneoskleral:'.$_->[1],	Value=>$_->[0]}) for  @{countAusgang(1,$jahr)};
+	$DG::items4->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Bulbus:'.$_->[1],		Value=>$_->[0]}) for  @{countAusgang(2,$jahr)};
+
+	$DG::items4->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Uebertrag Korneoskleral:'.$_->[1],	Value=>$_->[0]}) for  @{countUebertrag(1,$jahr)};
+	$DG::items4->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Uebertrag Bulbus:'.$_->[1],		Value=>$_->[0]}) for  @{countUebertrag(2,$jahr)};
+	$DG::items4->appendDictToCache({ID=>$itemid++, Year=>$jahr, Item=>'Amnion verworfen',	Value=> amnion_verworfen($jahr)});
+
+}</perlfunc>
+
+<perlfunc name="verwerfungblank" include="xlsgen.pl">
+{	my $sql = 'select  "IDSpender" from "Organkultur" where "IDVerwerfungsgrund" is  null and "IDWarteliste" is null order by "IDSpender";';
+	my $dbh = dbweb::getDBHForDG($DG::statistik);
+	returnXLSForSQLandDBH($sql,$dbh,"liste.xls");
+}</perlfunc>
+
+
+
+<perlfunc name="debugStatistik" include="xlsgen.pl">
+{	my $sql = 'select date_part(\'year\'::text, "GesamtstatistikOrgankultur"."DatumKulturAusgang") as year, "IDSpender", "Auge" from "GesamtstatistikOrgankultur" where "IDVerwerfungsgrund" is  null and "IDWarteliste" is null order by date_part(\'year\'::text, "GesamtstatistikOrgankultur"."DatumKulturAusgang") desc';
+}</perlfunc>
+
+<perlfunc name="ausgetrageneHornhaeute" include="xlsgen.pl">
+{	my $sql = 'select date_part(\'year\'::text, "GesamtstatistikOrgankultur"."DatumKulturAusgang") as year, date_part(\'month\'::text, "GesamtstatistikOrgankultur"."DatumKulturAusgang") as month, "IDSpender", "Auge" from "GesamtstatistikOrgankultur" where "IDVerwerfungsgrund" is not null order by date_part(\'year\'::text, "GesamtstatistikOrgankultur"."DatumKulturAusgang") desc , date_part(\'month\'::text, "GesamtstatistikOrgankultur"."DatumKulturAusgang") desc';
+	my $dbh = dbweb::getDBHForDG($DG::statistik);
+	returnXLSForSQLandDBH($sql,$dbh);
+}</perlfunc>
+
+<perlfunc name="entnahmeblank" include="xlsgen.pl">
+{	my $sql = 'select  "ID" from "StammdatenHornhautspender" where "IDEntnahmemethodeR" is  null or "IDEntnahmemethodeL" is  null;';
+	my $dbh = dbweb::getDBHForDG($DG::statistik);
+	returnXLSForSQLandDBH($sql,$dbh);
+}</perlfunc>
+
+<perlfunc name="BulbiListe" include="xlsgen.pl">
+{	my $sql = 'select  "ID" from "StammdatenHornhautspender" where "IDEntnahmemethodeR"=2 or "IDEntnahmemethodeL"=2;';
+	my $dbh = dbweb::getDBHForDG($DG::statistik);
+	returnXLSForSQLandDBH($sql,$dbh);
+}</perlfunc>
+
+<perlfunc name="OPDatumProbListe" include="xlsgen.pl">
+{	my $sql = 'select "Name","EndeWarteliste", "KulturAusDatum" from "WartelisteUebersicht" join "MedienWechselLast" on "MedienWechselLast"."IDOrgankultur"="WartelisteUebersicht"."IDOrgankultur" where date_part(\'year\', "KulturAusDatum")<>date_part(\'year\', "EndeWarteliste")';
+	my $dbh = dbweb::getDBHForDG($DG::statistik);
+	returnXLSForSQLandDBH($sql,$dbh);
+}</perlfunc>
+
+<perlfunc name="suchen">
+{	unless($DG::wartelistenLoaderDG->hasWhere() )
+	{	my @idarr;
+		my @darr=map{ { 'col'=>'DiagnoseID', 'val'=> $_->{DiagnoseID}, 'op'=>'eq'} }
+					 @{ $DG::searchPropertiesDG->allDicts() };
+		my $data=$DG::wlPropertiesDG->rowsForFilterArray(\@darr);
+		@idarr= map { $_->[4] } @{$data};
+		$DG::wartelisteDG->loadCacheFromDGWithPKs($DG::wartelistenLoaderDG,\@idarr);
+	} else
+	{	$DG::wartelisteDG->loadCacheFromDG($DG::wartelistenLoaderDG);
+warn "hadwhere";
+	}
+}</perlfunc>
+
+<perlfunc name="neusuchen">
+{	$DG::wartelistenLoaderDG->setWhere(undef);
+	$DG::searchPropertiesDG->clearCache();
+	$DG::wartelisteDG->clearCache();
+}</perlfunc>
+
+<perlfunc name="termineAnzeigen">
+{	use lib qw{/srv/www/lib-perl /Users/daboe01/src/privatePerl /Users/boehringer/src/privatePerl /Users/boehringer/bin /HHB/bin};
+	use passwordsecrets;
+	#eval(system('java -Djdbc.drivers=com.sap.dbtech.jdbc.DriverSapDB -Ddbd.port=9003 com.vizdom.dbd.jdbc.Server&'));
+warn "willdbh";
+	my $piz=$DG::wartelisteDG->selectedDict()->{PIZ};
+	$piz=~s/\s+//ogs;
+warn "$piz";
+	return unless $piz;
+	my $dbh = DBI->connect("dbi:JDBC:hostname=localhost:9003;url=$augURL", $augname, $augpassword) || warn " aufdb Database connection not made: $DBI::errstr";
+
+warn "diddbh";
+	my $sql ='select "PIZ","INTERNALNAME" from "AUGDATE" join "PATIENT" on ("AUGDATE"."PATIENTID"="PATIENT"."PATIENTID" ) join "PATIENT2PIZ" on ("PATIENT2PIZ"."PATIENTID"="PATIENT"."PATIENTID" ) join "SERVICE" on ("SERVICEID"="AUGDATE"."PLANEDSERVICEID") '.
+			 'where  "PIZ"='."'$piz'";
+	my $ret = [];
+	my $sth = $dbh->prepare( $sql );
+	$sth->execute();
+	my $list=[];
+	while( $ret=$sth->fetchrow_hashref()  )
+	{	my %currRow=%{$ret};
+		$DG::docscalDG->appendDictToCache({PIZ=>$currRow->{PIZ}, Termin=>$currRow->{PLANEDSERVICEID}});
+	}
+}</perlfunc>
+
+<perlfunc name="aktenBestellen">
+{	use MIME::Lite;
+	my $darr=$DG::wartelisteDG->allDicts();
+
+	my $mailhost= 'mail1.uniklinik-freiburg.de';
+	my $fromname= $DG::LOGIN->valueOfSelectedField('user');
+	my $fromemail='daniel.boehringer@uniklinik-freiburg.de';
+
+	my $emailtext="Sehr geehrte Damen und Herren, \n\n bitte liefern Sie die Akte(n) unter stehenden Patienten in das Fach von   Dr. $fromname aus (keine besondere Dringlichkeit)\n\n";
+	for (@$darr)
+	{	my $name=$_->{Name};
+		$emailtext.= "PIZ: $_->{PIZ}; $_->{Vornamen} $_->{Name}, $_->{Geburtsdatum}\n\n";
+	}
+	$emailtext.="\n\n Mit freundlichen Gruessen und bestem Dank, \n\n Dr. $fromname";
+
+	my $msg=MIME::Lite->new(From=>$fromemail, To=> $fromemail, Subject=>'Aktenanforderung (zentralarchiv.aug AT uniklinik-freiburg.de)', Type=>"TEXT", Data=>$emailtext);
+	MIME::Lite->send('smtp', $mailhost);
+	$msg->send();
+
+}</perlfunc>

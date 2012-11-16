@@ -1,0 +1,32 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[absolute]{<copytex:kpl/textpos.sty>}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+\CenterWallPaper{1}{<file:formulare/mibi.pdf>}
+\setlength{\headheight}{18\baselineskip}
+\setlength{\textheight} {175mm}
+
+\begin{document}
+\textblockorigin{1mm}{1mm}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\begin{textblock}{50}(78 , 65 )
+{
+\noindent <var:Date>
+}
+\end{textblock}
+
+\begin{textblock}{50}(48 , 270 )
+{
+\noindent <var:Date>
+}
+\end{textblock}
+
+\end{document}

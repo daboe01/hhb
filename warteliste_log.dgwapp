@@ -1,0 +1,264 @@
+<comment>
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</comment>
+
+<include src="hhb/faces.html">
+<foreach:passwordDG></foreach>
+<include src="hhb/login3.dgw">
+
+<foreach:rootDG></foreach>
+<foreach:wlPropertiesDG></foreach>
+
+<table>
+<tr>
+<td valign=top>
+	<table class="datatable">
+		<caption>Versions</caption>
+		<tr><th>date</th><th>version</th><th>user</th>
+		<foreach:wartelisteDG>
+		<tr>
+			<td><var:trigger_changed format:date="%d.%m.%Y %H:%M:%S"></td>
+			<td><var:trigger_tuple></td>
+			<td><var:trigger_user></td>
+		</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<condDG:wartelisteDG selection=true>
+	<form:wartelisteDG format:label="Warteliste" perl="checkWL">
+		<var:WartenAktiviert edittype=boolean format:label="Wartet f&uuml;r Auge">
+		<var:Auge edittype=text size="3" editmode=inplace>
+		<var:Prioritaet edittype=popup lookup="prioDG.Text" format:label="Priorit&auml;t (z.B. Leidensdruck)">
+		<var:Privatpatient edittype=boolean format:label="P / Zentrum">
+		<var:IDZentrum edittype=popup format:lookup="allCentersDG.ZentrumName"><br>
+		<var:IDMeldenderArzt edittype=combo size="30" format:lookup="mitarbeiterDG.Name" format:label="Meldung durch">
+		<var:ExternGemeldet edittype=boolean format:label="Extern gemeldet / bei / Externe Nummer">
+		<var:IDVermittelndesZentrum edittype=popup format:lookup="allCentersDG.meldung.ZentrumName">
+		<var:BISNR edittype=text size="10" editmode=inplace>
+		<var:StartWarteliste edittype=text editmode=inplace format:label="Start" format:date="%d.%m.%Y" editmode=inplace>
+		<var:KpAbDatum edittype=text format:date="%d.%m.%Y" editmode=inplace format:label="KP ab">
+		<var:EndeWarteliste edittype=text format:label="Ende (OP-Datum)" format:date="%d.%m.%Y" editmode=inplace>
+		<var:GrundExitWL edittype=popup format:label="Grund Ende" format:lookup="allExitWLDG.Name">
+		<cond var:GrundExitWL="const:9">
+			<var:BISTP edittype=text size="10" editmode=inplace>
+		</cond>
+		<var:IDOPIndikationsdiagnose edittype=popup format:lookup="wlPropertiesDG.AugenDiags.Name" format:label="OP Indikation (Grunderkrankung)">
+		<var:Narkosefrom edittype=popup format:lookup="narkoseDG.Text" format:label="Narkose"><br>
+		<var:status_anaesthesie edittype=popup lookup="statusAnaesthesieDG.Name" label="Anaesthesieambulanz">
+		<cond var:status_anaesthesie="const:2">
+			<var:datum_anaesthesie edittype=text editmode=inplace format:date="%d.%m.%Y">
+		</cond>
+		<var:IDOPArt edittype=popup format:lookup="opverfahrenDG.OPArt" format:label="OP-Verfahren">
+		<var:IDTrepanart edittype=popup lookup="trepanDG.Trepanart" label="Trephine">
+		<var:IDOperateur edittype=popup lookup="mitarbeiterDG.operiert.Name" label="Operateur">
+		<var:KeratoplastikAuge edittype=text format:label="nKp Auge / Gesamt" size="3" editmode=inplace>
+		<var:KeratoplastikGesamt edittype=text size="3" editmode=inplace>
+	
+		<var:status_hla_blut edittype=popup lookup="statusHLADG.Name" label="Status HLA-Blut / HLA-MM / Bestaetigt">
+		<var:MaxHLAMismatches edittype=text size="3" editmode=inplace>
+		<var:MMBestaetigt edittype=boolean>
+		<var:Bemerkungen edittype=textarea editmode=inplace format:label="Bemerkungen" cols="30" rows="6">
+		<var:fancy_nummer edittype=text size="3" editmode=inplace format:label="FANCY-Nummer" >
+
+		<hr><button:Drucken format:ajax="no" perl="wlBogen">
+	</form>
+	<table class="datatable">
+		<foreach:wlPropertiesDG.wlprops>
+			<tr><td>
+				<var:DiagnoseID lookup="allDiagsDG.Name">
+			</td><td>
+				<var:Parameter edittype=popup lookup="diagnosenWerteliste.Name@DiagnoseID">
+			</td></tr>
+		</foreach>
+	</table>
+</td>
+
+</body>
+</html>
+
+
+<DisplayGroups>{
+rootDG=
+{	cache=YES;
+	columns=("ID");
+	types={ "ID"=int; };
+	primaryKey="ID";
+	connection="dbi:Pg:dbname=hhb5;host=localhost;user=auditor;";
+};
+
+wartelisteDG=
+{	table="Warteliste_log";
+	columns=("trigger_id","trigger_tuple","ID","PatientID","IDZentrum","WartenAktiviert","StartWarteliste","EndeWarteliste","IDZentrum", "KpAbDatum","Narkosefrom", "Prioritaet", "KeratoplastikAuge","KeratoplastikGesamt","Auge","MaxHLAMismatches",
+			"GrundExitWL","Privatpatient","TransplantationenGesamt","TransfusionenGesamt", "SchwangerschaftenGesamt","IDOperateur","IDOPArt","IDMeldenderArzt","ExternGemeldet","IDVermittelndesZentrum","IDOrgankultur",
+			"IDOPIndikationsdiagnose","Bemerkungen","BISNR","BISTP","MMBestaetigt","IDTrepanart",
+			"pachy1","pachy2","pachy3","pachy4","FSLanteriorDiameter","FSLposteriorDiameter","fancy_nummer","status_hla_blut","status_anaesthesie","datum_anaesthesie","trigger_mode","trigger_changed","trigger_user");
+	types={"trigger_id"=int; "ID"=int; "PatientID"=int; "IDZentrum"=int; "WartenAktiviert"=bool; "StartWarteliste"=date; "EndeWarteliste"=date;
+			"KpAbDatum"=date;  "Narkosefrom"=int; "Prioritaet"=int; "KeratoplastikAuge"=int; "KeratoplastikGesamt"=int;
+			"MaxHLAMismatches"=int; "GrundExitWL"=int; "Privatpatient"=bool; "TransplantationenGesamt"=int; "TransfusionenGesamt"=int; 
+			"SchwangerschaftenGesamt"=int; "IDOperateur"=int; "IDOPArt"=int; "IDMeldenderArzt"=int; "ExternGemeldet"=bool;
+			"IDVermittelndesZentrum"=int; "IDOrgankultur"=int;"IDOPIndikationsdiagnose"=int; "MMBestaetigt"=bool; "IDTrepanart"=int;
+			"pachy1"=int;"pachy2"=int;"pachy3"=int;"pachy4"=int;"FSLanteriorDiameter"=int; "FSLposteriorDiameter"=int; "fancy_nummer"=int; "status_hla_blut"=int; "datum_anaesthesie"=date; "status_anaesthesie"=int;
+			"trigger_changed"=date; };
+	primaryKey="trigger_id";
+	bindFromColumn="ID"; bindToDG="rootDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=({col="trigger_changed"; op="desc"});
+	};
+};
+allCentersDG=
+{	table="WartelisteZentren";
+	columns=("ID","ZentrumName","VermitteltPatienten");
+	types={"ID"=int;"VermitteltPatienten"=bool};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+	filters=
+	{	meldung=  {col="VermitteltPatienten";op="!=";val="0"};
+	};	
+	autoSort="standard";
+	sortColumns=
+	{	standard=("ZentrumName");
+	};
+};
+wlPropertiesDG=
+{	table="AufnahmeDiagnoseKategorie";
+	columns=("ID","DiagnoseID","Name","Auge","StationaerID","Kategorie1","Parameter");
+	types={"ID"=int; "DiagnoseID"=int; "StationaerID"=int; "Kategorie1"=int;"Kategorie2"=int; };
+	write_table="AufnahmeDiagnose";
+	suppress_insert=("Kategorie1");
+	primaryKey="ID";
+	bindFromColumn="StationaerID"; bindToDG="wartelisteDG"; targetColumn="ID";
+	filters=
+	{	risiko=  {col="Kategorie1";op="eq";val="4"};
+		studien= {col="Kategorie1";op="eq";val="5"};
+		wlprops= {col="Kategorie1";op="eq";val="6"};
+		diagsRA=({col="Kategorie1";op="eq";val="1"},{col="Auge";op="eq";val="RA"});
+		diagsLA=({col="Kategorie1";op="eq";val="1"},{col="Auge";op="eq";val="LA"});
+		diagsBA=({col="Kategorie1";op="eq";val="1"},{col="Auge";op="eq";val="BA"});
+		AugenDiags=({col="Kategorie1";op="eq";val="1"},{col="Kategorie2";op="eq";val="2"});
+		diagsAllg=  {col="Kategorie1";op="eq";val="0"};
+	};
+};
+
+diagnosenWerteliste=
+{	table="Diagnose";
+	columns=("ID","Name","ArztbriefName","Kategorie1","Kategorie2");
+	types={"ID"=int; "Kategorie1"=int;"Kategorie2"=int; };
+	primaryKey="ID";
+	bindToDG="wlPropertiesDG"; bindFromColumn="Kategorie2";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("ID");
+	};
+	filters=
+	{	wl={col="Kategorie1";op="eq";val="8"};
+	};
+};
+
+
+allDiagsDG=
+{	table="AlleDiagnosen";
+	columns=("ID","Name","Kategorie1","Kategorie2");
+	types={"ID"=int;  "Kategorie1"=int; "Kategorie2"=int;};
+	primaryKey="ID";
+	bindToDG="wlPropertiesDG";
+};
+diagsRawDG=
+{	table="Diagnose";
+	columns=("ID","Name","ArztbriefName","Kategorie1","Kategorie2","BefundText","auto");
+	types={"ID"=int; "Kategorie1"=int; "Kategorie2"=int; };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	types={"ID"=int; "Kategorie1"=int; "Kategorie2"=int; "auto"=bool; };
+};
+
+allExitWLDG=
+{	table="StammdatenExitWL";
+	types={"ID"=int;};
+	columns=("ID","Name");
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+
+
+trepanDG=
+{	table="Trepanart";
+	columns=("ID","Trepanart");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+
+narkoseDG=
+{	table="StammdatenNarkose";
+	columns=("ID","Text");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+opverfahrenDG=
+{	table="StammdatenOPVerfahren";
+	columns=("ID","OPArt");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+
+ 	autoSort="standard";
+	sortColumns=
+	{	standard=("ID");
+	};
+};
+mitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","extern","operiert");
+	types={"ID"=int; "operiert"=bool; "extern"=bool;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+ 	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+	filters=
+	{	operiert=  {col="operiert";op="eq";val="1"};
+	}
+};
+prioDG=
+{	table="StammdatenPrioritaet";
+	columns=("ID","Text");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+augeDG=
+{	columns=("Name");
+	primaryKey="Name";
+	data=(("RA"),("LA"));
+};
+
+statusHLADG=
+{	columns=("id","Name");
+	primaryKey="id";
+	data=((1, "nicht erforderlich"),(2,"bereits abgenommen"),(3,"wird zugeschickt"));
+};
+statusAnaesthesieDG=
+{	columns=("id","Name");
+	primaryKey="id";
+	data=((1, "Erledigt"),(2,"Hat Termin"),(3,"Am Aufnahmetag"));
+};
+
+
+}</DisplayGroups>

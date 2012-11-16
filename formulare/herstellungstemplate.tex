@@ -1,0 +1,41 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage{supertabular}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{<copytex:hhb/wallpaper.sty>}
+\usepackage{pdflscape}
+\setcounter{secnumdepth}{0}
+
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\setlength{\headheight}{12\baselineskip}	% kleiner=hšher
+
+\begin{document}
+%\begin{landscape}
+\ThisCenterWallPaper{1}{<file:briefkopfHHB2.pdf>}
+\setlength{\oddsidemargin}{-13mm} 
+
+\renewcommand{\arraystretch}{1.5}
+
+\section{Herstellungsprotokoll <var:TPID>}
+{\tiny
+\begin{supertabular}{lp{1.2cm}p{1.0cm}p{1.4cm}lllllp{1.6cm}p{1.6cm}l}
+Medium& Inkulturnahme & Medium &NCS&  Halter & Flasche & BSS&6Well & Instrumente & Endothel& Spaltlampe & Mitarbeiter\\ \hline
+<foreach:list>
+<var:medium>& <var:inkulturnahme> &<var:chargennummer_medium>&<var:chargennummer_ncs>&  <var:chargennummer_halter>& <var:chargennummer_flasche>& <var:chargennummer_bss>& <var:chargennummer_bss_wellplate> & <var:instrument1>& <var:EZD> <var:BefundbarkeitEndothel> <var:AnteilNekrosen>  <var:NekrosenKlassifizierung>  <var:Endothelscore>& <var:stroma>  <var:bemerkungen>   &<var:mitarbeiter>\\ 
+</foreach:list>\hline
+\end{supertabular}
+}
+}
+\\
+\noindent Langzeitverbleib: <var:Langzeitverbleib>\\ \\\\\\
+\begin{tabular}{p{2cm}p{3.2cm}l}
+<var:Date> & Unterschrift  & Dr. Maier
+\\
+&& {\small Verantwortliche Person nach §20c des Arzneimittelgesetzes}\\
+\end{tabular}
+%\end{landscape}
+\end{document}

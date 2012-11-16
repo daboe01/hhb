@@ -1,0 +1,8 @@
+N
+LO60,0,340,40
+A60,60,0,3,1,1,N,"Hornhautspender"
+A60,85,0,3,1,2,N,"<var:ID>"
+A60,125,0,3,1,1,N,"<var:Name>, <var:Vorname>"
+A60,145,0,2,1,1,N,"<var:Geburtsdatum>"
+A60,165,0,2,1,1,N,"<var:Geschlecht>"
+P7

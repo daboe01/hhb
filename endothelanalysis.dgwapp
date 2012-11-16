@@ -1,0 +1,305 @@
+<comment>
+	Reading Centre application Jan.2010 by dr. boehringer
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</comment>
+
+<include src="cellfinder/cellfinder_schema.dgw">
+<include src="hhb/faces.html">
+
+<foreach:fillDG></foreach>
+<table>
+<tr>
+<td valign=top>
+
+	<foreach:trialsDG></foreach>
+
+
+	<table:imagesDG rows="20">
+		<head>
+			<col:50px> id </col>
+			<col:190px> filename </col>
+		</head>	
+		<foreach>
+			<cell><var:id></cell>
+			<cell><var:name2></cell>
+		</foreach>
+	</table:imagesDG>
+</td>
+<condDG:analysesDG selection=visible>
+<td valign=top>
+	<table class="datatable">
+	<caption>analyses</caption>
+	<tr>	<th> id </th>
+<condDG:trialsDG var:composition_for_editing=nenull>
+		<th> filter </th>
+</condDG:trialsDG>
+<condDG:trialsDG var:composition_for_celldetection=nenull>
+		<th> analysis </th>
+</condDG:trialsDG>
+		<th> pts </th>
+	</tr>
+	<foreach:analysesDG>
+		<tr>
+			<td><var:id></td>
+<condDG:trialsDG var:composition_for_editing=nenull>
+			<td><cond var:idcomposition_for_analysis=null><var:idcomposition_for_editing edittype=popup format:lookup="patch_compositionsDG.filters.name"></cond>
+				<cond var:idcomposition_for_analysis=nenull><var:idcomposition_for_editing format:lookup="patch_compositionsDG.name"></cond>
+			</td>
+</condDG:trialsDG>
+<condDG:trialsDG var:composition_for_celldetection=nenull>
+			<td><var:idcomposition_for_analysis format:lookup="patch_compositionsDG.name"></td>
+</condDG:trialsDG>
+			<td><var:id format:lookup="numberpointsDG.count"></td>
+		</tr>
+	</foreach>
+	</table>
+</condDG:analysesDG>
+<condDG:trialsDG var:composition_for_celldetection=nenull>
+<condDG:analysesDG var:idcomposition_for_analysis=false>
+	<form:analysesDG label="Analysis" perl="analyze">
+		<var:idcomposition_for_analysis edittype=popup format:lookup="patch_compositionsDG.analytics.name" format:label="analysis">
+	</form>
+</condDG:analysesDG>
+</condDG:trialsDG>
+
+<condDG:analysesDG selection=true>
+	<table class="datatable" width="100%">
+	<caption>point aggregations</caption>
+	<foreach:aggregationsDG>
+		<tr>
+			<td><var:name></td>
+			<td><var:value></td>
+		</tr>
+	</foreach>
+	</table>
+</condDG:analysesDG>
+</td>
+<td valign=top>
+	<form:analysesDG plain=YES>
+    	<div id="placeholder" style="width:<var:width edittype=plain>px;height:<var:height edittype=plain>px;"></div>
+	</form>
+	<form:fillDG style="display:none;position:absolute;" perl="didSaveFlot">
+		<var:json_text editmode=inplace edittype=textarea cols="80" rows="20" id="fillDG_json_text_id">
+	</form>
+</td>
+</tr>
+</table>
+
+
+
+	<div id="DOMRename" style="display:none;position:absolute;">
+	<form:imagesDG label="rename">
+		<var:name edittype=text size="15" format:label="name">
+	</form>
+	</div>
+
+
+<DisplayGroups>{
+
+fillDG={
+	columns=("id","json_text");
+	primaryKey="id";
+	cache=YES;
+};
+
+
+imagesDG={
+	table="images_name";
+	write_table="images";
+	columns=( "id", "name",  "name2", "filename", "idtrial", "idcentre" );
+	suppress_insert=("name2");
+	bindFromColumn="idtrial"; bindToDG="trialsDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("filename","id");
+	};
+
+	contextmenu=
+	(	{	name="Selektieren";
+			action="select";
+		}
+		{	name="L&ouml;schen";
+			action="delete";
+			javascript="Effect.Puff(event.target.parentNode.parentNode);";
+			confirm="Wirklich entfernen?";
+		}, { separator="true"; },
+		{	name="rename";
+			raiseDOMId="DOMRename";
+		},
+		{	name="new analysis";
+			perlfunc="newAnalysis";
+		},
+		{	name="Duplizieren";
+			perlfunc="duplicate";
+		}
+	);
+};
+
+analysesDG={
+	autoSort="standard";
+	sortColumns=
+	{	standard=({col="id"; op="desc"});
+	};
+	contextmenu=
+	(	{	name="Selektieren";
+			action="select";
+		},
+		{	name="L&ouml;schen";
+			action="delete";
+			javascript="Effect.Puff(event.target.parentNode.parentNode);";
+			confirm="Wirklich entfernen?";
+		},
+		{	name="clear analysis";
+			perlfunc="clear_analysis";
+		}
+	);
+
+};
+resultsDG={
+ 	autoSort="standard";
+	sortColumns=
+	{	standard=("id");
+	};
+};
+
+imagefileaDG={
+	columns=("pk","file");
+	cache=YES;
+};
+
+numberpointsDG=
+{	columns=("idanalysis","count");
+	primaryKey="idanalysis";
+	table="number_points";
+	types={ "idanalysis"=int; "count"=int; };
+	bindToDG="trialsDG";
+};
+
+
+}</DisplayGroups>
+
+<script>
+{	showInsert: function()
+	{	Effect.toggle('newdg1','slide',{duration:0.1});
+	},
+	performSave: function()
+	{
+		new Ajax.Request(dbweb.uri, { asynchronous:false, method: 'post', postBody: dbweb.basicParams()+'&ajax=7&inplace=fillDG_json_text&value='+ Object.toJSON(dbweb._flot.getData())+
+						'&forminfo='+ $('fillDG_json_text_id').form.elements['forminfo'].value+'&id=fillDG_json_text_id'});
+		dbweb.reloadPage();
+	}
+}</script>
+
+
+<perlfunc name="_onload_">
+{	$DG::trialsDG->selectPK(14);
+}</perlfunc>
+
+<perlfunc name="_earlyauto_">
+{	my $d=$DG::trialsDG->selectedDict();
+	$DG::fillDG->appendDictToCache({id => 0 }) unless $DG::fillDG->allDicts();
+
+}</perlfunc>
+
+<perlfunc name="_auto_">
+{	my $trial=$DG::trialsDG->selectedDict();
+	my $curr_img= $DG::imagesDG->selectedDict();
+	my $curr_ana= $DG::analysesDG->selectedDict();
+	my ($width, $height, $filename)=($curr_ana->{width}, $curr_ana->{height},  "/cellfinder_image/$curr_img->{id}");
+	$filename.="?cmp=$curr_ana->{idcomposition_for_editing}" if($curr_ana->{idcomposition_for_editing});
+	$filename.="&afterload=$trial->{composition_for_overlay}" if($trial->{composition_for_overlay} && $curr_ana->{idcomposition_for_analysis});
+warn $filename;
+	my $dataArr=$DG::resultsDG->dictsForWhereClauseDictRaw( { idanalysis=> $curr_ana->{id} },  {sort=> $DG::resultsDG->{sortColumns}->{$DG::resultsDG->{autoSort}} } );
+	my @points= map {[$_->{row},$height-$_->{col}]} @{$dataArr};
+	my $data= JSON::XS->new->utf8->encode(\@points);
+	my $userscript=<<"EOUSCR"
+	jQuery(function (){
+		var options = {
+			lines: { show: false },
+			points:{ show: true },
+			selection: { mode: "xy", color:" #513736" },
+			legend:{ show: false },
+			xaxis: { min:-3, max:$width },
+			yaxis: { min: 0, max:$height },
+			grid:  { backgroundImage: '$filename',
+					clickable: true,
+					hoverable: true,
+					editable: true,
+					autoHighlight: false
+				}
+			};
+ 			dbweb._flot=jQuery.plot(jQuery("#placeholder"), [$data], options);
+	});
+EOUSCR
+;
+	addUserscript($userscript);	# inject javascript for Flot editor
+### warn $userscript;
+}</perlfunc>
+
+
+<perlfunc name="didSaveFlot">
+{	my $val=JSON::XS->new->utf8->decode($DG::fillDG->mutablePendingUpdateDict()->{json_text});
+	my $settings=$DG::analysesDG->selectedDict();
+	delete $settings->{id};
+	delete $settings->{dist_avg};
+	$settings->{manual_edit}=1;
+	my $analysisPK=$DG::analysesDG-> insertDict($settings);
+	$DG::analysesDG->selectPK($analysisPK);
+
+	my @points=@{$val->[0]->{datapoints}->{points}};
+	my $height=$settings->{height};
+	while(scalar @points){
+		my $x=int(shift @points);
+		my $y=int(shift @points);
+		$DG::resultsDG->insertDict({row =>$x, col=>$height-$y, idanalysis=>$analysisPK});
+
+	};
+}</perlfunc>
+
+
+
+<perlfunc name="newAnalysis"  include="cellfinder/analysis.pl">
+{	my $trial=$DG::trialsDG->selectedDict();
+	my $idanalysis=$DG::analysesDG->insertDict( { idcomposition_for_editing=> $trial->{composition_for_editing} });
+	updateDimsOfAnalysis($idanalysis);
+	$DG::analysesDG->selectPK( $idanalysis );
+}</perlfunc>
+
+<perlfunc name="clear_analysis">
+{	my $pk=DG::pendingPrimaryKey();
+	my $sql = 'delete from results where idanalysis ='. $pk;
+	$DG::analysesDG->updatePKWithDict($pk, {idcomposition_for_analysis => undef});
+	$DG::analysesDG->executeSQLStatement($sql,1);
+	my $sql = 'delete from aggregations where idanalysis ='. $pk;
+	$DG::analysesDG->executeSQLStatement($sql,1);
+}</perlfunc>
+
+<perlfunc name="analyze" include="cellfinder/analysis.pl">
+{	my $curr_ana=DG::mutablePendingUpdateDict();
+	$DG::analysesDG->updateSelectionWithDict({idcomposition_for_analysis=> $curr_ana->{idcomposition_for_analysis}});
+	DG::abortPendingUpdate();
+	replaceAnalysis($DG::analysesDG->selectedPK());
+}</perlfunc>
+
+
+<perlfunc name="reanalyze" include="cellfinder/analysis.pl">
+{
+	my $idanalysis=DG::pendingPrimaryKey();
+	# <!> update analysis dimensions from potentially changed filter
+	replaceAnalysis($idanalysis);
+}</perlfunc>
+
+

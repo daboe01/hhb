@@ -1,0 +1,762 @@
+<comment>
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+1.3.05 by dr. boehringer
+	toDo:
+		HHB assi vorselektieren 
+		inkulturnehmen 
+		format:typeahead bei Verwandschaftsgrad
+</comment>
+
+<include src="hhb/faces.html">
+
+<table>
+<tr>
+<td valign=top>
+	<form:searchDG1 label="Suche">
+		<var:ID edittype=text placeholder="SpNummer"  pulldown=off size="9">
+		<var:Name edittype=text placeholder="Name" pulldown=off size="9" typeahead="allSpDG.Name">
+		<var:Vorname placeholder="Vorname" edittype=text size="9">
+		<button:Suchen class="btn" format:ajax="on">
+	</form>
+	<table class="datatable" width="500px">
+		<caption>Spender</caption>
+		<th>SP#</th>
+		<th><displayGroup:spDG perform:insert="var:Name" edittype=text" placeholder="Neu: Name + CR"></th>
+		<th>Vorname</th>
+		<th>Geb.datum</th>
+		<th>Sterbedat.</th>
+
+		<foreach:spDG>
+		<tr>
+			<td><var:ID></td>
+			<td><var:Name></td>
+			<td><var:Vorname></td>
+			<td><var:Geburtsdatum format:date="%d.%m.%Y"></td>
+			<td><var:Todeszeitpunkt format:date="%d.%m.%y %H:%M"></td>
+		</tr>
+		</foreach>
+	</table>
+	<foreach:passwordDG><var:level  style="display:none;"></foreach>
+</td>
+
+<td valign=top>
+	<form:spDG label="Stammdaten">
+		<var:ID edittype=text format:label="Nummer / PIZ" size="5">
+		<var:PIZ edittype=text size="9">
+		<comment></comment>
+		<var:Name edittype=text editmode=inplace format:label="Name">
+		<var:Vorname edittype=text  editmode=inplace  format:label="Vorname / weiblich">
+		<var:weiblich edittype=boolean>
+		<var:Geburtsdatum edittype=text editmode=inplace format:label="geboren" format:tooltip="dd.mm.yyyy" format:date="%d.%m.%Y">
+		<var:Todeszeitpunkt edittype=text label="gestorben" format:tooltip="dd.mm.yy hh:mm" format:date="%d.%m.%y %H:%M">
+		<var:Anschrift edittype=text editmode=inplace format:label="Anschrift">
+		<var:PLZ edittype=text editmode=inplace format:label="PLZ / Ort" size="5">
+		<var:Ort edittype=text editmode=inplace size="9">
+		<hr>
+		<var:IDEinverstaendnisArt edittype=popup lookup="einverstaendnisDG.Name" label="Einverst&auml;ndnis / durch">
+		<var:EinverstaendnisEingeholt edittype=combo lookup="mitarbeiterDG.Name" size="10">
+		<var:Telefon edittype=text label="Telefon">
+		<var:NameAngehoeriger edittype=text label="Kontaktpers./ Kontakt letzte 2 J.">
+		<var:persoenlicher_kontakt edittype=boolean>
+		<var:EinverstaendnisPerson edittype=text label="Verwandschaftsgrad">
+		<var:AnschriftAngehoeriger edittype=text label="Anschrift">
+		<var:PLZAngehoeriger size="5" edittype=text label="PLZ / Ort">
+		<var:OrtAngehoeriger edittype=text size="9">
+		<var:time_contact1 edittype=date format:date="%d.%m.%y %H:%M" size="15" label="Erstkontakt am (dd.mm.yy HH:MM)"> <button:now class="btn" perl="set_time1" format_ajax="on">
+		<var:time_contact2 edittype=date format:date="%d.%m.%y %H:%M" size="15" label="Zweitkontakt am (dd.mm.yy HH:MM)"><button:now class="btn" perl="set_time2" format_ajax="on">
+		<var:gespraechsnotiz edittype=textarea format:label="Gespraechsnotiz" cols="27" rows="3">
+		<var:einwilligung_forschung edittype=popup label="Einwilligung in Forschung" lookup="forschungseinwilligungDG.txt">
+		<hr>
+		<var:IDMelder edittype=popup label="Meldung durch" lookup="quelleDG.Name">
+		<cond var:IDMelder="const:5">
+			 <var:ExternalID edittype=text format:label="Organspendenummer" size="15">
+		</cond>
+		<var:IDSterbeort edittype=popup label="Sterbeort" lookup="sterbeortDG.Text">
+	</form>
+</td>
+<td valign=top>
+	<form:spDG label="weitere Daten">
+		<var:IDQuelle edittype=popup label="Entnahmeort" lookup="quelleDG.Name">
+		<var:Entnahmezeitpunkt edittype=text editmode=inplace format:label="Entnahme" format:tooltip="dd.mm.yy hh:mm" format:date="%d.%m.%y %H:%M">
+		<var:gekuehlt edittype=boolean label="Leichnam gek&uuml;hlt">
+		<br>
+		<button:Todesbescheinigung class="btn primary" perl="todesbescheinigungDrucken">
+		<button:Einwilligung class="btn" perl="einwilligungDrucken" format:ajax="on"><br>
+		<button:PDF class="btn primary" perl="einwilligungDrucken2" format:ajax="off"><br>
+		<button:Labels class="btn" perl="einwilligungLabelsDrucken" format:ajax="on">
+		<var:IDSpenderidentifikationDurch edittype=popup lookup="mitarbeiterDG.explant.Name" label="Identifikation durch / Mittels">
+		<var:IDSpenderidentifikationMittels edittype=popup lookup="IdentifikationsmittelDG.Name">
+
+		<var:IDExplanteur edittype=popup lookup="mitarbeiterDG.explant.Name" label="Explanteur">
+		<var:Bemerkungen edittype=textarea label="Bemerkungen" cols="30" rows="6">
+		<var:Sepsis edittype=boolean label="Sepsis  /  Todesursache">
+		<var:IDTodesursache edittype=popup lookup="todesursacheDG.Name">
+		<var:Risikogruppe edittype=boolean label="Risikofaktoren Kontagiosit&auml;t bekannt">
+		<var:Leukaemie edittype=boolean label="Leuk&auml;mie bekannt">
+		<var:Immunsuppression edittype=boolean label="Immunsuppression zum Todeszeitpunkt">
+		<var:KontraindikationChecked edittype=boolean label="Keine Kontraindikationen gegen HH-Spende">
+		<var:id_vorops_r edittype=popup label="VoroperationenR" format:lookup="voropDG.Text">
+		<var:id_vorops_l edittype=popup label="VoroperationenL" format:lookup="voropDG.Text">
+	</form>
+	<table class="datatable" width="100%">
+		<caption>Verweise</caption>
+		<th>Auge</th>
+		<th colspan="2">zeigen</th>
+		<th>ID</th>
+		<foreach:organkulturDG>
+			<tr>
+			<td><var:Auge></td>
+			<td><var:ID format:link="brutschrank.organkulturDG" format:lookup="const:Organkultur"></td>
+			<td><var:IDWarteliste format:link="warteliste.wartelisteDG" format:lookup="const:Empf&auml;nger"></td>
+			<td><var:ID></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<form:spDG label="Probenvalidität">
+		<var:IDPraemortemBlut edittype=popup lookup="PraemortemBlutDG.Name" label="Prae Mortem Blut / Groesse  /  Gewicht">
+		<var:Koerpergroesse edittype=text size="5">
+		<var:Koerpergewicht edittype=text size="5">
+<comment>
+		<var:TransfusionenExpander edittype=text label="FFP (Beutel)  / nichtsalin (ml)  /  EKs/  TKs " size="5">
+		<var:TransfusionenDextrose edittype=text size="5">
+		<var:Transfusionen edittype=text size="5">
+		<var:TransfusionenSalin edittype=text size="5">
+</comment>
+	</form>
+	<table class="datatable" width="100%">
+		<caption>Transfusionslast</caption>
+		<tr>
+			<td class="insertvar">Datum</td><td class="insertvar">
+			<displayGroup:transfusionslastDG format:label="Art" perform:insert="var:colloid_cristalloid" edittype=popup lookup="transfusionsDG.name" perl="newTransfusion"></td>
+			<td class="insertvar">Menge in ml</td>
+		</tr>
+		<foreach:transfusionslastDG>
+		<tr>
+			<td><var:transfusionszeitpunkt format:date="%d.%m.%y %H:%M" edittype=text></td>
+			<td><var:colloid_cristalloid lookup="transfusionsDG.name"></td>
+			<td><var:anzahl edittype=text></td>
+		</tr>
+		</foreach>
+	</table>
+	<form:spDG label="Inkulturnehmen">
+		<var:IDEntnahmemethodeR edittype=popup label="Entnahmemethode RA / LA" lookup="entnahmeDG.Name">
+		<var:IDEntnahmemethodeL edittype=popup lookup="entnahmeDG.Name">
+		<var:IDVerwefungsgrundPrimary edittype=popup label="Nicht kultiviert weil" lookup="verwerfungDG.Name">
+		<cond var:IDVerwefungsgrundPrimary=false>
+			<br><button:Inkulturnehmen class="btn" format:ajax="on" perl="kultivieren">
+			<var:gesperrt edittype=boolean format:label="Momentan gesperrt">
+			<table class="datatable">
+				<foreach:warnings>
+					<tr>
+						<td><var:WarnungsText" style="text-decoration:underline;color:red;"></td>
+					</tr>
+				</foreach>
+			</table>
+		</cond>
+	</form>
+
+	<table class="datatable" width="100%">
+		<caption>Blutwerte</caption>
+		<tr><th colspan=4>	<a href="/dbwebressources2/hhb/hla_nomenclature.pdf" class="btn primary">HLA Dictionary</a>
+			</th>
+		</tr>
+		<tr>
+			<td class="insertvar">Datum</td><td class="insertvar">Broad</td><td class="insertvar">
+			<displayGroup:HLASpDG format:label="Split" placeholder="Axx" perform:insert="var:IDHLA" edittype=combo lookup="allHLAsDG.Split" perl="insertHLA" size="5"></td>
+			<td class="insertvar">
+			<displayGroup:HLASpDG format:label="PCR" placeholder="A*xxxx" perform:insert="var:IDHLA" edittype=combo lookup="allHLAsDG.PCR"  perl="insertHLA" size="9"></td>
+		</tr>
+		<foreach:HLASpDG>
+		<tr>
+			<td><var:Datum format:date="%m/%Y" ></td>
+			<td><var:IDHLA lookup="allHLAsDG.Broad"></td>
+			<td><var:IDHLA lookup="allHLAsDG.Split"></td>
+			<td><var:IDHLA lookup="allHLAsDG.PCR"></td>
+		</tr>
+		</foreach>
+
+		<tr><th colspan=4>Blutgruppe</th>
+		</tr>
+		<tr>
+			<td class="insertvar">Datum</td>
+			<td class="insertvar" colspan="3"><displayGroup:BGSpDG perform:insert="var:IDBlutgruppe" edittype=popup lookup="allBGsDG.Allel" perl="insertBG" size="5"></td>
+		</tr>
+		<foreach:BGSpDG>
+		<tr>
+			<td><var:Datum format:date="%m/%Y"></td>
+			<td colspan="3"><var:IDBlutgruppe lookup="allBGsDG.Allel"></td>
+		</tr>
+		</foreach>
+
+		<tr><th colspan=4>Sero</th>
+		</tr>
+		<tr>
+			<td class="insertvar">Datum</td><td class="insertvar" colspan="2">
+			<displayGroup:SeroSpDG perform:insert="var:IDTest" edittype=popup lookup="allSerosDG.Test" perl="insertSero" size="5"></td>
+			<td class="insertvar">Negativ</td>
+		</tr>
+		<foreach:SeroSpDG>
+		<tr>
+			<td><var:Datum format:date="%m/%Y"></td>
+			<td colspan="2"><var:IDTest lookup="allSerosDG.Test"></td>
+			<td><var:Ergebnis edittype=boolean editmode=inplace></td>
+		</tr>
+		</foreach>
+	</table>
+</td>
+</table>
+
+</body>
+</html>
+
+<DisplayGroups>{
+spDG=
+{	table="StammdatenHornhautspender";
+	write_table="StammdatenHornhautspender";
+	bindToDG=searchDG1;
+	columns=
+	(	"ID","PIZ","Name","Vorname","Geburtsdatum", "Anschrift", "PLZ", "Ort",  "Todeszeitpunkt", "IDTodesursache", "IDQuelle", "IDEntnahmemethodeR", "IDEntnahmemethodeL", "IDExplanteur", "weiblich", "Bemerkungen",
+		"IDEinverstaendnisArt", "EinverstaendnisEingeholt", "EinverstaendnisPerson", "NameAngehoeriger", "Koerpergroesse", "Koerpergewicht", "TransfusionenExpander", "TransfusionenSalin", "TransfusionenRinger",
+		"TransfusionenDextrose", "Transfusionen", "Sepsis", "Risikogruppe", "Leukaemie", "Immunsuppression", "Entnahmezeitpunkt", "Telefon", "IDVerwefungsgrundPrimary", "IDSterbeort", "KontraindikationChecked",
+		"IDZentrum", "ExternalID" , "ExternalDonor" , "IDMelder","gekuehlt", "OrtAngehoeriger","PLZAngehoeriger","AnschriftAngehoeriger","persoenlicher_kontakt", "gespraechsnotiz", "time_contact1", "time_contact2", "einwilligung_forschung",
+		"IDSpenderidentifikationDurch","IDSpenderidentifikationMittels", "IDPraemortemBlut", "id_vorops_r", "id_vorops_l","gesperrt"
+	);
+	types={	"ID"=int; "PIZ"=int; "Todeszeitpunkt"=time; "IDTodesursache"=int; "IDQuelle"=int; "IDEntnahmemethodeR"=int; "IDEntnahmemethodeL"=int; "IDExplanteur"=int; "weiblich"=bool; "IDEinverstaendnisArt"=int;
+			"EinverstaendnisEingeholt"=int; "Koerpergroesse"=int; "Koerpergewicht"=int; "TransfusionenExpander"=int; "TransfusionenSalin"=int; "TransfusionenRinger"=int; "TransfusionenDextrose"=int;
+			"KontraindikationChecked"=bool; "Immunsuppression"=bool; "IDVerwefungsgrundPrimary"=int; "IDSterbeort"=int; "Risikogruppe"=bool; "Leukaemie"=bool; "IDZentrum"=int; "IDZentrum"=int;
+			"Transfusionen"=int; "Sepsis"=bool; "ExternalDonor"=bool; "Entnahmezeitpunkt"=time;  "Geburtsdatum"=date; "IDMelder"=int; "gekuehlt"=bool; "persoenlicher_kontakt"=bool; "time_contact1"=date; "einwilligung_forschung"=int;
+			"time_contact2"=date; "IDSpenderidentifikationDurch"=int; "IDSpenderidentifikationMittels"=int; "IDPraemortemBlut"=int; "id_vorops_r"=int; "id_vorops_l"=int;"gesperrt"=bool; };
+
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=({col="ID"; op="desc"});
+	};
+	contextmenu=
+	(	{	name="Selektieren";
+			action="select";
+		},
+		{	name="Spender entfernen und umnmumerieren";
+			perlfunc="removeDonorConsistenly";
+			javascript="Effect.Puff(event.target.parentNode.parentNode);";
+			confirm="Wirklich entfernen ?";
+		},
+		{	condition="passwordDG.level > 3";
+			name="Spender entfernen";
+			perlfunc="removeDonor";
+			javascript="Effect.Puff(event.target.parentNode.parentNode);";
+			confirm="Wirklich entfernen ?";
+		}
+	)
+};
+voropDG=
+{	table="StammdatenSpenderVoroperation";
+	types={"ID"=int; };
+	columns=("ID","Text");
+	primaryKey="ID";
+	bindToDG="spDG";
+};
+forschungseinwilligungDG=
+{	columns=("id","txt");
+	primaryKey="id";
+	data=((0,"Eingewilligt"),(2,"Enu und Forschung"),(1,"Nicht eingewilligt"));
+};
+
+allSpDG=
+{	table="StammdatenHornhautspender";
+	columns= ( "ID", "Name");
+	primaryKey="ID";
+	types={"ID"=int; };
+	connectionEnvAuto=YES;
+};
+
+todesursacheDG=
+{	table="StammdatenTodesursache";
+	columns=("ID","Name","ICD","Code","Malignom","Leukaemie","Sepsis");
+	primaryKey="ID";
+	types={"ID"=int; };
+	bindToDG="spDG";
+};
+quelleDG=
+{	table="StammdatenQuelle";
+	columns=("ID","Name","Intensivstation","Extern");
+	primaryKey="ID";
+	types={"ID"=int; };
+	bindToDG="spDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+};
+entnahmeDG=
+{	table="StammdatenEntnahmemethode";
+	columns=("ID","Name");
+	types={"ID"=int; };
+	primaryKey="ID";
+	bindToDG="spDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+};
+mitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","extern","role");
+	types={"ID"=int; "role"=int; "extern"=bool;};
+	primaryKey="ID";
+	bindToDG="spDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+	filters=
+	{	explant=({col="role";op=">=";val="2"},{col="extern";op="eq";val="0"});
+		einverst=({col="role";op=">=";val="1"});
+	}
+	
+};
+einverstaendnisDG=
+{	table="StammdatenEinverstaendnisArt";
+	columns=("ID","Name");
+	types={"ID"=int; };
+	primaryKey="ID";
+	bindToDG="spDG";
+};
+sterbeortDG=
+{	table="StammdatenSpenderSterbeort";
+	columns=("ID","Text","IDKlinik");
+	types={"ID"=int; "IDKlinik"=int;};
+	primaryKey="ID";
+	bindToDG="spDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Text");
+	};
+};
+verwerfungDG=
+{	table="StammdatenVerwerfungsgrund";
+	columns=("ID","Name");
+	primaryKey="ID";
+	types={"ID"=int;};
+	bindToDG="spDG";
+};
+HLASpDG=
+{	table="HLASpender";
+	columns=("ID","IDSpender","IDHLA","Datum");
+	types={"ID"=int; "Datum"=date; "IDSpender"=int; "IDHLA"=int; };
+	primaryKey="ID";
+	bindFromColumn="IDSpender"; bindToDG="spDG";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+allHLAsDG=
+{	table="StammdatenHLA";
+	columns=("ID","Broad","Split","Klasse","PCR");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="HLASpDG";
+};
+BGSpDG=
+{	table="BlutgruppeSpender";
+	columns=("ID","IDSpender","IDBlutgruppe","Datum");
+	types={"ID"=int; "Datum"=date; "IDSpender"=int; "IDBlutgruppe"=int; };
+	primaryKey="ID";
+	bindFromColumn="IDSpender"; bindToDG="spDG";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+
+transfusionsDG=
+{	columns=("id","name");
+	primaryKey="id";
+	data=((0,"Kristalloid"),(2,"Kolloidal"),(1,"Blutprodukte"));
+};
+
+prozentuale_blutverduennungDG=
+{	table="prozentuale_blutverduennung";
+	columns=("iddonor","prozentuale_blutverduennung","verbose_name");
+	types={"iddonor"=int; "prozentuale_blutverduennung"=int;};
+	primaryKey="iddonor";
+	bindFromColumn="iddonor"; bindToDG="spDG";
+};
+
+transfusionslastDG=
+{	table="spender_transfusionslast";
+	columns=("id","iddonor","colloid_cristalloid","transfusionszeitpunkt","anzahl");
+	types={"id"=int; "transfusionszeitpunkt"=date; "iddonor"=int; "colloid_cristalloid"=int; "anzahl"=int;};
+	primaryKey="id";
+	bindFromColumn="iddonor"; bindToDG="spDG";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+allBGsDG=
+{	table="StammdatenBlutgruppe";
+	columns=("ID","Allel");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="BGSpDG";
+};
+SeroSpDG=
+{	table="SerologieSpender";
+	columns=("ID","IDSpender","IDTest","Datum","Ergebnis");
+	types={"ID"=int; "Datum"=date; "IDSpender"=int; "IDTest"=int; "Ergebnis"=bool;};
+	primaryKey="ID";
+	bindFromColumn="IDSpender"; bindToDG="spDG";
+	sortColumns=
+	{	standard=("IDTest","ID");
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+allSerosDG=
+{	table="StammdatenSerologie";
+	columns=("ID","Test","Typ");
+	primaryKey="ID";
+	types={"ID"=int; };
+	bindToDG="SeroSpDG";
+};
+organkulturDG=
+{	table="Organkultur";
+	columns=("ID","IDSpender","IDWarteliste","IDVerwerfungsgrund","Auge","IDVoroperationen","EndOfCulture","Bemerkungen","IDMitarbeiter");
+	types={"ID"=int; "IDSpender"=int; "IDWarteliste"=int; "IDVerwerfungsgrund"=int; "IDVoroperationen"=int; "IDMitarbeiter"=int; "EndOfCulture"=bool;};
+	primaryKey="ID";
+	bindFromColumn="IDSpender"; bindToDG="spDG";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+medienwechselDG=
+{	table="Mediumwechsel";
+	columns=("ID","KulturEinDatum","KulturAusDatum","DatumBakteriologieEntnahme","DatumBakteriologieErgebnis","AerobSteril","AnaerobSteril", "BSSKontrolle","EZD","MethodeEZD","BefundbarkeitEpithel","Epithelscore",
+				"BefundbarkeitEndothel","Endothelscore","BefundbarkeitStroma", "Stromascore","NarbePeripher",
+				"NarbeZentral","IDOrgankultur","IsEndbefund","IDMedium","EndothelPotenziellTransplantierbar", "Befundbild", "DatumEndbefund","Bemerkungen", "AnteilNekrosen","IDMitarbeiter","pachy",
+				"InstrumentID","InstrumentID2","InstrumentID3","chargennummer","steridate","steridate2","NekrosenKlassifizierung","chargennummer_ncs","chargennummer_flasche","chargennummer_halter", "chargennummer_bss");
+
+	types={"ID"=int; "IDOrgankultur"=int; "KulturEinDatum"= time; "DatumEndbefund"= time; "KulturAusDatum"=time; "DatumBakteriologieEntnahme"=time; "DatumBakteriologieErgebnis"=time; "AerobSteril"=bool;
+			"AnaerobSteril"=bool; "BSSKontrolle"=bool; "EZD"=int; "MethodeEZD"=int;
+			"BefundbarkeitEndothel"=int; "Endothelscore"=int; "BefundbarkeitStroma"=int; "Stromascore"=int; "BefundbarkeitEpithel"=int; "Epithelscore"=int;
+			"IDMedium"=int; "NarbePeripher"=bool; "NarbeZentral"=bool; "IsEndbefund"=bool; "IDMitarbeiter"=int; "InstrumentID"=int; "InstrumentID2"=int; "InstrumentID3"=int; "AnteilNekrosen"=int; "Befundbild"=bool;
+			"EndothelPotenziellTransplantierbar"=bool; "steridate"=date; "steridate2"=date; "NekrosenKlassifizierung"=int; };
+
+	primaryKey="ID";
+	bindFromColumn="IDOrgankultur"; bindToDG="organkulturDG";
+};
+warnings=
+{	columns=("ID","WarnungsText","Critical");
+	primaryKey="ID";
+	bindToDG="spDG"; bindFromColumn="ID";
+	cache=YES;
+};
+
+
+facesDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("1","Auswahl"), ("2","Daten"));
+};
+
+IdentifikationsmittelDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("1","Fusszettel"), ("2","Spenderausweis"), ("3","Eingangsbuch"));
+};
+PraemortemBlutDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=( ("1","Serum"), ("2","EDTA"), ("3","Serum+EDTA"));
+};
+
+GlobalSettings=
+{	table="GlobalSettings";
+	columns=("Key","Value");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+
+
+}</DisplayGroups>
+
+<perlfunc name="_earlyauto_">
+{	$DG::spDG->{table}='LastDonors' unless ($DG::spDG->hasWhere());
+
+	my $csp=$DG::spDG->selectedDict({boost=>1});
+
+	$DG::warnings->clearCache();
+	$DG::warnings->appendDictToCache({ID=>$csp->{ID}, WarnungsText=>'Kein Entnahmedatum', Critical=>1})		unless length $csp->{Entnahmezeitpunkt};
+	$DG::warnings->appendDictToCache({ID=>$csp->{ID}, WarnungsText=>'Entnahmedatum liegt in der Zukunft!', Critical=>1})	if($csp->{Entnahmezeitpunkt} > DG::currentTimeString() );
+	$DG::warnings->appendDictToCache({ID=>$csp->{ID}, WarnungsText=>'Keine Todesursache', Critical=>1})		unless length $csp->{IDTodesursache};
+	$DG::warnings->appendDictToCache({ID=>$csp->{ID}, WarnungsText=>'Keine Quelle', Critical=>1})			unless length $csp->{IDQuelle};
+	$DG::warnings->appendDictToCache({ID=>$csp->{ID}, WarnungsText=>'Keine Entnahmemethode', Critical=>1})	if( $csp->{IDEntnahmemethodeR} == 3 &&  $csp->{IDEntnahmemethodeL} == 3);
+	$DG::warnings->appendDictToCache({ID=>$csp->{ID}, WarnungsText=>'Keine Entnahmemethode', Critical=>1})	if( $csp->{IDEntnahmemethodeR} == '' &&  $csp->{IDEntnahmemethodeL} == '');
+	$DG::warnings->appendDictToCache({ID=>$csp->{ID}, WarnungsText=>'Kontraindikationen bestaetigen!', Critical=>1})	if(! $csp->{KontraindikationChecked} );
+
+	my $transfusionLoad=$csp->{Transfusionen}*300 + $csp->{TransfusionenExpander}*270 + $csp->{TransfusionenSalin}*240 + $csp->{TransfusionenDextrose}*1;
+
+	$DG::warnings->appendDictToCache({ID=>$DG::spDG->selectedPK(), WarnungsText=>'Praetransfusionsblut testen!', Critical=>0})
+		if( $transfusionLoad > $csp->{Koerpergewicht} * 22.5);
+
+}</perlfunc>
+
+<include src="hhb/login3.dgw">
+
+<perlfunc name="_auto_">
+{
+	disableButton('Inkulturnehmen') if($DG::warnings->dictsForWhereClauseDictRaw({Critical=>1}));	# kritische warnungen drinne
+
+}</perlfunc>
+
+
+<perlfunc name="kultivieren">
+{
+	sub GlobalSetting { my ($key)=@_;
+		my $erg=$DG::GlobalSettings->dictsForWhereClauseDictRaw({Key=> $key});
+		return undef unless $erg;
+		return $erg->[0]->{Value};
+	}
+
+	sub mwDict { my ($idmedium, $idok, $kEinDatum , $kAusDatum)=@_;
+		my $userA=$DG::passwordDG->dictsForWhereClauseDict({name => $DG::LOGIN->valueOfSelectedField('user')});
+		my $userDict=$userA? $userA->[0]: {};
+		my $insertionDict={IDOrgankultur=> $idok, IDMedium=> $idmedium, KulturEinDatum=> $kEinDatum,  KulturAusDatum=> $kAusDatum};
+		$insertionDict->{chargennummer}=GlobalSetting($idmedium? 'chargennummer_m1': 'chargennummer_tm');
+		$insertionDict->{$_}=GlobalSetting($_) for(qw/chargennummer_ncs chargennummer_flasche/);
+		$insertionDict->{chargennummer_halter}=GlobalSetting('chargennummer_halter') if($idmedium);
+		$insertionDict->{IDMitarbeiter}=$userDict->{IDMitarbeiter};
+		return $insertionDict;
+	}
+	my $curr_sp=$DG::spDG->selectedDict();
+	my $IDSpender=$curr_sp->{ID};
+	my $entnahmezeit=$curr_sp->{Entnahmezeitpunkt};
+	my $currenttime=currentTimeString();
+
+	if($currenttime< $entnahmezeit )
+	{	addUserscript("alert('Eine Inkulturnahme vor der Entnahme ist nicht moeglich!')");
+			return;
+	}
+
+
+	my $data=$DG::organkulturDG-> dictsForWhereClauseDict({'IDSpender'=> $IDSpender, 'Auge'=>'R'});
+	if($#{$data}<0 && $DG::spDG->valueOfSelectedField ('IDEntnahmemethodeR') != 3)					#duplikate vermeiden
+	{	my $IDOrgankultur=$DG::organkulturDG->insertDict({'IDSpender'=> $IDSpender, IDVoroperationen=>$curr_sp->{id_vorops_r}, 'Auge'=>'R'});
+		my $d= mwDict(0, $IDOrgankultur, $entnahmezeit, $currenttime);
+		$DG::medienwechselDG->insertDict($d);
+		my $d= mwDict(1, $IDOrgankultur, $currenttime);
+		$DG::medienwechselDG->insertDict($d);
+	}
+	my $data=$DG::organkulturDG-> dictsForWhereClauseDict({'IDSpender'=> $IDSpender, 'Auge'=>'L'});
+	if($#{$data}<0 && $DG::spDG->valueOfSelectedField ('IDEntnahmemethodeL') != 3)					#duplikate vermeiden
+	{	my $IDOrgankultur=$DG::organkulturDG->insertDict({'IDSpender'=> $IDSpender, IDVoroperationen=>$curr_sp->{id_vorops_l}, 'Auge'=>'L'});
+		my $d= mwDict(0, $IDOrgankultur, $entnahmezeit, $currenttime);
+		$DG::medienwechselDG->insertDict($d);
+		my $d= mwDict(1, $IDOrgankultur, $currenttime);
+		$DG::medienwechselDG->insertDict($d);
+	}
+
+}</perlfunc>
+
+<perlfunc name="newTransfusion">
+{	my $udict=$DG::transfusionslastDG->mutablePendingInsertionDict();
+	$udict->{transfusionszeitpunkt}=currentTimeString();
+	$udict->{anzahl}=1;
+}</perlfunc>
+<perlfunc name="insertBG">
+{	my $udict=$DG::BGSpDG->mutablePendingInsertionDict();
+	$udict->{Datum}=currentTimeString();
+}</perlfunc>
+<perlfunc name="insertHLA">
+{	my $udict=$DG::HLASpDG->mutablePendingInsertionDict();
+	$udict->{Datum}=currentTimeString();
+}</perlfunc>
+<perlfunc name="insertSero">
+{	my $udict=$DG::SeroSpDG->mutablePendingInsertionDict();
+	$udict->{Datum}=currentTimeString();
+}</perlfunc>
+
+<perlfunc name="todesbescheinigungDrucken" include="pdfgen.pl">
+{	my $template=getRessource('formulare/todesbescheinigung.tex');
+	my $ddict={};
+	my $spDict=$DG::spDG->selectedDict();
+	$ddict->{$_}=$spDict->{$_} for ( keys %{$spDict} );
+	$ddict->{'Datum'}= currentTimeString();
+	for ( keys %{$ddict} )
+	{	$ddict->{$_}=~ s/, $//o;
+		$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/$3.$2.$1/go } 
+	returnPDF(PDFForTemplateAndRef($template,$ddict));
+}</perlfunc>
+
+<perlfunc name="einwilligungDrucken" include="pdfgen.pl">
+{
+	sub GlobalSetting { my ($key)=@_;
+		my $erg=$DG::GlobalSettings->dictsForWhereClauseDictRaw({Key=> $key});
+		return undef unless $erg;
+		return $erg->[0]->{Value};
+	}
+
+	my $ddict={};
+	my $spDict=$DG::spDG->selectedDict();
+	$ddict->{$_}=$spDict->{$_} for ( keys %{$spDict} );
+	$ddict->{'Todesursache'}=$DG::spDG->valueOfPath('todesursacheDG.Name@IDTodesursache');
+	$ddict->{'Sterbeort'}=$DG::spDG->valueOfPath('sterbeortDG.Text@IDSterbeort');
+	$ddict->{'EinwilligungArzt'}=$DG::spDG->valueOfPath('mitarbeiterDG.Name@EinverstaendnisEingeholt');
+	$ddict->{Explanteur}= $DG::spDG->valueOfPath('mitarbeiterDG.Vorname@IDExplanteur').' '.$DG::spDG->valueOfPath('mitarbeiterDG.Name@IDExplanteur');
+	$ddict->{'EinwilligungsArt'}=$DG::spDG->valueOfPath('einverstaendnisDG.Name@IDEinverstaendnisArt');
+	$ddict->{'Entnahmeort'}=$DG::spDG->valueOfPath('quelleDG.Name@IDQuelle');
+	$ddict->{'Entnahmemethode'}=$DG::spDG->valueOfPath('entnahmeDG.Name@IDEntnahmemethodeR');
+	$ddict->{'modality'}=$spDict->{gekuehlt}? 'K"uhlraumbedingungen':'Raumtemperatur';
+	$ddict->{Geschlecht}=$spDict->{weiblich}?'weiblich':'maennlich';
+	$ddict->{ChargeTM}=GlobalSetting('chargennummer_tm');
+
+
+
+	$ddict->{grenzwert}=$spDict->{Koerpergewicht}*22.5;
+	$ddict->{transfusionslast}= $spDict->{Transfusionen}*300 + $spDict->{TransfusionenExpander}*270 + $spDict->{TransfusionenSalin}*240 + $spDict->{TransfusionenDextrose}*1;
+
+	my $transfusionsDict=$DG::prozentuale_blutverduennungDG->dictForPK($spDict->{ID});
+	$ddict->{ProzentualeBlutverduennung}=sprintf("%3.2f",$transfusionsDict->{prozentuale_blutverduennung});
+	$ddict->{Blutprodukte}=$transfusionsDict->{verbose_name};
+
+	$DG::warnings->appendDictToCache({ID=>$DG::spDG->selectedPK(), WarnungsText=>'Praetransfusionsblut testen!', Critical=>0})
+		if( $transfusionLoad > $csp->{Koerpergewicht} * 22.5 || ($ddict->{ProzentualeBlutverduennung}+0.0)> 50);
+
+	$ddict->{Entnahmezeitpunkt}=~/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/go;
+	$ddict->{'Datum'}="$3.$2.$1";
+	$ddict->{'Uhrzeit'}="$4:$5";
+	for (keys %{$ddict})
+	{	$ddict->{$_}=~ s/, $//o;
+		$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+).*/$3.$2.$1  $4:$5/go;
+		$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+)/$3.$2.$1/go;
+		$ddict->{$_}=~ s/00:00:00//go
+	}
+#	returnPDF(PDFForTemplateAndRef(getRessource('formulare/entnahmeprotokoll.tex'),	$ddict));
+	LPRPrint(PDFForTemplateAndRef(getRessource('formulare/entnahmeprotokoll.tex'),	$ddict), 'LionsHHB' , 1);
+	LPRPrint(PDFForTemplateAndRef(getRessource('formulare/virologie.tex'),		$ddict), 'HHBOrange', 1);
+}</perlfunc>
+
+
+<perlfunc name="einwilligungDrucken2" include="pdfgen.pl">
+{
+
+	sub GlobalSetting { my ($key)=@_;
+		my $erg=$DG::GlobalSettings->dictsForWhereClauseDictRaw({Key=> $key});
+		return undef unless $erg;
+		return $erg->[0]->{Value};
+	}
+
+	my $ddict={};
+	my $spDict=$DG::spDG->selectedDict();
+	$ddict->{$_}=$spDict->{$_} for ( keys %{$spDict} );
+	$ddict->{'Todesursache'}=$DG::spDG->valueOfPath('todesursacheDG.Name@IDTodesursache');
+	$ddict->{'Sterbeort'}=$DG::spDG->valueOfPath('sterbeortDG.Text@IDSterbeort');
+	$ddict->{'EinwilligungArzt'}=$DG::spDG->valueOfPath('mitarbeiterDG.Vorname@EinverstaendnisEingeholt').' '.$DG::spDG->valueOfPath('mitarbeiterDG.Name@EinverstaendnisEingeholt');
+	$ddict-> {Explanteur}= $DG::spDG->valueOfPath('mitarbeiterDG.Vorname@IDExplanteur').' '.$DG::spDG->valueOfPath('mitarbeiterDG.Name@IDExplanteur');
+	$ddict->{'EinwilligungsArt'}=$DG::spDG->valueOfPath('einverstaendnisDG.Name@IDEinverstaendnisArt');
+	$ddict->{'Entnahmeort'}=$DG::spDG->valueOfPath('quelleDG.Name@IDQuelle');
+	$ddict->{'Entnahmemethode'}=$DG::spDG->valueOfPath('entnahmeDG.Name@IDEntnahmemethodeR');
+	$ddict->{'modality'}=$spDict->{gekuehlt}? 'K"uhlraumbedingungen':'Raumtemperatur';
+	$ddict->{Geschlecht}=$spDict->{weiblich}?'weiblich':'maennlich';
+	$ddict->{ChargeTM}=GlobalSetting('chargennummer_tm');
+
+	$ddict->{grenzwert}=$spDict->{Koerpergewicht}*22.5;
+	$ddict->{transfusionslast}= $spDict->{Transfusionen}*300 + $spDict->{TransfusionenExpander}*270 + $spDict->{TransfusionenSalin}*240 + $spDict->{TransfusionenDextrose}*1;
+
+	my $transfusionsDict=$DG::prozentuale_blutverduennungDG->dictForPK($spDict->{ID});
+	$ddict->{ProzentualeBlutverduennung}=sprintf("%3.2f",$transfusionsDict->{prozentuale_blutverduennung});
+	$ddict->{Blutprodukte}=$transfusionsDict->{verbose_name};
+
+	$DG::warnings->appendDictToCache({ID=>$DG::spDG->selectedPK(), WarnungsText=>'Praetransfusionsblut testen!', Critical=>0})
+		if( $transfusionLoad > $csp->{Koerpergewicht} * 22.5 || ($ddict->{ProzentualeBlutverduennung}+0.0)> 50);
+
+	$ddict->{Entnahmezeitpunkt}=~/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/go;
+	$ddict->{'Datum'}="$3.$2.$1";
+	$ddict->{'Uhrzeit'}="$4:$5";
+	for (keys %{$ddict})
+	{	$ddict->{$_}=~ s/, $//o;
+		$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+).*/$3.$2.$1  $4:$5/go;
+		$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+)/$3.$2.$1/go;
+		$ddict->{$_}=~ s/00:00:00//go
+	}
+	returnPDF(PDFForTemplateAndRef(getRessource('formulare/entnahmeprotokoll.tex'),	$ddict));
+}</perlfunc>
+
+
+
+<perlfunc name="einwilligungLabelsDrucken" include="pdfgen.pl">
+{	sub printEtikett { my ($objc,$template)=@_;
+		my  $str=LWP::Simple::get($dbweb::pathPrefix.$template);
+		labelPrinter($str, $objc);
+	}
+	sub GlobalSetting { my ($key)=@_;
+		my $erg=$DG::GlobalSettings->dictsForWhereClauseDictRaw({Key=> $key});
+		return undef unless $erg;
+		return $erg->[0]->{Value};
+	}
+
+	my $template=getRessource('formulare/entnahmeprotokoll.tex');
+	my $ddict={};
+	my $spDict=$DG::spDG->selectedDict();
+	$ddict->{$_}=$spDict->{$_} for ( keys %{$spDict} );
+	$ddict->{'Todesursache'}=$DG::spDG->valueOfPath('todesursacheDG.Name@IDTodesursache');
+	$ddict->{'Sterbeort'}=$DG::spDG->valueOfPath('sterbeortDG.Text@IDSterbeort');
+	$ddict->{'EinwilligungArzt'}=$DG::spDG->valueOfPath('mitarbeiterDG.Name@EinverstaendnisEingeholt');
+	$ddict->{'Explanteur'}=$DG::spDG->valueOfPath('mitarbeiterDG.Name@IDExplanteur');
+	$ddict->{'EinwilligungsArt'}=$DG::spDG->valueOfPath('einverstaendnisDG.Name@IDEinverstaendnisArt');
+	$ddict->{'Entnahmeort'}=$DG::spDG->valueOfPath('quelleDG.Name@IDQuelle');
+	$ddict->{'Entnahmemethode'}=$DG::spDG->valueOfPath('entnahmeDG.Name@IDEntnahmemethodeR');
+	$ddict->{'modality'}=$spDict->{gekuehlt}? 'K"uhlraumbedingungen':'Raumtemperatur';
+	$ddict->{Geschlecht}=$spDict->{weiblich}?'weiblich':'maennlich';
+	$ddict->{ChargeTM}=GlobalSetting('chargennummer_tm');
+
+	$ddict->{grenzwert}=$spDict->{Koerpergewicht}*22.5;
+
+	$ddict->{transfusionslast}= $spDict->{Transfusionen}*300 + $spDict->{TransfusionenExpander}*270 + $spDict->{TransfusionenSalin}*240 + $spDict->{TransfusionenDextrose}*1;
+
+	$DG::warnings->appendDictToCache({ID=>$DG::spDG->selectedPK(), WarnungsText=>'Praetransfusionsblut testen!', Critical=>0})
+		if( $transfusionLoad > $csp->{Koerpergewicht} * 22.5);
+
+
+
+	$ddict->{'Datum'}= currentDateString();
+	for (keys %{$ddict})
+	{	$ddict->{$_}=~ s/, $//o;
+		$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+).*/$3.$2.$1  $4:$5/go;
+		$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+)/$3.$2.$1/go;
+		$ddict->{$_}=~ s/00:00:00//go }
+
+	printEtikett($ddict,'/hhb/formulare/splabel.txt');
+	printEtikett($ddict,'/hhb/formulare/entnahmedoeschen.txt');
+}</perlfunc>
+
+
+<perlfunc name="removeDonorConsistenly">
+{	my $spID=DG::pendingPrimaryKey();
+warn   $spID;
+	my $statement ='delete from "StammdatenHornhautspender" where "ID"='.$spID.'; ';
+	   $statement.='update "StammdatenHornhautspender" set "ID"=-("ID"-1) where "ID">'.$spID.'; update "StammdatenHornhautspender" set "ID"=-("ID") where "ID"<0; ';
+	   $statement.='select setval(\'"StammdatenHornhautspender_ID_seq"\', (select last_value from "StammdatenHornhautspender_ID_seq")-1);';
+	use DBIx::MultiStatementDo;
+	my $batch = DBIx::MultiStatementDo->new( dbh => dbweb::getDBHForDG($DG::spDG) );
+	$batch->do( $statement );
+	$DG::spDG->invalidateSelection();
+}</perlfunc>
+
+
+<perlfunc name="removeDonor">
+{	$DG::spDG->deletePK($DG::spDG->pendingPrimaryKey());
+}</perlfunc>
+
+<perlfunc name="set_time1">
+{	$DG::spDG->updateSelectionWithDict({ time_contact1=>currentTimeString() });
+}</perlfunc>
+<perlfunc name="set_time2">
+{	$DG::spDG->updateSelectionWithDict({ time_contact2=>currentTimeString() });
+}</perlfunc>

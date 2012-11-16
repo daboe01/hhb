@@ -1,0 +1,39 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{<copytex:hhb/formular.sty>}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+\setlength{\headheight}{14\baselineskip}
+\CenterWallPaper{1}{<file:briefkopfHHB2.pdf>}
+
+\newFRMfield{Name}{15mm}
+\newFRMfield{Vorname}{15mm}
+\newFRMfield{date}{15mm}
+\newFRMfield{time}{15mm}
+\setFRMinlinestyle 
+\newFRMenvironment{env2}{Todeszeichen}{3}
+\newFRMfield{ort}{10mm}[Ort][Freiburg] 
+\setFRMruledstyle 
+\newFRMfield{sigf}{50mm}[Unterschrift]
+
+\begin{document}
+
+\setcounter{secnumdepth}{0}
+\section{Best"atigung}
+
+\noindent
+Bei Frau/Herrn \useFRMfield{Name}[<var:Name>],  \useFRMfield{Vorname}[<var:Vorname>],\useFRMfield{date}[<var:Geburtsdatum>] habe ich am \useFRMfield{date} um \useFRMfield{time} Uhr als "au"seres sicheres \\ \\
+\begin{env2} \end{env2} 
+festgestellt. \\ \\
+
+\noindent
+Damit sind der Tod und auch der endg"ultige, nicht behebbare Ausfall der Gesamtfunktion des Gehirns nachgewiesen. \\ \\
+
+\noindent
+Freiburg, <var:Datum>, \hfill \useFRMfield{sigf}
+
+\end{document}

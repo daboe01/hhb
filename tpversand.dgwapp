@@ -1,0 +1,249 @@
+<comment>
+1.3.2005: dr. boehringer: applet fuer die zentrenverwaltung
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</comment>
+
+<include src="hhb/faces.html">
+
+<table>
+<td valign=top>
+	<table class="datatable">
+		<caption>Zentren</caption>
+		<th>Name</th>
+		<foreach:zentrAnschrDG>
+			<tr>
+			<td><var:ZentrumName></td></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<form:zentrAnschrDG label="Anschrift">
+		<var:Kurzname edittype=text label="Kurzname">
+		<var:Name edittype=text label="Name">
+		<var:Anschrift1 edittype=text label="Anschrift" size=35>
+		<var:PLZ edittype=text label="PLZ", size=7>
+		<var:Ort edittype=text label="Ort">
+		<var:Langanrede edittype=text label="Langanrede" size=35>
+		<var:Tel edittype=text label="Tel.">
+		<var:Fax edittype=text label="Fax.">
+	</form>
+</td>
+<td valign=top>
+	<table:rechnungsDG rows="38">
+		<caption>Rechnungen</caption>
+		<head>
+			<col:60px> Tp </col>
+			<col:80px> Vers.dat. </col>
+			<col:60px> Betrag </col>
+		</head>	
+		<foreach>
+			<cell><var:IDOrgankultur lookup="organkulturDG.IDSpender"> <var:IDOrgankultur lookup="organkulturDG.Auge"></cell>
+			<cell><var:TransportDatum format:date="%d.%m.%Y"></cell>
+			<cell><var:Rechnungsbetrag></cell>
+		</foreach>
+	</table:rechnungsDG>
+</td>
+<td valign=top>
+	<form:rechnungsDG label="Rechnung">
+		<var:IDRechnungsadresse edittype=popup format:lookup="zentrAnschrDG.rechanschr.Name" format:label="Adresse">
+		<comment><var:RechnungBezahlt edittype=boolean label="bezahlt"></comment>
+		<var:Rechnungsnummer edittype=text label="Rechnungsnummer">
+		<var:Rechnungsbetrag edittype=text label="Rechnungsbetrag">
+		<var:TransportDatum edittype=text format:size=10 format:date="%d.%m.%Y" label="Versanddatum">
+		<var:IDMitarbeiter  edittype=popup format:lookup="nameMitarbeiterDG.mta.Name" format:label="Mitarbeiter">
+		<var:IDWL edittype=text label="IDWL" size="5">
+	</form>
+</td>
+<td valign=top>
+	<foreach:wartelisteDG><var:ID style="display:none;"></foreach>
+	<foreach:patDG><var:ID style="display:none;"></foreach>
+	<form:patDG  label="Empfaenger">
+		<var:Name edittype=text label="Name">
+		<var:Vorname edittype=text label="Vorname">
+		<var:Geburtsdatum edittype=text label="Geburtsdatum" format:date="%d.%m.%Y">
+		<var:Anschrift edittype=text label="Anschrift">
+		<var:PLZ edittype=text label="PLZ   / Ort" size="5">
+		<var:Ort edittype=text size="12">
+		<var:Telefon1 edittype=text label="Telefon" size="8">
+		<var:Telefon2 edittype=text size="8">
+	</form>
+	<form:wartelisteDG label="Warteliste">
+		<var:Auge edittype=text size="3" label="Auge">
+		<var:Privatpatient edittype=boolean label="P / Zentrum">
+		<var:IDZentrum edittype=popup lookup="allCentersDG.ZentrumName"><br>
+		<var:Prioritaet edittype=popup lookup="prioDG.Text" label="Prio">
+		<var:StartWarteliste edittype=text label="Start" size="12" format:date="%d.%m.%Y">
+		<var:KpAbDatum edittype=text size="12" format:date="%d.%m.%Y" format:label="KP ab">
+		<var:IDOPIndikationsdiagnose edittype=popup lookup="wlPropertiesDG.AugenDiags.Name" label="OP Indikation">
+		<var:Narkosefrom edittype=popup lookup="narkoseDG.Text" label="Narkose"><br>
+		<var:IDOPArt edittype=popup lookup="opverfahrenDG.OPArt" label="OP-Verfahren">
+		<var:KeratoplastikAuge edittype=text label="nKp Auge / Gesamt" size="3">
+		<var:KeratoplastikGesamt edittype=text size="3">
+		<var:MaxHLAMismatches edittype=text label="HLA-MM" size="3">
+		<var:TransplantationenGesamt edittype=text label="nTranspl. / nTransf." size="3">
+		<var:TransfusionenGesamt edittype=text size="3">
+		<var:Bemerkungen edittype=textarea label="Bemerkungen" cols="30" rows="6">
+	</form>
+</td>
+</table>
+</body>
+</html>
+
+
+<DisplayGroups>{
+
+zentrAnschrDG=
+{	table="Rechnungsanschrift";
+	write_table="Zentrumsanschrift";
+	columns=("ZentrumName","ID","Anrede","Titel","Name","Anschrift1","Anschrift2","PLZ", "Ort","Land","Kurzname", "Langanrede", "Typ", "Tel", "Fax", "IDZentrum");
+	types={"ID"=int; "IDZentrum"=int; "Typ"=int;};
+	primaryKey="ID";
+	suppress_insert=("ZentrumName");
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+	sortColumns=
+	{	standard=("Name");
+	};
+};
+anschrNameDG=
+{	table="StammdatenAnschrifttyp";
+	columns=("ID","Typ");
+	types={"ID"=int; "Typ"=int;};
+	primaryKey="ID";
+	bindToDG="zentrAnschrDG";
+};
+rechnungsDG=
+{	table="Transplantatversand";
+	columns=("ID","Rechnungsbetrag","RechnungBezahlt","IDOrgankultur","TransportDatum","IDRechnungsadresse","IDWL","Notfall", "IDVersandadresse","Rechnungsnummer", "IDMitarbeiter","Bemerkung");
+	types={"ID"=int; "Rechnungsbetrag"=int; "RechnungBezahlt"=bool; "IDOrgankultur"=int; "TransportDatum"=date; "IDRechnungsadresse"=int;  "IDWL"=int; "Notfall"=bool; "IDVersandadresse"=int;
+			"Rechnungsnummer"=int; "TransportDatum"=date;
+			"IDMitarbeiter"=int};
+	primaryKey="ID";
+	bindFromColumn="IDRechnungsadresse"; bindToDG="zentrAnschrDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=({col="IDOrgankultur"; op="desc"});
+	};
+};
+organkulturDG=
+{	table="Organkultur";
+	columns=("ID", "IDSpender", "Auge", "IDWarteliste",     "EndOfCulture");
+	types=  {"ID"=int; "IDSpender"=int; "IDWarteliste"=int; "EndOfCulture"=int;};
+	primaryKey="ID";
+	bindFromColumn="ID"; bindToDG="rechnungsDG"; targetColumn="IDOrgankultur";
+};
+tpidDG=
+{	table="TPIDsKultiviert";
+	columns=("ID","TPID");
+	types={"ID"=int; "TPID"=int;};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	cache=YES;
+};
+nameMitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","Strasse","PLZ","Ort","Telefon","Mobil","Fax","extern","role");
+	primaryKey="ID";
+	types={"ID"=int; };
+	bindToDG="rechnungsDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+	cache=YES;
+	filters=
+	{	mta={col="role";op=">=";val="3"};
+	}
+};
+wartelisteDG=
+{	table="Warteliste";
+	columns=("ID","PatientID","IDZentrum","WartenAktiviert","StartWarteliste","EndeWarteliste","IDZentrum", "KpAbDatum","Narkosefrom","Prioritaet", "KeratoplastikAuge","KeratoplastikGesamt","Auge","MaxHLAMismatches",
+	"GrundExitWL","Privatpatient","TransplantationenGesamt","TransfusionenGesamt","SchwangerschaftenGesamt","IDOperateur","TrepanTp","TrepanPat","IDOPArt","IDMeldenderArzt","ExternGemeldet","IDVermittelndesZentrum",
+	"IDOrgankultur","IDOPIndikationsdiagnose","Bemerkungen","MMBestaetigt");
+	primaryKey="ID";
+	bindFromColumn="ID"; bindToDG="rechnungsDG"; targetColumn="IDWL";
+
+	types={"ID"=int; "PatientID"=int; "IDZentrum"=int; "WartenAktiviert"=bool; "StartWarteliste"=date; "EndeWarteliste"=date;
+			"IDZentrum"=int; "KpAbDatum"=date;  "Narkosefrom"=int; "Prioritaet"=int; "KeratoplastikAuge"=int; "KeratoplastikGesamt"=int;
+			"MaxHLAMismatches"=int; "GrundExitWL"=int; "Privatpatient"=int; "TransplantationenGesamt"=int; "TransfusionenGesamt"=int; 
+			"SchwangerschaftenGesamt"=int; "IDOperateur"=int; "IDOPArt"=int; "IDMeldenderArzt"=int; "ExternGemeldet"=int;
+			"IDVermittelndesZentrum"=int; "IDOrgankultur"=int; "IDOPIndikationsdiagnose"=int; "MMBestaetigt"=bool; };
+
+};
+patDG=
+{	table="StammdatenPatient";
+	types={"ID"=int; };
+	columns=
+	(	"ID","Name","Vorname","Geburtsdatum", "Anschrift", "PLZ", "Ort", "weiblich", "Telefon1", "Telefon2", "VerstorbenAm", "PIZ", "ExternalID", "IDZentrum"
+	);
+	primaryKey="ID";
+	bindFromColumn="ID"; bindToDG="wartelisteDG"; targetColumn="PatientID";
+};
+narkoseDG=
+{	table="StammdatenNarkose";
+	columns=("ID","Text");
+	types={"ID"=int; };
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+opverfahrenDG=
+{	table="StammdatenOPVerfahren";
+	columns=("ID","OPArt");
+	types={"ID"=int; "OPArt"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+prioDG=
+{	table="StammdatenPrioritaet";
+	columns=("ID","Text");
+	types={"ID"=int; };
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+allCentersDG=
+{	table="WartelisteZentren";
+	columns=("ID","ZentrumName");
+	primaryKey="ID";
+	types={"ID"=int; };
+	bindToDG="wartelisteDG";
+	cache=YES;
+};
+wlPropertiesDG=
+{	table="AufnahmeDiagnoseKategorie";
+	columns=("ID","DiagnoseID","Name","Auge","StationaerID","Kategorie1","Parameter");
+	types={"ID"=int; "StationaerID"=int; "Kategorie1"=int;};
+	primaryKey="ID";
+	bindFromColumn="StationaerID"; bindToDG="wartelisteDG";
+	filters=
+	{	AugenDiags={col="Kategorie1";op="eq";val="1"};
+	};
+};
+
+}</DisplayGroups>
+
+<include src="hhb/login3.dgw">
+
+<perlfunc name="connectToOK">
+{	my $mydict=$DG::rechnungsDG->mutablePendingInsertionDict();
+	$mydict->{IDVersandadresse}=$mydict->{IDRechnungsadresse};
+	$mydict->{IDWL}=$DG::organkulturDG->dictForPK( $mydict->{IDOrgankultur} )->{IDWarteliste};
+}</perlfunc>
+
+<perlfunc name="_earlyauto_">
+{	$DG::zentrAnschrDG->selectedDict({boost=>1});
+}</perlfunc>

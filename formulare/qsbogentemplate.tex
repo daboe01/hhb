@@ -1,0 +1,33 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage{supertabular}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage[final]{pdfpages}
+\usepackage[absolute]{<copytex:hhb/textpos.sty>}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+\ThisCenterWallPaper{1}{<file:formulare/QS_Bogen_HHB.pdf>}
+\setlength{\headheight}{15.7\baselineskip}
+\setlength{\textheight} {175mm}
+
+\begin{document}
+\textblockorigin{1mm}{1mm}
+\setlength{\TPHorizModule}{1mm}
+\setlength{\TPVertModule}{1mm}
+
+\begin{textblock}{50}(50 , 35 )
+{
+\noindent Sp<var:IDSpender><var:SPAuge>
+}
+\end{textblock}
+
+\newpage
+
+\includepdf[pages=-]{<file:formulare/QS_Bogen_HHB.pdf>} 
+\includepdf[pages=-]{<file:formulare/AUG-HHB-Transport-Anlage-B-5-7.pdf>} 
+
+\end{document}

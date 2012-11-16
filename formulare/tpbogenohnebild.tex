@@ -1,0 +1,49 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+\setlength{\headheight}{13\baselineskip}
+\CenterWallPaper{1}{<file:briefkopfHHB.pdf>}
+
+\begin{document}
+\begin{table}
+\begin{tabular}{lp{9cm}} \hline
+Transplantatnummer & Sp<var:IDSpender><var:SPAuge>\\
+Spenderalter & <var:SpenderAlter> (<var:Spendergenus>)\\
+HIV-Serologie & negativ\\
+HCV-Serologie / RNA-PCR & negativ\\
+HBs-Ag & negativ\\
+TPPA & negativ\\
+\\
+Tod-Entnahme-Zeit  & <var:PostMortemZeit>	
+\\
+Kulturdauer gesamt & <var:KulturdauerGesamt> \\
+Kulturdauer Medium 2 & <var:KulturdauerAktuell> \\
+Letzte mikroskopische Kontrolle & <var:DatumLetzteEZD> \\
+Freigegeben durch Arzt & <var:PersonKontrolle> \\
+Endothelzelldichte & <var:LetzteEZD> ${Zellen \over mm^{2} }$ \\
+Letzte mikrobiologische Kontrolle & <var:DatumLetzteMiBi> (steril) \\
+\\ \hline
+Empf"anger & <var:Name>, <var:Vorname>, geb. am <var:Geburtsdatum>\\
+Operationsdatum & <var:EndeWarteliste>\\ 
+Verwendbar bis  & <var:HaltbarBis>\\
+Auge & <var:OPAuge>\\ 
+Indikation & <var:OPDiagnose>\\ 
+Zentrum & <var:Zentrum>\\ 
+\\ \hline
+HLA Splits Spender & <var:HLASpender>\\
+HLA Splits Patient & <var:HLAPatient>\\
+\\ \hline
+Bemerkung & <var:OKBemerkungen>\\ \hline
+\\
+\end{tabular}
+\begin{tabular}{p{2cm}p{3.2cm}l}
+<var:Datum> & Unterschrift  & Dr. Maier\\
+&& Laborleiter\\
+\end{tabular}
+\end{table}
+\end{document}

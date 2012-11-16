@@ -1,0 +1,111 @@
+<comment>
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</comment>
+
+<include src="hhb/faces.html">
+<a href="http://ha21033/wiki/index.php/Femto"> Anweisungen </a>
+<table>
+<td valign=top>
+	<table class="datatable">
+		<caption>Liste</caption>
+		<th>Name</th>
+		<th>Vorname</th>
+		<th>Geb</th>
+		<th>TP</th>
+		<th>OP</th>
+		<th>Profile</th>
+		<foreach:laserDG>
+			<tr>
+			<td><var:Name></td>
+			<td><var:Vorname></td>
+			<td><var:Geburtsdatum format:date="%d.%m.%Y"></td>
+			<td><var:TP></td>
+			<td><var:OPDatum format:date="%d.%m.%Y"></td>
+			<td><var:profile></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<foreach:wartelisteDG></foreach>
+
+	<form:wartelisteDG label="Cornea Daten" style="width:450px;" id="corneapanel" perl="checkValues">
+		<var:pachy1 edittype=text editmode=inplace size="6" format:label="Orbschan pachymetry 8mm periphery">
+		<var:pachy2 edittype=text editmode=inplace size="6">
+		<var:pachy3 edittype=text editmode=inplace size="6">
+		<var:pachy4 edittype=text editmode=inplace size="6">
+		<var:FSLanteriorDiameter edittype=text size="6" format:label="anterior/ posterior cut diameter">
+		<var:FSLposteriorDiameter edittype=text size="6">
+		<var:FSLalignment_incisions edittype=text size="6" format:label="alignment incisions">
+		<hr><button:Print perl="doPrintFS">
+	</form>
+	<foreach:errorDG> <tr> <td><var:Message  style="color:red;"></td> </tr> </foreach>
+</td>
+</td>
+</table>
+</body>
+</html>
+
+
+<DisplayGroups>{
+
+laserDG=
+{	table="FSLaser";
+	columns =("ID","OPDatum","OPAuge","TP","Name","Vorname","Geburtsdatum","Auge","meanpachy", "maxpachy","DO_DepthInCornea","DO_OuterDiameter","DO_InnerDiameter","DO_Energy","DO_AnteriorSideCut_PostDepth", "DO_PosteriorSideCut_AnteriorDepth", "DO_AnteriorSideCut_Diameter","DO_AnteriorSideCut_Energy","DO_PosteriorSideCut_Diameter","DO_PosteriorSideCut_PostDepth", "DO_PosteriorSideCut_Energy","RC_DepthInCornea","RC_OuterDiameter","RC_InnerDiameter","RC_Energy","RC_AnteriorSideCut_PostDepth", "RC_AnteriorSideCut_Diameter","RC_AnteriorSideCut_Energy","RC_PosteriorSideCut_PostDepth","RC_PosteriorSideCut_Diameter", "RC_PosteriorSideCut_AnteriorDepth", "RC_PosteriorSideCut_PostDepth","RC_PosteriorSideCut_Energy","profile","spiral","FSLalignment_incisions");
+	types={ "ID"=int;};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="standard";
+	sortColumns=
+	{	standard=({col="OPDatum"; op="desc"});
+	};
+};
+
+wartelisteDG=
+{	table="Warteliste";
+	columns=("ID","pachy1","pachy2","pachy3","pachy4","FSLanteriorDiameter","FSLposteriorDiameter","FSLalignment_incisions");
+	types={ "ID"=int;
+			"pachy1"=int;"pachy2"=int;"pachy3"=int;"pachy4"=int;"FSLanteriorDiameter"=real; "FSLposteriorDiameter"=real; "FSLalignment_incisions"=int};
+	primaryKey="ID";
+	bindFromColumn="ID"; bindToDG="laserDG";targetColumn="ID";
+};
+errorDG=
+{	columns=("Message");
+	primaryKey="Message";
+	cache=YES;
+};
+
+}</DisplayGroups>
+
+
+<perlfunc name="doPrintFS" include="pdfgen.pl">
+{	my $d = $DG::laserDG->selectedDict();
+
+	for( keys %{$d} )
+	{	$d->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/$3.$2.$1/go
+	}
+
+	returnPDF(PDFForTemplateAndRef(getRessource('femto.tex'), $d) );
+
+}</perlfunc>
+
+<perlfunc name="checkValues">
+{	my $d=DG::mutablePendingUpdateDict();
+	if($d->{FSLposteriorDiameter} >9.4 || $d->{FSLanteriorDiameter} >9.4)
+	{	$DG::errorDG->appendDictToCache( {Message =>'max. diameter of 9.4 exceeded'} );
+		addUserscript('Effect.Shake("corneapanel",{duration:0.2});');
+	}
+}</perlfunc>

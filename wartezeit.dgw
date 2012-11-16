@@ -1,0 +1,35 @@
+<DisplayGroups>{
+wzDG=
+{	columns=("PatID","mm","ErwarteteWartezeit");
+	primaryKey="PatID";
+	bindFromColumn="PatID"; bindToDG="patDG";
+	cache=YES;
+};
+wzLoaderDG=
+{	table="SpenderInzidenz";
+	columns=("PatID","mm","ErwarteteWartezeit");
+	primaryKey="PatID";
+	types={"PatID"=int;};
+	bindToDG="patDG";
+};
+globalSettingsDG=
+{	table="GlobalSettings";
+	columns=("Key","Value");
+	primaryKey="Key";
+	bindToDG="patDG";
+};
+}</DisplayGroups>
+
+<perlfunc name="calcWZ">
+{	sub calcWZ{ my ($pid)=@_;
+		my $factor= (1/365);
+		$factor*= $DG::globalSettingsDG->floatValue($_) for qw /WTShareTypedCorneas WTCorneasPerDay WTShareTransplantableCorneas/;
+		my @a=map { {PatID=>$_->{PatID},  mm=>$_->{mm}, ErwarteteWartezeit=>sprintf ( "%.2f", $factor/$_->{ErwarteteWartezeit} ) } }
+			( @{$DG::wzLoaderDG->dictsForWhereClauseDictRaw( {PatID => $pid } ) } );
+		$DG::wzDG->appendDictToCache( $_ ) for @a;
+		return \@a;
+	}
+	$__invokeParam=$DG::patDG->selectedPK() unless length $__invokeParam;
+	$DG::wzDG->clearCache();
+	calcWZ($__invokeParam);
+}</perlfunc>

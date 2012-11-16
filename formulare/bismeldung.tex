@@ -1,0 +1,134 @@
+\documentclass[12pt]{scrartcl}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,ngerman]{babel}
+\usepackage{color}
+\usepackage{calc}
+\usepackage{longtable}
+\usepackage{times} 
+
+\begin{document}
+{\bfseries
+SUPPLEMENTARY DONOR AND CORNEA DETAILS FORM} \footnote{BIS: afhandelen conform FOR 2.83}\\
+
+
+\hspace*{-5.5mm} \begin{tabular}{|p{10cm}p{5cm}|}
+\hline
+{\bfseries Donor identification} \\\hline
+
+{\bfseries BIS-donornumber: }<var:ExternalID>&~ \\~&\\ 
+{\bfseries Date of Birth:}  <var:Geburtsdatum> & { Donor age: <var:SpenderAlter> years}\\
+{ Name or initials: <var:Name>,  <var:Vorname>} & Sex: <var:GenderMF>\\
+
+{ Storage time: <var:KulturdauerAktuell> days} &{ Use until: <var:HaltbarBis>}\\
+\hline
+
+Local identification: <var:IDSpender>
+\\\hline
+\end{tabular}
+
+
+\begin{longtable}[l]{|p{2.631cm}|p{3.61cm}|}
+\hline
+\multicolumn{2}{p{15.287cm}|}{{\bfseries
+Virological test results:}
+}\\\hline
+{\bfseries
+Test}
+&
+{\bfseries
+Result}
+\\\hline
+<foreach:viro>
+<var:Test>
+&
+<var:result>
+\\\hline
+</foreach:viro>
+\end{longtable}
+
+\begin{longtable}[l]{|p{15.287001cm}}
+\hline
+{\bfseries
+The typing of this cornea donor is:}
+\\\hline
+
+<var:HLATyping>
+\\\hline
+{
+Performed by (institute):} <var:HLAInstitute>
+\\\hline
+{
+Performed on material:} <var:HLAMaterial>
+\\\hline
+{
+Performed by which method:} <var:HLAMethod>
+\\\hline
+\end{longtable}
+
+\begin{longtable}[l]{|p{5.388cm}|p{1.7049999cm}|p{0.216cm}|p{5.4160004cm}|p{1.7609999cm}|}
+\hline
+\multicolumn{5}{|p{15.286cm}|}{{
+\textbf{The status of these corneas is: }(for 1 cornea fill only the
+right of left part)}
+}\\\hline
+\multicolumn{2}{|p{7.293cm}|}{{\centering
+\textbf{Right} cornea
+\par}
+}&
+
+&
+\multicolumn{2}{p{7.3770003cm}|}{{\centering
+\textbf{Left }cornea
+\par}
+}\\\cline{1-2}\cline{4-5}
+\multicolumn{2}{|p{7.293cm}|}{{\bfseries
+Cell count: <var:EZDR>}
+
+{\bfseries
+Arcus N / Y, if Yes: diameter clear part:}
+}&
+&
+\multicolumn{2}{p{7.3770003cm}|}{{\bfseries
+Cell count: <var:EZDL>}
+
+{\bfseries
+Arcus N / Y, if Yes: diameter clear part:}
+}\\\cline{1-2}\cline{4-5}
+\end{longtable}
+
+\begin{longtable}[l]{|p{7.543cm}|p{7.543cm}|}
+\hline
+\multicolumn{2}{|p{15.286cm}|}{{\bfseries
+Sterility control of the medium}
+}\\\hline
+{
+Storage medium:} <var:StorageMedium>
+&
+{
+Transport medium:}
+\\\hline
+{
+Performed on date:} <var:DDMMYYYmibizeitpunkt>
+&
+{
+Performed on date:}
+\\\hline
+{
+Result}
+&
+{
+Result}
+\\\hline
+\end{longtable}
+
+
+{\bfseries
+\noindent I hereby certify that the above information is correct to the best of my
+knowledge and belief,\\}
+
+{
+<var:ZentrumsName>,
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ (<var:MA>)}
+
+\end{document}

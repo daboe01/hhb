@@ -1,0 +1,847 @@
+<comment>
+20.1.05: Wartelisten und Patientenverwaltung by Dr. Boehringer
+todo:
+	WL-Aktiv haken ausgrauen, wenn tp schon alloziert.
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+</comment>
+
+<script>
+{	showSearch: function()
+	{	Effect.toggle('searchdg1','slide',{duration:0.1});
+		setTimeout(function(){$('searchDG1_Name_0').select()}, 150);
+	},
+	showInsert: function()
+	{	Effect.toggle('newdg1','slide',{duration:0.1});
+		setTimeout(function(){$('newdg1_Name0').select()}, 150);
+	}
+}</script>
+
+<include src="hhb/faces.html">
+<foreach:passwordDG></foreach>
+<table>
+<tr>
+<td valign=top>
+	<a class="btn" href="javascript:dbweb.userscripts.showSearch();"><strong>Suchen</strong></a>
+	<form:searchDG1 style="display:none;" id="searchdg1">
+		<var:PIZ edittype=text label="PIZ">
+		<var:Name edittype=text label="Name" pulldown=off typeahead="allPatNamesDG.Name">
+		<var:Vorname edittype=text label="Vorname">
+		<var:Geburtsdatum edittype=text label="Geburtsdatum" format:date="%d.%m.%Y">
+		<var:Diag edittype=text label="Diagnose" typeahead="allDiagsDG.AugenDiags.Name">
+		<var:IDOPArt edittype=popup format:lookup="opverfahrenDG.OPArt" format:label="OP-Verfahren">
+		<hr>
+		<button:Zentren_Liste perl="zentrenwl"><br>
+		<button:FANCY_Screen_Liste perl="printFancyList">
+		<button:FANCY_ID_Liste perl="printFancyIDList"><br>
+		<button:FANCY_termine perl="fancy_termine">
+	</form>
+	<a class="btn" href="javascript:dbweb.userscripts.showInsert();"><strong>Einf&uuml;gen</strong></a>
+	<div style="display:none;background-color: #c4ffbe;" id="newdg1" class='datatable'>
+		<displayGroup:patDG perform:insert="var:Name" edittype=text" perl="newPat" id="newdg1_Name0" format:label="Neu: PIZ eingeben" size="10">
+	</div>
+
+	<table:patDG.alive rows="35">
+		<head>
+			<col:80px> Name </col>
+			<col:80px> Vorname </col>
+			<col:60px> Geb </col>
+		</head>	
+		<foreach>
+			<cell><var:Name></cell>
+			<cell><var:Vorname></cell>
+			<cell><var:Geburtsdatum format:date="%d.%m.%y"></cell>
+		</foreach>
+	</table:patDG>
+</td>
+<td valign=top>
+	<condDG:patDG selection=true>
+	<form:patDG label="Stammdaten &auml;ndern">
+<comment>
+		<var:ID edittype=text label="ID" editmode=inplace>
+</comment>
+		<var:PIZ edittype=text label="PIZ" editmode=inplace>
+		<var:weiblich edittype=boolean label="weiblich">
+		<var:Name edittype=text label="Name" editmode=inplace>
+		<var:Vorname edittype=text label="Vorname" editmode=inplace>
+		<var:Geburtsdatum edittype=text label="Geburtsdatum" format:date="%d.%m.%Y" format:tooltip="dd.mm.yyyy" editmode=inplace>
+		<var:Anschrift edittype=text label="Anschrift" editmode=inplace>
+		<var:PLZ edittype=text label="PLZ   / Ort" size="5" editmode=inplace>
+		<var:Ort edittype=text size="12" editmode=inplace>
+		<var:Telefon1 edittype=text label="Telefon1" editmode=inplace>
+		<var:Telefon2 edittype=text label="Telefon2" editmode=inplace>
+		<var:Telefon3 edittype=text label="Telefon3" editmode=inplace>
+		<var:Telefon4 edittype=text label="Telefon4" editmode=inplace>
+		<var:Land edittype=text label="Land" editmode=inplace editmode=inplace format:lookup="alleLaenderDG.Land">
+
+	</form>
+	<a href="/dbwebressources2/hhb/hla_nomenclature.pdf">HLA Dictionary</a>
+	<table class="datatable">
+		<caption>Blutwerte</caption>
+		<tr><th colspan=4>HLA</th></tr><tr>
+		<th>Datum</th>
+		<th>Broad</th>
+		<th>Split</th>
+		<th>PCR</th>
+		</tr>
+		<tr>
+			<td class="insertvar">&nbsp;</td>
+			<td class="insertvar">
+				<displayGroup:HLAPatDG perform:insert="var:IDHLA" perl="insertHLA" edittype=combo lookup="allHLAsDG.Broad" size="5">
+			</td>
+			<td class="insertvar">
+				<displayGroup:HLAPatDG perform:insert="var:IDHLA" perl="insertHLA" edittype=combo lookup="allHLAsDG.Split" size="5">
+			</td>
+			<td class="insertvar">
+				<displayGroup:HLAPatDG perform:insert="var:IDHLA" perl="insertHLA" edittype=combo lookup="allHLAsDG.PCR" size="9">
+			</td>
+		</tr>
+		<foreach:HLAPatDG>
+		<tr>
+			<td><var:Datum format:date="%m/%Y"></td>
+			<td><var:IDHLA lookup="allHLAsDG.Broad"></td>
+			<td><var:IDHLA lookup="allHLAsDG.Split"></td>
+			<td><var:IDHLA lookup="allHLAsDG.PCR"></td>
+		</tr>
+		</foreach>
+
+
+		<tr><th colspan=4>Blutgruppe</th>
+		</tr>
+		<tr>
+			<td class="insertvar">Datum</td>
+			<td class="insertvar" colspan="3"><displayGroup:BGPatDG perform:insert="var:IDBlutgruppe" edittype=popup lookup="allBGsDG.Allel" perl="insertBG" size="5"></td>
+		</tr>
+		<foreach:BGPatDG>
+		<tr>
+			<td><var:Datum format:date="%m/%Y"></td>
+			<td colspan="3"><var:IDBlutgruppe lookup="allBGsDG.Allel"></td>
+		</tr>
+		</foreach>
+	</table>
+	<button:WZ format:ajax="on" format:progress="2" perl="calcWZ">
+	<table class="datatable">
+		<foreach:wzDG>
+			<tr>
+				<td><var:mm"></td>
+				<td><var:ErwarteteWartezeit"></td>
+			</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<table class="datatable">
+		<caption>Auf Warteliste</caption>
+		<tr><td colspan="4" class="insertvar">
+			<displayGroup:wartelisteDG perform:insert="var:Auge" perl="addToWL" edittype=popup format:label="OP-Auge" lookup="augeDG.Name">
+		</td></tr>
+		<tr><th>Auge</th><th>Start</th>	<th>Ende</th><th>Tp</th></tr>
+		<foreach:wartelisteDG>
+		<tr>
+			<comment> <td><var:ID></td>
+			update "Warteliste" set "IDOrgankultur"=2114 where "ID"=xx</comment>
+			<td><var:Auge></td>
+			<td><var:StartWarteliste format:date="%d.%m.%Y"></td>
+			<td><var:EndeWarteliste format:date="%d.%m.%Y" size="12"></td>
+			<td><var:IDOrgankultur format:link="brutschrank.organkulturDG" format:lookup="const:OK"></td>
+		</tr>
+		</foreach>
+	</table>
+	</condDG:patDG>
+</td>
+<td valign=top>
+	<condDG:wartelisteDG selection=true>
+	<form:wartelisteDG format:label="Warteliste &auml;ndern" perl="checkWL">
+<comment>
+		<var:PatientID edittype=text label="ID" editmode=inplace>
+</comment>
+		<var:WartenAktiviert edittype=boolean format:label="Wartet f&uuml;r Auge">
+		<var:Auge edittype=text size="3" editmode=inplace>
+		<var:Prioritaet edittype=popup lookup="prioDG.Text" format:label="Priorit&auml;t (z.B. Leidensdruck)">
+		<var:Privatpatient edittype=boolean format:label="P / Zentrum">
+		<var:IDZentrum edittype=popup format:lookup="allCentersDG.ZentrumName"><br>
+		<var:IDMeldenderArzt edittype=combo size="30" format:lookup="mitarbeiterDG.Name" format:label="Meldung durch">
+		<var:ExternGemeldet edittype=boolean format:label="Extern gemeldet / bei / Externe Nummer">
+		<var:IDVermittelndesZentrum edittype=popup format:lookup="allCentersDG.meldung.ZentrumName">
+		<var:BISNR edittype=text size="10" editmode=inplace>
+		<var:StartWarteliste edittype=text editmode=inplace format:label="Start" format:date="%d.%m.%Y" editmode=inplace>
+		<var:KpAbDatum edittype=text format:date="%d.%m.%Y" editmode=inplace format:label="KP ab">
+		<var:EndeWarteliste edittype=text format:label="Ende (OP-Datum)" format:date="%d.%m.%Y" editmode=inplace>
+		<var:GrundExitWL edittype=popup format:label="Grund Ende" format:lookup="allExitWLDG.Name">
+		<cond var:GrundExitWL="const:9">
+			<var:BISTP edittype=text size="10" editmode=inplace>
+		</cond>
+		<var:IDOPIndikationsdiagnose edittype=popup format:lookup="wlPropertiesDG.AugenDiags.Name" format:label="OP Indikation (Grunderkrankung)">
+		<var:Narkosefrom edittype=popup format:lookup="narkoseDG.Text" format:label="Narkose"><br>
+		<var:status_anaesthesie edittype=popup lookup="statusAnaesthesieDG.Name" label="Anaesthesieambulanz">
+		<cond var:status_anaesthesie="const:2">
+			<var:datum_anaesthesie edittype=text editmode=inplace format:date="%d.%m.%Y">
+		</cond>
+		<var:IDOPArt edittype=popup format:lookup="opverfahrenDG.OPArt" format:label="OP-Verfahren">
+		<var:IDTrepanart edittype=popup lookup="trepanDG.Trepanart" label="Trephine">
+		<var:IDOperateur edittype=popup lookup="mitarbeiterDG.operiert.Name" label="Operateur">
+		<var:KeratoplastikAuge edittype=text format:label="Anz.vor-KPs ips./ Gesamt" size="3" editmode=inplace>
+		<var:KeratoplastikGesamt edittype=text size="3" editmode=inplace>
+	
+		<var:status_hla_blut edittype=popup lookup="statusHLADG.Name" label="Status HLA-Blut / HLA-MM / Bestaetigt">
+		<var:MaxHLAMismatches edittype=popup lookup="matchgradeDG.Name" size="3" editmode=inplace>
+		<var:MMBestaetigt edittype=boolean>
+		<var:Bemerkungen edittype=textarea editmode=inplace format:label="Bemerkungen" cols="30" rows="6">
+		<var:fancy_nummer edittype=text size="3" editmode=inplace format:label="FANCY-Nummer" >
+
+		<hr><button:Drucken format:ajax="no"  class="btn primary" perl="wlBogen">
+	</form>
+	<table class="datatable">
+		<foreach:wlPropertiesDG.wlprops>
+			<tr><td>
+				<var:DiagnoseID lookup="allDiagsDG.Name">
+			</td><td>
+				<var:Parameter edittype=popup lookup="diagnosenWerteliste.Name@DiagnoseID">
+			</td></tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<table class="datatable">
+	<caption>Diagnosen</caption>
+		<tr><th colspan=2>Risikoeinstufung</th></tr><tr>
+		<td class="insertvar" colspan=2>
+			<displayGroup:wlPropertiesDG.risiko perform:insert="var:DiagnoseID" edittype=popup lookup="allDiagsDG.risiko.Name" size="25">
+		</td></tr>
+		<foreach:wlPropertiesDG.risiko>
+			<tr><td colspan=2>
+				<var:DiagnoseID lookup="allDiagsDG.Name">
+			</td></tr>
+		</foreach>
+		<th>Studie</th>
+		<th>Gruppe</th>
+		<tr><td class="insertvar" colspan=2>
+			<displayGroup:wlPropertiesDG.studien perform:insert="var:DiagnoseID" edittype=popup lookup="allDiagsDG.studien.Name" size="25">
+		</td></tr>
+		<foreach:wlPropertiesDG.studien>
+			<tr><td>
+				<var:Name></td>	<td><var:Parameter edittype=text size="5">
+			</td></tr>
+		</foreach>
+		<th colspan=2>RA</th>
+		<tr><td class="insertvar" colspan=2>
+			<displayGroup:wlPropertiesDG.diagsRA perform:insert="var:DiagnoseID" edittype=combo pulldown=off lookup="allDiagsDG.AugenDiags.Name" size="25">
+		</td></tr>
+		<foreach:wlPropertiesDG.diagsRA>
+			<tr><td colspan=2>
+				<var:Name>
+			</td></tr>
+		</foreach>
+		<th colspan=2>LA</th>
+		<tr><td class="insertvar" colspan=2>
+			<displayGroup:wlPropertiesDG.diagsLA perform:insert="var:DiagnoseID" edittype=combo pulldown=off lookup="allDiagsDG.AugenDiags.Name" size="25">
+		</td></tr>
+		<foreach:wlPropertiesDG.diagsLA>
+			<tr><td colspan=2>
+				<var:Name>
+			</td></tr>
+		</foreach>
+		<th colspan=2>BA</th>
+		<tr><td class="insertvar" colspan=2>
+			<displayGroup:wlPropertiesDG.diagsBA perform:insert="var:DiagnoseID" edittype=combo pulldown=off lookup="allDiagsDG.AugenDiags.Name" size="25">
+		</td></tr>
+		<foreach:wlPropertiesDG.diagsBA>
+			<tr><td colspan=2>
+				<var:Name>
+			</td></tr>
+		</foreach>
+		<th colspan=2>Allg.</th>
+		<tr><td class="insertvar" colspan=2>
+			<displayGroup:wlPropertiesDG.diagsAllg perform:insert="var:DiagnoseID" edittype=combo pulldown=off lookup="allDiagsDG.diagsAllg.Name" size="25">
+		</td></tr>
+		<foreach:wlPropertiesDG.diagsAllg>
+			<tr><td colspan=2>
+				<var:Name>
+			</td></tr>
+		</foreach>
+	</table>
+	</condDG>
+</td></tr>
+</table>
+
+<br>
+<table>
+<tr>
+<td valign=top>
+	<table class="datatable">
+		<th>Datum</th>
+		<foreach:arztberichteDG>
+		<tr>
+			<td><var:udatum format:date="%d.%m.%Y"></td>
+		</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+		<form:arztberichteDG>
+			<var:text edittype=textarea cols="60" rows="60">
+		</form>
+</td>
+
+</body>
+</html>
+
+
+<DisplayGroups>{
+arztberichteDG=
+{	table="briefe";
+	columns=("id","piz","udatum","text");
+	types={ "id"=int;"piz"=int;  udatum="date"; }; 
+	primaryKey="id";
+	bindToDG="patDG"; bindFromColumn="piz"; targetColumn="PIZ";
+	autoSort="standard";
+	connection="dbi:Pg:dbname=ambulanzbriefe;host=localhost;user=root;password=root";
+	sortColumns=
+	{	standard=({col="udatum"; op="desc"});
+	};
+};
+
+patDG=
+{	table="StammdatenPatient";
+	bindToDG=searchDG1;
+	columns=
+	(	"ID","Name","Vorname","Geburtsdatum", "Anschrift", "PLZ", "Ort", "weiblich", "Telefon1", "Telefon2", "Telefon3", "Telefon4", "VerstorbenAm", "PIZ", "ExternalID", "IDZentrum","Land"
+	);
+	types={"ID"=int; "Geburtsdatum"=time; "VerstorbenAm"=date; "ExternalID"=int; "IDZentrum"=int; "weiblich"=bool;};
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	autoSort="Name";
+	sortColumns=
+	{	Name=("Name","ID");
+		Name_rev=({col="Name"; op="desc"}, {col="ID"; op="desc"});
+		Vorname=("Vorname","ID");
+		Vorname_rev=({col="Vorname"; op="desc"}, {col="ID"; op="desc"});
+		Geb=("Geburtsdatum","ID");
+		Geb_rev=({col="Geburtsdatum"; op="desc"}, {col="ID"; op="desc"});
+	};
+	filters=
+	{	alive=  {col="VerstorbenAm";op="eqnull"};
+	};	
+	contextmenu=
+	(	{	name="Selektieren";
+			action="select";
+		},
+		{	condition="passwordDG.level > 2";
+			name="Patient entfernen";
+			action="delete";
+			javascript="Effect.Puff(event.target.parentNode.parentNode);";
+			confirm="Wirklich entfernen ?";
+		}, { separator="true"; },
+		{	name="Verstorben";
+			perlfunc="verstorben";
+			javascript="Effect.Puff(event.target.parentNode.parentNode);";
+			confirm="Wirklich Verstorben?";
+		},	{ separator="true"; },
+		{	name="Arztbriefe";
+			perlfunc="show_arztbriefe";
+		}
+	)
+};
+allPatNamesDG=
+{	table="AllNames";
+	columns=("Name");
+	primaryKey="Name";
+	connectionEnvAuto=YES;
+};
+
+alleLaenderDG=
+{	table="AlleLaender";
+	columns=("Land");
+	primaryKey="Land";
+	connectionEnvAuto=YES;
+};
+
+
+wartelisteDG=
+{	table="Warteliste";
+	columns=("ID","PatientID","IDZentrum","WartenAktiviert","StartWarteliste","EndeWarteliste","IDZentrum", "KpAbDatum","Narkosefrom", "Prioritaet", "KeratoplastikAuge","KeratoplastikGesamt","Auge","MaxHLAMismatches",
+			"GrundExitWL","Privatpatient","TransplantationenGesamt","TransfusionenGesamt", "SchwangerschaftenGesamt","IDOperateur","IDOPArt","IDMeldenderArzt","ExternGemeldet","IDVermittelndesZentrum","IDOrgankultur",
+			"IDOPIndikationsdiagnose","Bemerkungen","BISNR","BISTP","MMBestaetigt","IDTrepanart",
+			"pachy1","pachy2","pachy3","pachy4","FSLanteriorDiameter","FSLposteriorDiameter","fancy_nummer","status_hla_blut","status_anaesthesie","datum_anaesthesie");
+	types={ "ID"=int; "PatientID"=int; "IDZentrum"=int; "WartenAktiviert"=bool; "StartWarteliste"=date; "EndeWarteliste"=date;
+			"KpAbDatum"=date;  "Narkosefrom"=int; "Prioritaet"=int; "KeratoplastikAuge"=int; "KeratoplastikGesamt"=int;
+			"MaxHLAMismatches"=int; "GrundExitWL"=int; "Privatpatient"=bool; "TransplantationenGesamt"=int; "TransfusionenGesamt"=int; 
+			"SchwangerschaftenGesamt"=int; "IDOperateur"=int; "IDOPArt"=int; "IDMeldenderArzt"=int; "ExternGemeldet"=bool;
+			"IDVermittelndesZentrum"=int; "IDOrgankultur"=int;"IDOPIndikationsdiagnose"=int; "MMBestaetigt"=bool; "IDTrepanart"=int;
+			"pachy1"=int;"pachy2"=int;"pachy3"=int;"pachy4"=int;"FSLanteriorDiameter"=int; "FSLposteriorDiameter"=int; "fancy_nummer"=int; "status_hla_blut"=int; "datum_anaesthesie"=date; "status_anaesthesie"=int; };
+	primaryKey="ID";
+	bindFromColumn="PatientID"; bindToDG="patDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=({col="StartWarteliste"; op="desc"});
+	};
+	contextmenu=
+	(	{	name="Selektieren";
+			action="select";
+		},
+		{	condition="passwordDG.level > 3";
+			name="L&ouml;schen";
+			action="delete";
+			javascript="Effect.Puff(event.target.parentNode.parentNode);";
+			confirm="Wirklich entfernen? (I.d.R. besser:  deaktivieren)";
+		},	{ separator="true"; },
+		{	name="Drucken";
+			perlfunc="wlBogen";
+		},
+		{	name="Duplizieren";
+			perlfunc="duplicateWL";
+		},
+			{ separator="true"; },
+			
+		{	name="Kataster";
+			perlfunc="goto_kataster";
+		},
+		{	name="Spender";
+			perlfunc="goto_spender";
+		},
+		{	condition="wartelisteDG.IDZentrum > 1";
+			name="QS-Bogen ok";
+			perlfunc="mark_qsbogen_ok";
+			confirm="Qualitaetsbogen wirklich ok?";
+		},
+		{	name="femto";
+			perlfunc="goto_femto";
+		},
+		{	name="_dealloc";
+			confirm="Wirklich dealloc?";
+			perlfunc="dealloc";
+		},	{ separator="true"; },
+		{	name="Audit trail";
+			perlfunc="audit_trail";
+		}
+
+	)
+};
+allCentersDG=
+{	table="WartelisteZentren";
+	columns=("ID","ZentrumName","VermitteltPatienten");
+	types={"ID"=int;"VermitteltPatienten"=bool};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+	filters=
+	{	meldung=  {col="VermitteltPatienten";op="!=";val="0"};
+	};	
+	autoSort="standard";
+	sortColumns=
+	{	standard=("ZentrumName");
+	};
+};
+wlPropertiesDG=
+{	table="AufnahmeDiagnoseKategorie";
+	columns=("ID","DiagnoseID","Name","Auge","StationaerID","Kategorie1","Parameter");
+	types={"ID"=int; "DiagnoseID"=int; "StationaerID"=int; "Kategorie1"=int;"Kategorie2"=int; };
+	write_table="AufnahmeDiagnose";
+	suppress_insert=("Kategorie1");
+	primaryKey="ID";
+	bindFromColumn="StationaerID"; bindToDG="wartelisteDG";
+	filters=
+	{	risiko=  {col="Kategorie1";op="eq";val="4"};
+		studien= {col="Kategorie1";op="eq";val="5"};
+		wlprops= {col="Kategorie1";op="eq";val="6"};
+		diagsRA=({col="Kategorie1";op="eq";val="1"},{col="Auge";op="eq";val="RA"});
+		diagsLA=({col="Kategorie1";op="eq";val="1"},{col="Auge";op="eq";val="LA"});
+		diagsBA=({col="Kategorie1";op="eq";val="1"},{col="Auge";op="eq";val="BA"});
+		AugenDiags=({col="Kategorie1";op="eq";val="1"},{col="Kategorie2";op="eq";val="2"});
+		diagsAllg=  {col="Kategorie1";op="eq";val="0"};
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+
+diagnosenWerteliste=
+{	table="Diagnose";
+	columns=("ID","Name","ArztbriefName","Kategorie1","Kategorie2");
+	types={"ID"=int; "Kategorie1"=int;"Kategorie2"=int; };
+	primaryKey="ID";
+	bindToDG="wlPropertiesDG"; bindFromColumn="Kategorie2";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("ID");
+	};
+	filters=
+	{	wl={col="Kategorie1";op="eq";val="8"};
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+
+
+allDiagsDG=
+{	table="AlleDiagnosen";
+	columns=("ID","Name","Kategorie1","Kategorie2");
+	types={"ID"=int;  "Kategorie1"=int; "Kategorie2"=int;};
+	primaryKey="ID";
+	bindToDG="wlPropertiesDG";
+};
+diagsRawDG=
+{	table="Diagnose";
+	columns=("ID","Name","ArztbriefName","Kategorie1","Kategorie2","BefundText","auto");
+	types={"ID"=int; "Kategorie1"=int; "Kategorie2"=int; };
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+	types={"ID"=int; "Kategorie1"=int; "Kategorie2"=int; "auto"=bool; };
+};
+
+allExitWLDG=
+{	table="StammdatenExitWL";
+	types={"ID"=int;};
+	columns=("ID","Name");
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+HLAPatDG=
+{	table="HLAPatient";
+	columns=("ID","IDPatient","IDHLA","Datum");
+	types={"ID"=int; "IDPatient"=int; "IDHLA"=int; "Datum"=date; };
+	primaryKey="ID";
+	bindFromColumn="IDPatient"; bindToDG="patDG";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+allHLAsDG=
+{	table="StammdatenHLA";
+	columns=("ID","Broad","Split","Klasse","PCR");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	bindToDG="HLAPatDG";
+};
+
+BGPatDG=
+{	table="BlutgruppePatient";
+	columns=("ID","IDPatient","IDBlutgruppe","Datum");
+	types={"ID"=int; "Datum"=date; "IDPatient"=int; "IDBlutgruppe"=int; };
+	primaryKey="ID";
+	bindFromColumn="IDPatient"; bindToDG="patDG";
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+allBGsDG=
+{	table="StammdatenBlutgruppe";
+	columns=("ID","Allel");
+	types={"ID"=int;  };
+	primaryKey="ID";
+	bindToDG="BGPatDG";
+};
+
+
+trepanDG=
+{	table="Trepanart";
+	columns=("ID","Trepanart");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+
+narkoseDG=
+{	table="StammdatenNarkose";
+	columns=("ID","Text");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+opverfahrenDG=
+{	table="StammdatenOPVerfahren";
+	columns=("ID","OPArt");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+
+ 	autoSort="standard";
+	sortColumns=
+	{	standard=("ID");
+	};
+};
+mitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","extern","operiert");
+	types={"ID"=int; "operiert"=bool; "extern"=bool;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+ 	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+	filters=
+	{	operiert=  {col="operiert";op="eq";val="1"};
+	}
+};
+prioDG=
+{	table="StammdatenPrioritaet";
+	columns=("ID","Text");
+	types={"ID"=int;};
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+augeDG=
+{	columns=("Name");
+	primaryKey="Name";
+	data=(("RA"),("LA"));
+};
+
+statusHLADG=
+{	columns=("id","Name");
+	primaryKey="id";
+	data=((1, "nicht erforderlich"),(2,"bereits abgenommen"),(3,"wird zugeschickt"));
+};
+statusAnaesthesieDG=
+{	columns=("id","Name");
+	primaryKey="id";
+	data=((1, "Erledigt"),(2,"Hat Termin"),(3,"Am Aufnahmetag"));
+};
+
+
+followUpDG=
+{	table="Brief";
+	columns=(	"ID","StationaerID","Datum","Untersuchungsdatum","OberarztID","ArztID","sphRA","cylRA","AchseRA","VisusRA","sphLA","cylLA","AchseLA", "VisusLA","EZD","TensioRA", "TensioLA",
+				"TpTrueb", "IR", "keratometrischeRefraktion1","keratometrischeRefraktion2", "keratometrischeAchse1", "keratometrischeAchse2", "ARsph", "ARcyl", "ARAchse", "Orb1",
+				"Orb2", "Orb3", "Orb4", "Pachy");
+	types=		{"ID"=int; "StationaerID"=int; "Datum"=date; "Untersuchungsdatum"=date; "OberarztID"=int; "ArztID"=int; "TpTrueb"=bool; "IR"=bool;
+					"keratometrischeAchse1"=int; "keratometrischeAchse2"=int; "keratometrischeRefraktion1"=int; "keratometrischeRefraktion2"=int; "EZD"=int; };
+	primaryKey="ID";
+	bindFromColumn="StationaerID"; bindToDG="wartelisteDG";
+	connectionEnvAuto=YES;
+};
+
+matchgradeDG=
+{	columns=("ID","Name");
+	primaryKey="ID";
+	data=(("0","0"),("1","1"),("2","2"),("6","6"));
+};
+
+}</DisplayGroups>
+
+
+<include src="hhb/login3.dgw">
+
+
+<perlfunc name="duplicateWL">
+{	my $d=$DG::wartelisteDG->dictForPK($DG::wartelisteDG->pendingPrimaryKey());
+	my $diags=$DG::wlPropertiesDG->dictsForWhereClauseDictRaw({StationaerID=>$d->{ID}});
+	delete $d->{$_} for (qw/ID EndeWarteliste GrundExitWL IDOrgankultur/);
+	$d->{StartWarteliste}=currentDateString();
+	$d->{WartenAktiviert}=1;
+	my $pk=$DG::wartelisteDG->insertDict($d);
+	$DG::wlPropertiesDG->insertDict({StationaerID=>$pk, DiagnoseID=>$_->{DiagnoseID}, Auge=>$_->{Auge} }) for(@$diags);
+	$DG::wartelisteDG->selectPK($pk);
+}</perlfunc>
+
+<perlfunc name="insertHLA">
+{	$DG::HLAPatDG->mutablePendingInsertionDict()->{Datum}=currentDateString();
+}</perlfunc>
+
+<perlfunc name="insertBG">
+{	$DG::BGPatDG->mutablePendingInsertionDict()->{Datum}=currentDateString();
+}</perlfunc>
+
+<perlfunc name="addToWL">
+{	my $d=$DG::wartelisteDG->mutablePendingInsertionDict();
+	$d->{StartWarteliste}=currentDateString();
+	$d->{WartenAktiviert}=1;
+
+	# <!> mitarbeiter aus loginstring ableiten
+	my $pk=$DG::wartelisteDG->insertDict($d);
+	$DG::wartelisteDG->abortPendingInsert();
+	my $allBefunde= $DG::diagsRawDG->dictsForWhereClauseDictRaw({Kategorie1=>6});
+	for(@{$allBefunde}) { $DG::wlPropertiesDG->insertDict({DiagnoseID=> $_->{'ID'}, StationaerID=>$pk } ) if($_->{auto} ) };
+	$DG::wartelisteDG->selectPK($pk);
+}</perlfunc>
+
+<perlfunc name="checkWL">
+{	my  $current=$DG::wartelisteDG->selectedDict();
+	my  $pending=$DG::wartelisteDG->mutablePendingUpdateDict();
+	if ($pending->{'GrundExitWL'} && !length $current->{'GrundExitWL'})
+	{	$pending->{'WartenAktiviert'}='0';
+		$pending->{'EndeWarteliste'}= currentDateString();
+	}
+}</perlfunc>
+
+<include src="hhb/wartezeit.dgw">
+<perlfunc name="wlBogen" include="pdfgen.pl">
+{
+	my $template=getRessource('formulare/wlbogentemplate.tex');
+	my $ddict={};
+	my $wlDict=$DG::wartelisteDG->pendingPrimaryKey()? $DG::wartelisteDG->dictForPK($DG::wartelisteDG->pendingPrimaryKey()): $DG::wartelisteDG->selectedDict();
+	my $patDict=$DG::patDG->selectedDict();
+
+	$ddict->{$_}=$wlDict->{$_}  for  ( keys %{$wlDict} );
+	$ddict->{$_}=$patDict->{$_} for  ( keys %{$patDict} );
+
+	$ddict->{'Allgemeindiagnosen'}=$DG::wlPropertiesDG->flattenFilterUsingFaceAndDelim('diagsAllg','Name','; ');
+	$ddict->{'Risiko'}=$DG::wlPropertiesDG->flattenFilterUsingFaceAndDelim('risiko','Name',', ');
+	my	  $patHLA=$DG::HLAPatDG->allDicts();
+	if($#{$patHLA}>=0)
+	{	$ddict->{'HLAString'}=$DG::HLAPatDG->flattenForFaceAndDelim('allHLAsDG.Split@IDHLA',', ');
+	} else
+	{	$template =~ s/HLA Allele.*?\\\\//o;
+	}
+
+	my $pid=$DG::patDG->selectedPK();
+	DG::invokePerlfunc('calcWZ', $pid);
+	my $wzs=$DG::wzDG->dictsForWhereClauseDictRaw({PatID => $pid});
+	if (scalar @$wzs)
+	{	$ddict->{'WZ'.$_->{mm}.'MM'}=$_->{ErwarteteWartezeit} for ( @$wzs )
+	} else
+	{	$template =~ s/Erwartete Wartezeit.*?\\\\//o;
+	}
+
+	my $t;
+	$ddict->{'Zentrum'}=							$DG::wartelisteDG->valueOfPath('allCentersDG.ZentrumName@IDZentrum');
+	$ddict->{'Arzt'}=								$DG::wartelisteDG->valueOfPath('mitarbeiterDG.Name@IDMeldenderArzt');
+	$ddict->{'Privat'}=								$wlDict->{Privatpatient}?'Ja':'Nein';
+	$ddict->{'OPVerfahren'}=						$DG::wartelisteDG->valueOfPath('opverfahrenDG.OPArt@IDOPArt');
+	$ddict->{'Narkose'}=							$DG::wartelisteDG->valueOfPath('narkoseDG.Text@Narkosefrom');
+	$ddict->{'OPindikationsdiagnose'}.= (length ($t=$DG::wlPropertiesDG->flattenFilterUsingFaceAndDelim('diagsRA','Name','; ')))? 'RA: '.$t:'';
+	$ddict->{'OPindikationsdiagnose'}.= (length ($t=$DG::wlPropertiesDG->flattenFilterUsingFaceAndDelim('diagsLA','Name','; ')))? 'LA: '.$t:'';
+	$ddict->{'OPindikationsdiagnose'}.= (length ($t=$DG::wlPropertiesDG->flattenFilterUsingFaceAndDelim('diagsBA','Name','; ')))? 'BA: '.$t:'';
+	$ddict->{'Leidensdruck'}=						$DG::wartelisteDG->valueOfPath('prioDG.Text@Prioritaet');
+	$ddict->{'Operateur'}=							$DG::wartelisteDG->valueOfPath('mitarbeiterDG.Name@IDOperateur');
+
+	$ddict->{'Datum'}= currentTimeString();
+
+	for( keys %{$ddict} )
+	{	$ddict->{$_}=~ s/, $//o;
+		$ddict->{$_}=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/$3.$2.$1/go
+	}
+	returnPDF(PDFForTemplateAndRef($template,$ddict));
+}</perlfunc>
+
+<perlfunc name="newPat" include="pdvaccess.pl">
+{	my $idict=$DG::patDG->mutablePendingInsertionDict();
+	if($idict->{Name}=~/([0-9]{8})/)
+	{	my $piz=$1;
+		$DG::patDG->setWhere( { PIZ=>$piz } );
+		if ($DG::patDG->dictsForWhereClauseDictRaw({PIZ=>$piz}) )
+		{	$DG::patDG->abortPendingInsert();
+			return;
+		} else
+		{	my ($name, $vorname, $geb, $str, $plz, $ort, $tel, $sex)=lookupPIZ($piz);
+		#<!>	$idict->{$_}= shift @attribs for qw/PIZ Name Vorname Geburtsdatum Anschrift PLZ Ort Telefon1 weiblich/;
+			if (length $name)
+			{	$idict->{PIZ}=$piz;
+				$idict->{Name}=$name;
+				$idict->{Vorname}=$vorname;
+				$idict->{Geburtsdatum}=$geb;
+				$idict->{Anschrift}=$str;
+				$idict->{PLZ}=$plz;
+				$idict->{Ort}=$ort;
+				$idict->{Telefon1}=$tel;
+				$idict->{weiblich}= 1 if($sex =~ /f/io);
+
+
+			} else
+			{	$DG::patDG->abortPendingInsert();
+				$dbweb::logger->log_error("keinen Patienten zur PIZ $piz gefunden");
+				return;
+			}
+		}
+	} else
+	{	$DG::patDG->setWhere( $idict );
+	}
+}</perlfunc>
+
+<perlfunc name="zentrenwl"  include="xlsgen.pl">
+{	my $sql ='select "WartelisteZentren"."ZentrumName", "WartelisteUebersicht"."Name","WartelisteUebersicht"."Vorname","Geburtsdatum","WartelisteUebersicht"."StartWarteliste" from "WartelisteUebersicht" join "WartelisteZentren" on ("WartelisteUebersicht"."IDZentrum"= "WartelisteZentren"."ID") where "IDZentrum">1 and "WartenAktiviert"=true order by "ZentrumName", "StartWarteliste" desc';
+	my $dbh = dbweb::getDBHForDG($DG::patDG);
+	returnXLSForSQLandDBH($sql,$dbh);
+}</perlfunc>
+
+<perlfunc name="fancy_termine"  include="xlsgen.pl">
+{	my $sql ='select "PIZ" from "Warteliste"  join "StammdatenPatient" on "PatientID"="StammdatenPatient"."ID" where "fancy_nummer" is not null and "IDOrgankultur" is not null order by "EndeWarteliste"';
+	my $dbh = dbweb::getDBHForDG($DG::patDG);
+	my $list=$DG::patDG->executeSQLStatement($sql);
+	my $pizzen=join "','", map {$_->[0]} (@$list);
+	$pizzen="'$pizzen'";
+warn $pizzen;
+	my $dbh = DBI->connect("dbi:JDBC:hostname=localhost:9003;url=jdbc:sapdb://10.210.21.10:7210/augdb", 'daniel', 'bhu87zgv') || warn " aufdb Database connection not made: $DBI::errstr";
+	my $sql ='select "BIRTHNAME", "PIZ","AUGDATE"."ANNOTATION", "PLANEDBEGINING","INTERNALNAME" from "AUGDATE" join "PATIENT" on ("AUGDATE"."PATIENTID"="PATIENT"."PATIENTID" ) join "PATIENT2PIZ" on ("PATIENT2PIZ"."PATIENTID"="PATIENT"."PATIENTID" ) join "SERVICE" on ("SERVICEID"="AUGDATE"."PLANEDSERVICEID") where "PIZ" in ('. $pizzen.')';
+	returnXLSForSQLandDBH($sql,$dbh);
+}</perlfunc>
+
+
+<perlfunc name="printFancyList" include="pdfgen.pl">
+{	my $sql='select "Name", "StartWarteliste", fancy_nummer, "Bemerkungen" from fancy_list'; 
+	my $listR=$DG::patDG->executeSQLStatement($sql);
+	my @list= map
+	{	my $g=$_->[1];
+		my @words=split /\s+/o, $_->[3];
+		my $comment=join ' ', @words[0..4];
+		$comment.=scalar @words>4?'...':'';
+		$g=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/$3.$2.$1/go;
+		{ date=>$g, fancy_number=>$_->[2]?$_->[2]:"", name=>$_->[0], Bemerkungen=> $comment  };
+	} (@{$listR});
+	my $template=getRessource('formulare/fancy_list_template.tex');
+	returnPDF(PDFForTemplateAndRef($template, { list=> \@list }));
+}</perlfunc>
+
+<perlfunc name="printFancyIDList" include="pdfgen.pl">
+{	sub format_date{ my ($g)=@_;
+		$g=~ s/([0-9]+)-([0-9]+)-([0-9]+) ([0-9]+):([0-9]+):([0-9]+)/$3.$2.$1/go;
+		return $g;
+	}
+	my $sql='select nr, piz, gebdat, name, geschlecht, einschlussdatum from fancy_id_list'; 
+	my $listR=$DG::patDG->executeSQLStatement($sql);
+	my @list= map
+	{	{	fancy_number=>sprintf("01%03d",$_->[0]),
+			gebdat=>format_date($_->[2]),
+			geschlecht=>$_->[4],
+			name=>$_->[3],
+			einschlussdatum => format_date ($_->[5]),
+			piz =>$_->[1]
+		};
+	} (@{$listR});
+	my $template=getRessource('formulare/fancy_id_list_template.tex');
+	returnPDF(PDFForTemplateAndRef($template, { list=> \@list }));
+}</perlfunc>
+
+
+<include src="hhb/arztbriefe_aufrufen.dgw">
+
+<perlfunc name="goto_kataster">
+{	redirectToAppDGPK('kataster','wartelisteDG',DG::pendingPrimaryKey());
+}</perlfunc>
+<perlfunc name="audit_trail">
+{	DG::redirectToAppDGPK('warteliste_log','rootDG',DG::pendingPrimaryKey());
+}</perlfunc>
+
+<DisplayGroups>{
+organkulturDG=
+{	table="Organkultur";
+	columns=("ID","IDSpender","IDWarteliste" );
+	primaryKey="IDWarteliste";
+	connectionEnvAuto=YES;
+}}</DisplayGroups>
+<perlfunc name="goto_spender">
+{	my $idwl=$DG::wartelisteDG->pendingPrimaryKey();
+	my $sp=$DG::organkulturDG->dictForPK($idwl);
+	redirectToAppDGPK('spender','spDG',$sp->{IDSpender});
+}</perlfunc>
+<perlfunc name="goto_femto">
+{	redirectToAppDGPK('femto','laserDG',$DG::wartelisteDG->pendingPrimaryKey());
+}</perlfunc>
+
+<perlfunc name="mark_qsbogen_ok">
+{	$DG::followUpDG->insertDict({ StationaerID=>$DG::wartelisteDG->selectedPK(), Datum=>currentDateString()})
+		unless $DG::followUpDG->dictsForWhereClauseDictRaw( {'StationaerID'=>$DG::wartelisteDG->selectedPK() } );
+}</perlfunc>
+
+<perlfunc name="dealloc">
+{	$DG::wartelisteDG->updatePKWithDict($DG::wartelisteDG->pendingPrimaryKey(), {IDOrgankultur=>undef});
+}</perlfunc>
+
+<perlfunc name="verstorben">
+{	$DG::patDG->updatePKWithDict(DG::pendingPrimaryKey(), {VerstorbenAm=> currentDateString()});
+}</perlfunc>
+

@@ -1,0 +1,519 @@
+<comment>
+
+5.5.05: Kataster-neufassung by Dr. Boehringer
+    Copyright (C) 2003-2012  Daniel Boehringer
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+</comment>
+
+
+<include src="hhb/faces.html">
+<h1> Achtung, diese Anwendung wird nicht mehr unterstützt!, d.h. die liste nicht mehr aktualisiert</h1>
+<table>
+<td valign=top>
+	<table class="datatable" width="100%">
+		<caption> Arbeitslise </caption>
+		<tr>
+		<th>Name</th>
+		<th>Vorname</th>
+		<th>Auge</th>
+		<th>OP</th>
+		</tr>
+		<foreach:wartelisteDG>
+			<tr>
+			<td><var:Name></td>
+			<td><var:Vorname></td>
+			<td><var:Auge></td>
+			<td><var:EndeWarteliste format:date="%d.%m.%y"></td>
+			</tr>
+		</foreach>
+	</table>
+	<button:reload format:ajax="on" perl="clearCache">
+	<foreach:wartelisteRawDG></foreach>
+	<form:wartelisteRawDG label="OP-Daten">
+		<var:KeratoplastikAuge edittype=text label="nKp" size="3">
+		<var:IDOPArt edittype=combo lookup="opverfahrenDG.OPArt" label="OP">
+		<var:IDOPIndikationsdiagnose edittype=popup format:lookup="wlPropertiesDG.AugenDiags.Name" format:label="OP Indikation">
+		<var:IDTrepanart edittype=combo lookup="trepanDG.Trepanart" label="Trephine">
+		<var:FSLanteriorDiameter edittype=text size="6" format:label="anterior/ posterior cut diameter">
+		<var:FSLposteriorDiameter edittype=text size="6">
+	</form>
+
+	<foreach:opberichteDG></foreach>
+	<form:opberichteDG label="OP Bericht">
+		<var:txt edittype=textarea cols="30" rows="10">
+	</form>
+	<table class="datatable" width="100%">
+		<caption>Risikoeinstufung usw.</caption>
+		<foreach:wlPropertiesDG.risiko>
+			<tr><td colspan=2>
+				<var:DiagnoseID lookup="allDiagsDG.Name">
+			</td></tr>
+		</foreach>
+		<tr><th>Studie</th><th>Gruppe</th></tr>
+		<foreach:wlPropertiesDG.studien>
+			<tr><td>
+				<var:DiagnoseID lookup="allDiagsDG.Name"></td><td>
+				<var:Parameter size="5">
+			</td></tr>
+		</foreach>
+		<tr><th>Auge</th><th>Diags</th></tr>
+		<foreach:wlPropertiesDG.AugenDiags>
+			<tr><td><var:Auge></td>
+				<td><var:DiagnoseID lookup="allDiagsDG.Name"></td>
+			</tr>
+		</foreach>
+		<foreach:wlPropertiesDG.WLProps>
+				<tr>
+					<td><var:Name></td>
+					<td><var:Parameter edittype=popup lookup="diagnosenWerteliste.Name@DiagnoseID"></td>
+				</tr>
+		</foreach>
+		</table>
+</td>
+<td valign=top>
+	<table class="datatable">
+		<caption>Briefe</caption>
+			<tr>
+				<th>Datum</th>
+			</tr>
+			<foreach:arztberichteDG>
+				<tr>
+				<td>
+					<var:udatum format:date="%d.%m.%y"></td>
+				</td></tr>
+			</foreach>
+	</table>
+	<button:insert format:ajax="on" perl="addToFU">
+
+</td>
+<td valign=top>
+	<condDG:arztberichteDG selection=true>
+		<form:arztberichteDG>
+			<var:text edittype=textarea cols="60" rows="50">
+		</form>
+	</condDG>
+<br>
+<table>
+<tr>
+<td valign=top>
+	<table class="datatable">
+		<th>Auge</th>
+		<th>Datum</th>
+		<th>OP</th>
+		<foreach:opplanerDG>
+		<tr>
+			<td><var:auge format:date="%d.%m.%Y"></td>
+			<td><var:op_date format:date="%d.%m.%Y"></td>
+			<td><var:op></td>
+		</tr>
+		</foreach>
+	</table>
+</td>
+</tr>
+</table>
+</td>
+<td valign=top>
+	<table class="datatable">
+		<caption>Dati</caption>
+		<tr><th>Datum</th></tr>
+		<foreach:followUpDG>
+		<tr>
+			<td><var:Datum format:date="%d.%m.%Y"></td>
+		</tr>
+		</foreach>
+	</table>
+</td>
+<td valign=top>
+	<form:followUpDG label="Fixdaten">
+		<var:Datum edittype=text format:date="%d.%m.%y" size="10" label="Untersuchung vom">
+		<var:IR edittype=boolean format:label="Absto&szlig;ung / Eintr&uuml;bung"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<var:TpTrueb edittype=boolean>
+		<var:EZD edittype=text editmode=inplace format:label="EZD" size="6">
+		<button:get perl="getEndothel">
+		<var:sphRA edittype=text editmode=inplace size="4" format:label="RA: sph / cyl / Achse =">
+		<var:cylRA edittype=text editmode=inplace size="4">
+		<var:AchseRA edittype=text editmode=inplace size="4">
+		<var:VisusRA edittype=text editmode=inplace size="4">
+		<var:sphLA edittype=text editmode=inplace size="4" format:label="LA: sph / cyl / Achse =">
+		<var:cylLA edittype=text editmode=inplace size="4">
+		<var:AchseLA edittype=text editmode=inplace size="4">
+		<var:VisusLA edittype=text editmode=inplace size="4">
+		<hr>
+		<comment>
+		<var:keratometrischeRefraktion1 edittype=text editmode=inplace size="4" format:label="Kera Ref">
+		<var:keratometrischeRefraktion2 edittype=text editmode=inplace size="4">
+		<var:keratometrischeAchse1 edittype=text editmode=inplace size="4" format:label="KeraAchs">
+		<var:keratometrischeAchse2 edittype=text editmode=inplace size="4">
+		</comment>
+		<var:ARsph edittype=text size="4" editmode=inplace format:label="AR: sph / cyl / A">
+		<var:ARcyl edittype=text size="4" editmode=inplace>
+		<var:ARAchse edittype=text size="4" editmode=inplace>
+		<var:Orb1 edittype=text size="4" editmode=inplace format:label="ORB: Irreg / cyl/ 3mm / A">
+		<var:Orb2 edittype=text size="4" editmode=inplace>
+		<var:Orb4 edittype=text size="4" editmode=inplace>
+		<var:Orb3 edittype=text size="4" editmode=inplace>
+		<var:Pachy edittype=text size="4" editmode=inplace label="Pachy">
+		<button:get perl="getOrbscan">
+	</form>
+</td>
+<td valign=top>
+	<condDG:followUpDG selection=true>
+		<table class="datatable">
+		<caption>Weitere Daten</caption>
+				<tr>
+					<th>Befund</th>
+					<th>Wert</th>
+				</tr>
+				<tr><td class="insertvar" colspan=2>
+					<displayGroup:fuPropertiesDG.befunde perform:insert="var:BefundID" edittype=popup lookup="allFUPropsDG.befunde.Name" size="25">
+				</td></tr>
+				<foreach:fuPropertiesDG.befunde>
+					<tr><td>
+						<var:BefundID lookup="allFUPropsDG.Name"></td><td>
+						<var:Parameter edittype=text editmode=inplace size="5">
+					</td></tr>
+				</foreach>
+			<th colspan=2>Komplikation</th><tr>
+			<td class="insertvar" colspan=2>
+				<displayGroup:fuPropertiesDG.komplikation perform:insert="var:BefundID" edittype=combo lookup="allFUPropsDG.komplikation.Name" size="25">
+			</td></tr>
+			<foreach:fuPropertiesDG.komplikation>
+				<tr><td colspan=2>
+					<var:BefundID lookup="allFUPropsDG.Name">
+				</td></tr>
+			</foreach>
+			<tr>
+				<th>Medi</th>
+				<th>Dosis</th>
+			</tr>
+			<th colspan="2">Syst.</th>
+			<tr><td class="insertvar" colspan=2>
+				<displayGroup:fuPropertiesDG.therapieSys perform:insert="var:BefundID" edittype=popup lookup="allFUPropsDG.therapieSys.Name" size="25">
+			</td></tr>
+			<foreach:fuPropertiesDG.therapieSys>
+				<tr><td>
+					<var:BefundID lookup="allFUPropsDG.Name"></td><td>
+					<var:Parameter edittype=popup lookup="applikationsFqDG.Frequenz">
+				</td></tr>
+			</foreach>
+			<tr><th colspan=2>RA</th></tr>
+			<tr><td class="insertvar" colspan=2>
+				<displayGroup:fuPropertiesDG.therapieRA perform:insert="var:BefundID" edittype=popup lookup="allFUPropsDG.Augenmedis.Name" size="25">
+			</td></tr>
+			<foreach:fuPropertiesDG.therapieRA>
+				<tr><td>
+					<var:BefundID lookup="allFUPropsDG.Name"></td><td>
+					<var:Parameter edittype=popup lookup="applikationsFqDG.Frequenz">
+				</td></tr>
+			</foreach>
+			<th colspan=2>LA</th>
+			<tr><td class="insertvar" colspan=2>
+				<displayGroup:fuPropertiesDG.therapieLA perform:insert="var:BefundID" edittype=popup lookup="allFUPropsDG.Augenmedis.Name" size="25">
+			</td></tr>
+			<foreach:fuPropertiesDG.therapieLA>
+				<tr><td>
+					<var:BefundID lookup="allFUPropsDG.Name"></td><td>
+					<var:Parameter edittype=popup lookup="applikationsFqDG.Frequenz">
+				</td></tr>
+			</foreach>
+		</table>
+	</condDG>
+</td>
+
+</table>
+
+</body>
+</html>
+
+
+<DisplayGroups>{
+wartelisteDG=
+{	table="grundliste_ab_kataster";
+	cache=YES;
+	columns=(	"WLID","PatientID", "Name", "Vorname","Geburtsdatum","IDZentrum", "EndeWarteliste", "KeratoplastikAuge","KeratoplastikGesamt","Auge","MaxHLAMismatches",
+				"TransplantationenGesamt","TransfusionenGesamt", "SchwangerschaftenGesamt","IDOperateur","TrepanTp","TrepanPat","IDOPArt","IDMeldenderArzt","IDOrgankultur",
+				"IDTrepanart","IDOPIndikationsdiagnose","Bemerkungen","Privatpatient", "PIZ");
+	primaryKey="WLID";
+	bindToDG=searchDG2;
+	connectionEnvAuto=YES;
+
+	filters=
+	{	kpl= ({col="IDOrgankultur";op="nenull"} , {col="IDZentrum";op="eq";val="1"});
+	}
+	contextmenu=
+	(	{	name="Selektieren";
+			action="select";
+		},	{ separator="true"; },
+		{	name="Warteliste";
+			perlfunc="goto_WL";
+		},
+		{	name="Arztbriefe";
+			perlfunc="show_arztbriefeWL";
+		}
+	)
+};
+wartelisteRawDG=
+{	table="Warteliste";
+	columns=(	"ID","PatientID", "IDZentrum", "KeratoplastikAuge","KeratoplastikGesamt","Auge","MaxHLAMismatches",
+				"TransplantationenGesamt","TransfusionenGesamt", "SchwangerschaftenGesamt","IDOperateur","TrepanTp","TrepanPat","IDOPArt",
+				"IDTrepanart","IDOPIndikationsdiagnose","Bemerkungen","Privatpatient","HHWeggefroren","FSLposteriorDiameter","FSLanteriorDiameter");
+	primaryKey="ID";
+	types={ "ID"=int; "PatientID"=int; "IDZentrum"=int; 
+			"KeratoplastikAuge"=int; "KeratoplastikGesamt"=int;
+			"MaxHLAMismatches"=int;"TransplantationenGesamt"=int; "TransfusionenGesamt"=int; 
+			"SchwangerschaftenGesamt"=int; "IDOperateur"=int; "IDOPArt"=int; "IDMeldenderArzt"=int;
+			"IDOPIndikationsdiagnose"=int; "Privatpatient"=bool; "IDTrepanart"=int; "HHWeggefroren"=bool;"FSLposteriorDiameter"=int; "FSLanteriorDiameter"=int; };
+	bindToDG=wartelisteDG; bindFromColumn="ID";
+};
+opberichteDG=
+{	table="opberichte";
+	columns=("idwl","txt");
+	types={ "idwl"=int; }; 
+	primaryKey="idwl";
+	bindToDG="wartelisteDG"; bindFromColumn="idwl";
+};
+arztberichteDG=
+{	table="briefe";
+	columns=("id","piz","udatum","text");
+	types={ "id"=int;"piz"=int;  udatum="date"; }; 
+	primaryKey="id";
+	bindToDG="wartelisteDG"; bindFromColumn="piz"; targetColumn="PIZ";
+	autoSort="standard";
+	connection="dbi:Pg:dbname=ambulanzbriefe;host=localhost;user=root;password=root";
+	sortColumns=
+	{	standard=({col="udatum"; op="desc"});
+	};
+};
+
+okDG=
+{	table="Organkultur";
+	columns=("ID","IDSpender", "Auge","IDWarteliste","EndOfCulture");
+	primaryKey="ID";
+	bindFromColumn="IDWarteliste"; bindToDG="wartelisteDG"; targetColumn="WLID";
+};
+
+allPatNamesDG=
+{	table="WartelisteUebersicht";
+	columns=("Name");
+	primaryKey="Name";
+	connectionEnvAuto=YES;
+	filters=
+	{	kpl= ({col="IDOrgankultur";op="nenull"} );
+	}
+};
+allCentersDG=
+{	table="WartelisteZentren";
+	columns=("ID","ZentrumName");
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+	cache=YES;
+};
+wlPropertiesDG=
+{	table="AufnahmeDiagnoseKategorie";
+	columns=("ID","DiagnoseID","Name","Auge","StationaerID","Kategorie1","Kategorie2","Parameter");
+	types={"ID"=int; "DiagnoseID"=int; "StationaerID"=int; "Kategorie1"=int; "Kategorie2"=int;};
+	write_table="AufnahmeDiagnose";
+	suppress_insert=("Kategorie1","Kategorie2");
+	primaryKey="ID";
+	bindFromColumn="StationaerID"; bindToDG="wartelisteDG";
+	bindToColumn="IDOPIndikationsdiagnose";
+	filters=
+	{	risiko=		 {col="Kategorie1";op="eq";val="4"};
+		studien=	 {col="Kategorie1";op="eq";val="5"};
+		diagsRA=	({col="Kategorie1";op="eq";val="1"},{col="Auge";op="eq";val="RA"});
+		diagsLA=	({col="Kategorie1";op="eq";val="1"},{col="Auge";op="eq";val="LA"});
+		diagsBA=	({col="Kategorie1";op="eq";val="1"},{col="Auge";op="eq";val="BA"});
+		AugenDiags=	 {col="Kategorie1";op="eq";val="1"};
+		diagsAllg=	 {col="Kategorie1";op="eq";val="0"};
+		WLProps=	 {col="Kategorie1";op="eq";val="7"};
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+diagnosenWerteliste=
+{	table="Diagnose";
+	columns=("ID","Name","ArztbriefName","Kategorie1","Kategorie2");
+	primaryKey="ID";
+	bindToDG="wlPropertiesDG"; bindFromColumn="Kategorie2";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("ID");
+	};
+	filters=
+	{	wl={col="Kategorie1";op="eq";val="8"};
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+
+
+followUpDG=
+{	table="Brief";
+	columns=("ID","StationaerID","Datum","Untersuchungsdatum","OberarztID","ArztID","sphRA","cylRA","AchseRA","VisusRA","sphLA","cylLA","AchseLA", "VisusLA","EZD","TensioRA", "TensioLA",
+			"TpTrueb", "IR", "keratometrischeRefraktion1","keratometrischeRefraktion2", "keratometrischeAchse1", "keratometrischeAchse2", "ARsph", "ARcyl", "ARAchse", "Orb1",
+			"Orb2", "Orb3", "Orb4", "Pachy", "date_insert");
+	types=	{"ID"=int; "StationaerID"=int; "Datum"=date; "Untersuchungsdatum"=date; "OberarztID"=int; "ArztID"=int; "TpTrueb"=bool; "IR"=bool;
+			"keratometrischeAchse1"=int; "keratometrischeAchse2"=int; "keratometrischeRefraktion1"=int; "keratometrischeRefraktion2"=int; "EZD"=int; "date_insert"=date; };
+	primaryKey="ID";
+	bindFromColumn="StationaerID"; bindToDG="wartelisteDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=({col="Datum"; op="desc"});
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+fuPropertiesDG=
+{	table="BriefBefundKategorie";
+	columns=("ID","BefundID","BriefID","Datum","Auge","Kategorie","Parameter");
+	types={"ID"=int; "BefundID"=int; "BriefID"=int; "Datum"=date; "Kategorie"=int; };
+	primaryKey="ID";
+	bindFromColumn="BriefID"; bindToDG="followUpDG";
+	write_table="BriefBefund";
+	suppress_insert=("Kategorie");
+	filters=
+	{	therapieRA=		({col="Kategorie";op="eq";val="1000"}, {col="Auge";op="eq";val="RA"});
+		therapieLA=		({col="Kategorie";op="eq";val="1000"}, {col="Auge";op="eq";val="LA"});
+		Augenmedis=		 {col="Kategorie";op="eq";val="1000"};
+		therapieSys=	 {col="Kategorie";op="eq";val="1001"};
+		komplikation=	 {col="Kategorie";op="eq";val="2000"};
+		operation=		 {col="Kategorie";op="eq";val="3000"};
+		befunde=		 {col="Kategorie";op="eq";val="4000"};
+	};
+	<include src="hhb/minimal_ctxt_menu.dgw">
+};
+
+allFUPropsDG=
+{	table="Befund";
+	columns=("ID","Name","Kategorie","auto");
+	primaryKey="ID";
+	bindToDG="fuPropertiesDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Name");
+	};
+};
+allDiagsDG=
+{	table="Diagnose";
+	columns=("ID","Name","Kategorie1","Kategorie2","auto");
+	types={"ID"=int; "auto"=bool; "Kategorie1"=int; "Kategorie2"=int; };
+	primaryKey="ID";
+	bindToDG="wlPropertiesDG";
+};
+allExitWLDG=
+{	table="StammdatenExitWL";
+	columns=("ID","Name");
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+opverfahrenDG=
+{	table="StammdatenOPVerfahren";
+	columns=("ID","OPArt");
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+};
+mitarbeiterDG=
+{	table="Mitarbeiter";
+	columns=("ID","Name","Vorname","Titel","Funktion","operiert","extern");
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+	filters=
+	{	operiert=  {col="operiert";op="eq";val="1"};
+	}
+	types=
+	{ "operiert"=bool;
+	}
+};
+trepanDG=
+{	table="Trepanart";
+	columns=("ID","Trepanart");
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+	cache=YES;
+};
+applikationsFqDG=
+{	table="Applikationsfrequenz";
+	columns=("ID","Frequenz","Kategorie");
+	primaryKey="ID";
+	bindToDG="wartelisteDG";
+	autoSort="standard";
+	sortColumns=
+	{	standard=("Frequenz");
+	};
+};
+
+LOGIN=
+{	columns=("AppName","user","password");
+	DataInSession=YES;
+};
+passwordDG=
+{	table="Password";
+	columns=("ID","name","password","level");
+	primaryKey="ID";
+	connectionEnvAuto=YES;
+};
+
+katasterAktivDG=
+{	table="KatasterAktiv";
+	columns=("IDWL","Auge","PatientID");
+	primaryKey="PatientID";
+	connectionEnvAuto=YES;
+};
+opplanerDG=
+{	table="op_liste_piz";
+	columns=("pk","piz", op_date, "auge", "op");
+	primaryKey="pk";
+	connection="dbi:Pg:dbname=prometheus_copy;user=root;host=localhost"
+	bindToDG="wartelisteDG"; bindFromColumn="piz"; targetColumn="PIZ";
+};
+
+
+}</DisplayGroups>
+
+<perlfunc name="addToFU">
+{	my $idict={date_insert => currentDateString(), StationaerID=>$DG::wartelisteDG->selectedPK(), Datum=> $DG::arztberichteDG->selectedDict()->{datum} };
+	my $pk=$DG::followUpDG->insertDict($idict);
+	$DG::followUpDG->selectPK($pk);
+	my $allBefunde= $DG::allFUPropsDG->dictsForFilter('befunde');
+	map	{ $DG::fuPropertiesDG->insertDict({'BefundID'=> $_->{'ID'}, 'BriefID'=>$pk } ) if($_->{auto} ) } (@{$allBefunde});
+}</perlfunc>
+
+<perlfunc name="clearCache">
+{	$DG::wartelisteDG->clearCache();
+	$DG::wartelisteDG->invalidateSelection();
+	$DG::arztberichteDG->clearCache();
+}</perlfunc>
+
+
+<perlfunc name="_auto_">
+{	my $name=$DG::LOGIN->valueOfSelectedField('user');
+	$name='' unless $name;
+	my $user=$DG::passwordDG->dictsForWhereClauseDictRaw({name=>$name});
+	$DG::LOGIN->rejectLogin() unless $user;
+	my $userDict=$user->[0];
+	$DG::LOGIN->rejectLogin() if( (length $userDict->{password}) && ( $DG::LOGIN->valueOfSelectedField('password') ne $userDict->{password}) || $userDict->{level}<1 );
+	warn $name;
+}</perlfunc>
+
+
+<perlfunc name="goto_WL">
+{	redirectToAppDGPK('warteliste','wartelisteDG',DG::pendingPrimaryKey());
+}</perlfunc>
+
+
+
+
+<perlfunc name="invalidatePatientSelection">
+{	$DG::wartelisteDG->invalidateSelection();
+}</perlfunc>
+

@@ -1,0 +1,84 @@
+\documentclass[a4]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage[latin1]{inputenc}
+
+\renewcommand{\familydefault}{\sfdefault} 
+\usepackage{helvet} 
+
+\usepackage{<copytex:hhb/wallpaper.sty>}
+
+\setlength{\headheight}{8\baselineskip} 	% kleiner=hšher
+\setcounter{secnumdepth}{0}
+\begin{document}
+\ThisCenterWallPaper{1}{<file:briefkopfHHB2.pdf>}
+\section{Profile: <var:profile>}
+\section{Donor settings}
+\begin{tabular}{ll}
+Transplantat & <var:TP>\\
+Empf"anger & <var:Name>, <var:Vorname>, geb. am <var:Geburtsdatum>\\
+Operationsdatum & <var:OPDatum>\\ 
+Operationsauge & <var:OPAuge>\\ 
+\end{table}\\
+\begin{centering}
+\begin{tabular}{ll}
+\it Lamellar cut\\ \hline
+Depth in cornea  & <var:DO_DepthInCornea>\\
+Outer Diameter  & <var:DO_OuterDiameter>\\
+Inner Diameter  & <var:DO_InnerDiameter>\\
+Spiral  & <var:spiral>\\
+Energy  & {\it Maximalenergie} -0.2\\
+\end{tabular}
+\end{centering}
+
+\parbox[t]{0.5\linewidth}{ 
+\begin{tabular}{ll} 
+\it Anterior side cut & \\\hline
+PostDepth  & <var:DO_AnteriorSideCut_PostDepth>\\
+Diameter  & <var:DO_AnteriorSideCut_Diameter>\\
+Energy  & {\it Maximalenergie} -0.2\\
+\end{tabular}
+} 
+\parbox[t]{0.5\linewidth}{
+\begin{tabular}{ll} 
+\it Posterior side cut & \\\hline
+AnteriorDepth  & <var:DO_PosteriorSideCut_AnteriorDepth>\\
+PostDepth  & <var:DO_PosteriorSideCut_PostDepth>\\
+Diameter  & <var:DO_PosteriorSideCut_Diameter>\\
+Energy  & {\it Maximalenergie} -0.2\\
+\end{tabular}
+}
+\section{Recipient settings}
+\begin{centering}
+\begin{tabular}{ll}
+\it Lamellar cut\\ \hline
+Depth in cornea  & <var:RC_DepthInCornea>\\
+Outer Diameter  & <var:RC_OuterDiameter>\\
+Inner Diameter  & <var:RC_InnerDiameter>\\
+Spiral  & <var:spiral>\\
+Energy  & {\it Maximalenergie} -0.2\\
+\end{tabular}
+\end{centering}
+
+\parbox[t]{0.5\linewidth}{ 
+\begin{tabular}{ll} 
+Anterior side cut & \\\hline
+PostDepth  & <var:RC_AnteriorSideCut_PostDepth>\\
+Diameter  & <var:RC_AnteriorSideCut_Diameter>\\
+Energy  & {\it Maximalenergie} -0.2\\
+\end{tabular}
+} 
+\parbox[t]{0.5\linewidth}{
+\begin{tabular}{ll} 
+Posterior side cut & \\\hline
+AnteriorDepth  & <var:RC_PosteriorSideCut_AnteriorDepth>\\
+PostDepth  & <var:RC_PosteriorSideCut_PostDepth>\\
+Diameter  & <var:RC_PosteriorSideCut_Diameter>\\
+Energy  & {\it Maximalenergie} -0.2\\
+\end{tabular}
+}
+~\\\\\\\\
+\begin{tabular}{p{2cm}l}
+Datum & Unterschrift \\
+\end{tabular}
+
+\end{document}
