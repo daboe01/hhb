@@ -16,3 +16,6 @@
 WICHTIGER HINWEIS:
     Verwendung auf eigene Gefahr!
     Use at your own risk.
+
+Fuer die Installation ist das dbweb Framework erforderlich:
+    <https://github.com/daboe01/dbweb>
